@@ -40,7 +40,7 @@
   color: var(--c-primary);
   font-size: 0.9rem;
   cursor: pointer;
-  font-weight: 600;
+  font-weight:700;
   margin-bottom: 1rem;
   padding: 0.4rem 0.75rem;
   border-radius: var(--radius-full);
@@ -91,11 +91,17 @@
   gap: 1.5rem;
   font-size: 0.9rem;
   color: var(--c-text-secondary);
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
 }
 
 .saveBtn {
   background: none;
-  border: 1.5px solid var(--c-border);
+  border: 1.5px solid var(--c-primary);
   border-radius: var(--radius-full);
   width: 44px;
   height: 44px;
@@ -114,7 +120,7 @@
 }
 
 .saveBtn.saved {
-  border-color: #ef4444;
+  border-color: var(--c-primary);
   background: #fef2f2;
 }
 

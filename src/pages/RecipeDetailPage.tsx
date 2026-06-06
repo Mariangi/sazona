@@ -1,78 +1,105 @@
-import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import type { RecipeResponse } from '@sasona/shared'
-import { api } from '../api/client'
-import Button from '../components/ui/Button'
-import styles from './RecipeDetailPage.module.css'
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import type { RecipeResponse } from "@sasona/shared";
+import { api } from "../api/client";
+import Button from "../components/ui/Button";
+import styles from "./RecipeDetailPage.module.css";
+import { ArrowLeftIcon, ClockIcon, PeopleIcon, SavedIcon, SaveIcon } from "../components/ui/Icons";
 
 export default function RecipeDetailPage() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const [recipe, setRecipe] = useState<RecipeResponse | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [generating, setGenerating] = useState(false)
-  const [generated, setGenerated] = useState(false)
-  const [saved, setSaved] = useState(false)
-  const [togglingSave, setTogglingSave] = useState(false)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [recipe, setRecipe] = useState<RecipeResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [generating, setGenerating] = useState(false);
+  const [generated, setGenerated] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [togglingSave, setTogglingSave] = useState(false);
 
   useEffect(() => {
-    if (!id) return
-    const recipeId = Number(id)
-    api.getRecipeById(recipeId)
+    if (!id) return;
+    const recipeId = Number(id);
+    api
+      .getRecipeById(recipeId)
       .then(setRecipe)
       .catch((err) => setError(err.message))
-      .finally(() => setLoading(false))
-    api.isRecipeSaved(recipeId)
-      .then(res => setSaved(res.saved))
-      .catch(() => {})
-  }, [id])
+      .finally(() => setLoading(false));
+    api
+      .isRecipeSaved(recipeId)
+      .then((res) => setSaved(res.saved))
+      .catch(() => {});
+  }, [id]);
 
   async function handleToggleSave() {
-    if (!id) return
-    setTogglingSave(true)
+    if (!id) return;
+    setTogglingSave(true);
     try {
       if (saved) {
-        await api.unsaveRecipe(Number(id))
-        setSaved(false)
+        await api.unsaveRecipe(Number(id));
+        setSaved(false);
       } else {
-        await api.saveRecipe(Number(id))
-        setSaved(true)
+        await api.saveRecipe(Number(id));
+        setSaved(true);
       }
-    } catch {} finally {
-      setTogglingSave(false)
+    } catch {
+    } finally {
+      setTogglingSave(false);
     }
   }
 
   async function handleGenerateList() {
-    if (!recipe) return
-    setGenerating(true)
+    if (!recipe) return;
+    setGenerating(true);
     try {
       await api.createShoppingList({
         name: recipe.name,
-        items: recipe.ingredients.map(i => ({
-          name: i.name, quantity: i.quantity, unit: i.unit,
+        items: recipe.ingredients.map((i) => ({
+          name: i.name,
+          quantity: i.quantity,
+          unit: i.unit,
         })),
-      })
-      setGenerated(true)
+      });
+      setGenerated(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error')
+      setError(err instanceof Error ? err.message : "Error");
     } finally {
-      setGenerating(false)
+      setGenerating(false);
     }
   }
 
-  if (loading) return <div className={styles.center}><div className={styles.spinner} /></div>
-  if (error) return <div className={styles.center}><p className={styles.errorText}>{error}</p></div>
-  if (!recipe) return <div className={styles.center}><p className={styles.errorText}>Receta no encontrada</p></div>
+  if (loading)
+    return (
+      <div className={styles.center}>
+        <div className={styles.spinner} />
+      </div>
+    );
+  if (error)
+    return (
+      <div className={styles.center}>
+        <p className={styles.errorText}>{error}</p>
+      </div>
+    );
+  if (!recipe)
+    return (
+      <div className={styles.center}>
+        <p className={styles.errorText}>Receta no encontrada</p>
+      </div>
+    );
 
   return (
     <div className={styles.container}>
-      <button className={styles.backBtn} onClick={() => navigate(-1)}>← Volver</button>
+      <button className={styles.backBtn} onClick={() => navigate(-1)}>
+       <ArrowLeftIcon height="12" width="12" fill="var(--c-primary)"/> Volver
+      </button>
 
       {recipe.imageUrl && (
         <div className={styles.hero}>
-          <img src={recipe.imageUrl} alt={recipe.name} className={styles.heroImage} />
+          <img
+            src={recipe.imageUrl}
+            alt={recipe.name}
+            className={styles.heroImage}
+          />
         </div>
       )}
 
@@ -81,17 +108,32 @@ export default function RecipeDetailPage() {
           <div>
             <h1 className={styles.title}>{recipe.name}</h1>
             <div className={styles.meta}>
-              <span>👥 {recipe.servings} comensales</span>
-              <span>⏱️ {recipe.prepTime} minutos</span>
+              <span>
+                <PeopleIcon
+                  height="14"
+                  width="14"
+                  fill="var(--c-text-secondary)"
+                />{" "}
+                {recipe.servings} comensales
+              </span>
+              <span>
+                {" "}
+                <ClockIcon
+                  height="14"
+                  width="14"
+                  fill="var(--c-text-secondary)"
+                />{" "}
+                {recipe.prepTime} minutos
+              </span>
             </div>
           </div>
           <button
-            className={`${styles.saveBtn} ${saved ? styles.saved : ''}`}
+            className={`${styles.saveBtn} ${saved ? styles.saved : ""}`}
             onClick={handleToggleSave}
             disabled={togglingSave}
-            title={saved ? 'Quitar de guardados' : 'Guardar'}
+            title={saved ? "Quitar de guardados" : "Guardar"}
           >
-            {saved ? '❤️' : '🤍'}
+            {saved ? <SavedIcon fill="var(--c-primary)"/> : <SaveIcon fill="var(--c-primary)"/>}
           </button>
         </div>
 
@@ -103,7 +145,10 @@ export default function RecipeDetailPage() {
                 <span className={styles.ingredientBullet} />
                 <span className={styles.ingredientName}>{ing.name}</span>
                 {ing.quantity && (
-                  <span className={styles.ingredientQty}>{ing.quantity}{ing.unit ? ` ${ing.unit}` : ''}</span>
+                  <span className={styles.ingredientQty}>
+                    {ing.quantity}
+                    {ing.unit ? ` ${ing.unit}` : ""}
+                  </span>
                 )}
               </li>
             ))}
@@ -124,16 +169,16 @@ export default function RecipeDetailPage() {
 
         <div className={styles.actions}>
           {generated ? (
-            <Button onClick={() => navigate('/shopping-lists')}>
-              🛒 Ver lista de compras
+            <Button onClick={() => navigate("/shopping-lists")}>
+               Ver lista de compras
             </Button>
           ) : (
             <Button onClick={handleGenerateList} isLoading={generating}>
-              🛒 Generar lista de compras
+               Generar lista de compras
             </Button>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }

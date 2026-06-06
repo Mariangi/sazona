@@ -89,10 +89,19 @@
 
 .cardMeta {
   display: flex;
+  align-items: center;
   gap: 1rem;
   font-size: 0.8rem;
   color: var(--c-text-secondary);
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
 }
+
+
 
 .empty {
   text-align: center;

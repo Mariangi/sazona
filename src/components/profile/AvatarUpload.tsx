@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import styles from './AvatarUpload.module.css'
+import { CameraIcon } from '../ui/Icons'
 
 interface AvatarUploadProps {
   currentUrl: string | null
@@ -33,7 +34,6 @@ export default function AvatarUpload({ currentUrl, onUpload }: AvatarUploadProps
 
   return (
     <div className={styles.container}>
-      <label className={styles.label}>Foto de perfil</label>
       <div className={styles.wrapper} onClick={() => inputRef.current?.click()}>
         <div className={styles.avatar}>
           {src ? (
@@ -42,7 +42,7 @@ export default function AvatarUpload({ currentUrl, onUpload }: AvatarUploadProps
             <span className={styles.initials}>?</span>
           )}
           <div className={styles.overlay}>
-            {uploading ? '...' : '📷'}
+            {uploading ? '...' : <CameraIcon width='32'  height='32' fill='#fff'/>}
           </div>
         </div>
       </div>

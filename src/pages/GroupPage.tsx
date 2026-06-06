@@ -72,7 +72,7 @@ export default function GroupPage() {
 
   const isOwn = (uid: number) => uid === user?.id
 
-  if (loading) return <div className={styles.center}>Cargando...</div>
+  if (loading) return <div className={styles.center}><div className={styles.spinner} /></div>
   if (!group) return <div className={styles.center}>Grupo no encontrado</div>
 
   return (
@@ -88,8 +88,8 @@ export default function GroupPage() {
       <div className={styles.chat}>
         {messages.length === 0 && (
           <div className={styles.emptyChat}>
-            <span>💬</span>
-            <p>No hay mensajes aún. ¡Propón una cena!</p>
+            <div className={styles.emptyVisual}>💬</div>
+            <p>No hay mensajes aún. ¡Proponé una cena!</p>
           </div>
         )}
 
@@ -143,12 +143,14 @@ export default function GroupPage() {
       <div className={styles.inputArea}>
         {showRecipePicker && (
           <div className={styles.recipePicker}>
-            <span className={styles.pickerTitle}>Elige una receta:</span>
-            {recipes.map(r => (
-              <button key={r.id} className={styles.pickerItem} onClick={() => handleSend(r.id)}>
-                🥘 {r.name}
-              </button>
-            ))}
+            <span className={styles.pickerTitle}>Elegí una receta:</span>
+            <div className={styles.pickerScroll}>
+              {recipes.map(r => (
+                <button key={r.id} className={styles.pickerItem} onClick={() => handleSend(r.id)}>
+                  🥘 {r.name}
+                </button>
+              ))}
+            </div>
             <button className={styles.pickerCancel} onClick={() => setShowRecipePicker(false)}>
               Cancelar
             </button>
@@ -161,7 +163,7 @@ export default function GroupPage() {
           </button>
           <input
             className={styles.chatInput}
-            placeholder="Escribe un mensaje..."
+            placeholder="Escribí un mensaje..."
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}

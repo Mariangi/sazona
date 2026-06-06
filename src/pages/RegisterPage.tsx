@@ -3,7 +3,7 @@ import RegisterForm from '../components/Auth/RegisterForm'
 
 export default function RegisterPage() {
   return (
-    <AuthLayout title="Crear cuenta" subtitle="Regístrate para empezar a organizar tus comidas">
+    <AuthLayout title="Crear cuenta" subtitle="Unite y descubrí recetas increíbles.">
       <RegisterForm />
     </AuthLayout>
   )

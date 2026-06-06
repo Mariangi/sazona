@@ -50,12 +50,15 @@ export default function ShoppingListsPage() {
     }
   }
 
-  if (loading) return <div className={styles.center}>Cargando...</div>
+  if (loading) return <div className={styles.center}><div className={styles.spinner} /></div>
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h2 className={styles.pageTitle}>🛒 Listas de compra</h2>
+        <div>
+          <h2 className={styles.pageTitle}>🛒 Listas de compra</h2>
+          <p className={styles.subtitle}>Organizá tus compras del super</p>
+        </div>
         <Button onClick={() => setShowCreate(true)}>+ Nueva lista</Button>
       </div>
 
@@ -82,8 +85,8 @@ export default function ShoppingListsPage() {
 
       {lists.length === 0 ? (
         <div className={styles.empty}>
-          <span className={styles.emptyIcon}>🛒</span>
-          <p>Crea listas para tus compras o genera una desde una receta</p>
+          <div className={styles.emptyVisual}>🛒</div>
+          <p className={styles.emptyText}>Creá listas para tus compras o genera una desde una receta</p>
         </div>
       ) : (
         <div className={styles.list}>

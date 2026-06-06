@@ -31,15 +31,7 @@ export default function ShoppingListDetail() {
     } catch {}
   }
 
-  async function handleRefresh() {
-    if (!id) return
-    try {
-      const updated = await api.getShoppingList(Number(id))
-      setList(updated)
-    } catch {}
-  }
-
-  if (loading) return <div className={styles.center}>Cargando...</div>
+  if (loading) return <div className={styles.center}><div className={styles.spinner} /></div>
   if (error) return <div className={styles.center}>{error}</div>
   if (!list) return <div className={styles.center}>Lista no encontrada</div>
 
@@ -68,7 +60,7 @@ export default function ShoppingListDetail() {
 
       {list.items.length === 0 ? (
         <div className={styles.empty}>
-          <span className={styles.emptyIcon}>🛒</span>
+          <div className={styles.emptyVisual}>🛒</div>
           <p>No hay items en esta lista</p>
         </div>
       ) : (

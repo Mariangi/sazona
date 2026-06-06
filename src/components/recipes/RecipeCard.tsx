@@ -23,8 +23,8 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
       <div className={styles.body}>
         <h3 className={styles.name}>{recipe.name}</h3>
         <div className={styles.meta}>
-          <span>👥 {recipe.servings} pers.</span>
-          <span>⏱️ {recipe.prepTime} min</span>
+          <span>👥 {recipe.servings}</span>
+          <span>⏱️ {recipe.prepTime}min</span>
         </div>
         <div className={styles.counts}>
           <span>{recipe.ingredientCount} ingredientes</span>

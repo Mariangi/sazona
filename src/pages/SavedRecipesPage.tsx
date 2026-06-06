@@ -24,22 +24,22 @@ export default function SavedRecipesPage() {
     } catch {}
   }
 
-  if (loading) return <div className={styles.center}>Cargando...</div>
+  if (loading) return <div className={styles.center}><div className={styles.spinner} /></div>
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.pageTitle}>🔖 Guardados</h2>
-      <p className={styles.subtitle}>
-        Recetas que guardaste para ver más tarde
-      </p>
+      <div className={styles.header}>
+        <h2 className={styles.pageTitle}>🔖 Guardados</h2>
+        <p className={styles.subtitle}>Recetas que guardaste para ver más tarde</p>
+      </div>
 
       {error && <div className={styles.error}>{error}</div>}
 
       {recipes.length === 0 ? (
         <div className={styles.empty}>
-          <span className={styles.emptyIcon}>🔖</span>
-          <p>Aún no tienes recetas guardadas</p>
-          <p className={styles.hint}>Desde el detalle de una receta puedes guardarla</p>
+          <div className={styles.emptyVisual}>🔖</div>
+          <p className={styles.emptyText}>Aún no tenés recetas guardadas</p>
+          <p className={styles.emptyHint}>Desde el detalle de una receta podés guardarla</p>
         </div>
       ) : (
         <div className={styles.grid}>
@@ -56,8 +56,8 @@ export default function SavedRecipesPage() {
                 <div className={styles.body}>
                   <h3 className={styles.name}>{r.name}</h3>
                   <div className={styles.meta}>
-                    <span>👥 {r.servings} pers.</span>
-                    <span>⏱️ {r.prepTime} min</span>
+                    <span>👥 {r.servings}</span>
+                    <span>⏱️ {r.prepTime}min</span>
                   </div>
                   <div className={styles.counts}>
                     <span>{r.ingredientCount} ingredientes</span>

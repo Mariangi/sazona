@@ -1,16 +1,30 @@
 .container {
-  max-width: 720px;
+  max-width: 680px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .title {
   font-size: 1.5rem;
-  color: #111827;
+  font-weight: 700;
+  color: var(--c-text);
+  margin: 0 0 0.25rem;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--c-text-secondary);
   margin: 0 0 1.5rem;
 }
 
 .card {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: var(--c-surface);
+  border-radius: var(--radius-xl);
+  border: 1.5px solid var(--c-border);
   padding: 2rem;
 }

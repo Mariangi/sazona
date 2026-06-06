@@ -16,13 +16,12 @@ export default function FridgePage() {
 
   async function handleSearch() {
     if (ingredients.length === 0) {
-      setError('Añade al menos un ingrediente')
+      setError('Añadí al menos un ingrediente')
       return
     }
     setError('')
     setLoading(true)
     setSearched(true)
-
     try {
       const data = await api.findRecipesByIngredients({ ingredients, allowExtra })
       setResults(data)
@@ -43,13 +42,14 @@ export default function FridgePage() {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.pageTitle}>🧊 ¿Qué cocino hoy?</h2>
-      <p className={styles.subtitle}>
-        Ingresa los ingredientes que tienes en la heladera y te sugerimos recetas
-      </p>
+      <div className={styles.header}>
+        <h2 className={styles.pageTitle}>🧊 Mi heladera</h2>
+        <p className={styles.subtitle}>
+          Ingresá los ingredientes que tenés y te sugerimos recetas
+        </p>
+      </div>
 
       <div className={styles.card}>
-        <label className={styles.sectionLabel}>Ingredientes que tengo:</label>
         <FridgeInput ingredients={ingredients} onChange={setIngredients} />
 
         <label className={styles.checkbox}>
@@ -57,8 +57,9 @@ export default function FridgePage() {
             type="checkbox"
             checked={allowExtra}
             onChange={(e) => setAllowExtra(e.target.checked)}
+            className={styles.checkboxInput}
           />
-          <span>Permitir recetas con ingredientes que no tengo</span>
+          <span className={styles.checkboxLabel}>Permitir recetas con ingredientes que no tengo</span>
         </label>
 
         {error && <div className={styles.error}>{error}</div>}
@@ -75,11 +76,11 @@ export default function FridgePage() {
         </div>
       </div>
 
-      {loading && <div className={styles.center}>Buscando recetas...</div>}
+      {loading && <div className={styles.loadingState}>Buscando recetas...</div>}
 
       {searched && !loading && results && results.length === 0 && (
         <div className={styles.empty}>
-          <span className={styles.emptyIcon}>😕</span>
+          <div className={styles.emptyVisual}>😕</div>
           <p>No se encontraron recetas con esos ingredientes</p>
         </div>
       )}

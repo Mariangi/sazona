@@ -153,10 +153,9 @@
     right: 0;
     background: var(--c-surface);
     border-top: 1px solid var(--c-border);
-    padding: 0.35rem 0;
+    padding: 0.8rem 0.35rem;
     z-index: 100;
     justify-content: space-around;
-    padding-bottom: env(safe-area-inset-bottom, 0.35rem);
   }
 
   .mobileLink {
@@ -164,57 +163,61 @@
     flex-direction: column;
     align-items: center;
     gap: 0.1rem;
-    padding: 0.3rem 0.4rem;
     border-radius: var(--radius-md);
     text-decoration: none;
     color: var(--c-text-tertiary);
     transition: all 0.15s;
     min-width: 0;
     flex: 1;
-    max-width: 70px;
   }
 
-  .mobileIcon {
-    font-size: 1.2rem;
+  .mobileIcon svg {
+    width: 30px;
+    height: 30px;
   }
 
   .mobileLabel {
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--c-text-secondary);
     max-width: 100%;
-  }
-
-  .mobileActive {
-    color: var(--c-primary);
-
-    span svg path {
-      fill: var(--c-primary);
-    }
   }
 
   .mobileActive .mobileLabel {
     font-weight: 700;
     color: var(--c-primary);
   }
+  .mobileActive .mobileIcon svg path {
+    fill: var(--c-primary);
+  }
 
   .mobileHighlight .mobileIcon {
-    width: 2.6rem;
-    height: 2.6rem;
+    width: 3.8rem;
+    height: 3.8rem;
     border-radius: var(--radius-full);
     background: var(--c-primary);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
-    margin-top: -0.6rem;
+    font-size: 1.2rem;
+    margin-top: -2rem;
     box-shadow: 0 2px 12px rgba(255, 130, 64, 0.45);
+    color: white;
   }
 
   .mobileHighlight .mobileLabel {
     font-weight: 700;
+    color: var(--c-text);
+  }
+
+  .mobileActive.mobileHighlight .mobileLabel {
     color: var(--c-primary);
+  }
+  
+  .mobileActive.mobileHighlight .mobileIcon svg path {
+    fill: var(--c-surface) !important;
   }
 }

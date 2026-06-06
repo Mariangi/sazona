@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../api/client";
 import { useAuth } from "../hooks/useAuth";
-import type { SavedRecipe } from "@sasona/shared";
+import type { SavedRecipe, RecipeListItem } from "@sasona/shared";
 import AvatarUpload from "../components/profile/AvatarUpload";
 import ProfileForm from "../components/profile/ProfileForm";
 import ChangePasswordForm from "../components/profile/ChangePasswordForm";
@@ -14,14 +14,14 @@ import { NavLink } from "react-router-dom";
 export default function ProfilePage() {
   const { user, setUser } = useAuth();
   const [favorites, setFavorites] = useState<SavedRecipe[]>([]);
+  const [recipes, setRecipes] = useState<RecipeListItem[]>([]);
   const [showPopupPassword, setShowPopupPassword] = useState(false);
   const [showPopupEdit, setShowPopupEdit] = useState(false);
   const [showPopupClose, setShowPopupClose] = useState(false);
 
   useEffect(() => {
-    api.getSavedRecipes()
-      .then(setFavorites)
-      .catch(() => {});
+    api.getSavedRecipes().then(setFavorites).catch(() => {});
+    api.getRecipes().then(setRecipes).catch(() => {});
   }, []);
 
   async function handleAvatarUpload(base64: string) {
@@ -39,6 +39,40 @@ export default function ProfilePage() {
           />
           <h2>Chef {user?.username}</h2>
         </div>
+
+        {recipes.length > 0 && (
+          <section>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Mis recetas</h2>
+              <NavLink to="/recipes" className={styles.allLink}>
+                <span className={styles.all}>ver todas</span>
+              </NavLink>
+            </div>
+
+            <div className={styles.favorites}>
+              {recipes.slice(0, 3).map((recipe) => (
+                <NavLink
+                  to={`/recipes/${recipe.id}`}
+                  key={recipe.id}
+                  className={styles.favoriteCard}
+                >
+                  <div className={styles.favoriteImageWrapper}>
+                    {recipe.imageUrl ? (
+                      <img
+                        src={recipe.imageUrl}
+                        alt={recipe.name}
+                        className={styles.favoriteImage}
+                      />
+                    ) : (
+                      <div className={styles.favoritePlaceholder}>🍽️</div>
+                    )}
+                  </div>
+                  <span className={styles.favoriteTitle}>{recipe.name}</span>
+                </NavLink>
+              ))}
+            </div>
+          </section>
+        )}
 
         {favorites.length > 0 && (
           <section>

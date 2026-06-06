@@ -59,38 +59,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      <section className={styles.trending}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Descubrí algo nuevo</h2>
-          <button className={styles.seeAll} onClick={() => navigate('/recipes')}>Ver todo</button>
-        </div>
-        <div className={styles.trendingGrid}>
-          <div className={styles.trendingCard} onClick={() => navigate('/random-dinner')}>
-            <div className={styles.trendingVisual}>
-              <span className={styles.trendingEmoji}>🍕</span>
-            </div>
-            <p className={styles.trendingLabel}>Sorpresa culinaria</p>
-          </div>
-          <div className={styles.trendingCard} onClick={() => navigate('/recipes')}>
-            <div className={styles.trendingVisual}>
-              <span className={styles.trendingEmoji}>🌮</span>
-            </div>
-            <p className={styles.trendingLabel}>Tendencias</p>
-          </div>
-          <div className={styles.trendingCard} onClick={() => navigate('/groups')}>
-            <div className={styles.trendingVisual}>
-              <span className={styles.trendingEmoji}>👨‍👩‍👧‍👧</span>
-            </div>
-            <p className={styles.trendingLabel}>Cocina en grupo</p>
-          </div>
-          <div className={styles.trendingCard} onClick={() => navigate('/shopping-lists')}>
-            <div className={styles.trendingVisual}>
-              <span className={styles.trendingEmoji}>🛒</span>
-            </div>
-            <p className={styles.trendingLabel}>Listas de compra</p>
-          </div>
-        </div>
-      </section>
+  
     </div>
   )
 }

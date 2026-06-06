@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1780756149731,
+      "tag": "0000_elite_caretaker",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1780757204619,
+      "tag": "0001_smiling_inertia",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1780758675660,
+      "tag": "0002_late_proemial_gods",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1780760808410,
+      "tag": "0003_demonic_miracleman",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1780765193891,
+      "tag": "0004_slow_power_pack",
+      "breakpoints": true
+    }
+  ]
+}

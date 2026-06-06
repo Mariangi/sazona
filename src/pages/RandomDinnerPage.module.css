@@ -1,0 +1,268 @@
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.machine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.slotWindow {
+  background: linear-gradient(135deg, #1e1b4b, #312e81);
+  border: 3px solid #4f46e5;
+  border-radius: 16px;
+  padding: 1.5rem 2.5rem;
+  min-width: 320px;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 30px rgba(79, 70, 229, 0.3), inset 0 0 20px rgba(79, 70, 229, 0.1);
+}
+
+.slotText {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  text-align: center;
+  transition: transform 0.05s;
+}
+
+.spinning {
+  animation: slotShake 0.1s infinite;
+}
+
+@keyframes slotShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+.spinBtn {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  border: none;
+  padding: 1.25rem 3rem;
+  border-radius: 16px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(79, 70, 229, 0.4);
+  transition: all 0.2s;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(79, 70, 229, 0.4); transform: scale(1); }
+  50% { box-shadow: 0 4px 30px rgba(79, 70, 229, 0.6); transform: scale(1.03); }
+}
+
+.spinBtn:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 30px rgba(79, 70, 229, 0.5);
+}
+
+.spinBtn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  animation: none;
+}
+
+.result {
+  width: 100%;
+  margin-top: 2rem;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.resultCard {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.resultImage {
+  height: 220px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.resultImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.resultPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+}
+
+.resultName {
+  font-size: 1.5rem;
+  color: #111827;
+  margin: 1.25rem 1.5rem 0.5rem;
+}
+
+.resultMeta {
+  display: flex;
+  gap: 1.5rem;
+  margin: 0 1.5rem 1.5rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.section {
+  margin: 0 1.5rem 1.25rem;
+}
+
+.section h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 0.5rem;
+}
+
+.list {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+  line-height: 1.7;
+}
+
+.resultActions {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem 1.5rem;
+}
+
+.replayBtn {
+  flex: 1;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.replayBtn:hover {
+  background: #4338ca;
+}
+
+.allBtn {
+  flex: 1;
+  background: #f3f4f6;
+  color: #374151;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.allBtn:hover {
+  background: #e5e7eb;
+}
+
+.confettiContainer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.confetti {
+  position: absolute;
+  top: -20px;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #6b7280;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.empty h2 {
+  font-size: 1.3rem;
+  color: #111827;
+  margin: 0 0 0.5rem;
+}
+
+.empty p {
+  margin: 0 0 1.5rem;
+  font-size: 1rem;
+}
+
+.emptyBtn {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.emptyBtn:hover {
+  background: #4338ca;
+}

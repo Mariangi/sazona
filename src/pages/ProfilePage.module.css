@@ -1,0 +1,22 @@
+.container {
+  max-width: 600px;
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  color: #111827;
+  margin: 0 0 1.5rem;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}

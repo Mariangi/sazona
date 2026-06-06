@@ -1,0 +1,139 @@
+.container {
+  max-width: 600px;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  color: #6b7280;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+.backBtn {
+  background: none;
+  border: none;
+  color: #4f46e5;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 0;
+  text-align: left;
+}
+
+.backBtn:hover {
+  text-decoration: underline;
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  color: #111827;
+  margin: 0;
+}
+
+.meta {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.progressBar {
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: #22c55e;
+  border-radius: 3px;
+  transition: width 0.2s;
+}
+
+.empty {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: #6b7280;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.item:hover {
+  border-color: #4f46e5;
+}
+
+.done {
+  opacity: 0.6;
+  background: #f9fafb;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: #4f46e5;
+  cursor: pointer;
+}
+
+.itemInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.itemName {
+  font-size: 0.95rem;
+  color: #111827;
+}
+
+.done .itemName {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+
+.itemDetail {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.checkmark {
+  font-size: 1rem;
+  color: #22c55e;
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.done .checkmark {
+  opacity: 1;
+}

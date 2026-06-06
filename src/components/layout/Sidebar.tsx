@@ -1,8 +1,9 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import styles from './Sidebar.module.css'
+import { DiceIcon, GroupIcon, HomeIcon, ListToBuyIcon, SearchIcon } from '../ui/Icons'
 
-const navItems = [
+const desktopNav = [
   { to: '/dashboard', label: 'Inicio', icon: '🏠' },
   { to: '/recipes', label: 'Recetas', icon: '📖' },
   { to: '/fridge', label: 'Heladera', icon: '🧊' },
@@ -12,14 +13,22 @@ const navItems = [
   { to: '/random-dinner', label: 'Sorpresa', icon: '🎲' },
 ]
 
+const mobileNav = [
+  { to: '/dashboard', label: 'Inicio',  icon: <HomeIcon/> },
+  { to: '/discover', label: 'Descubrí', icon:<SearchIcon/> },
+  { to: '/random-dinner', label: 'Sorpresa', icon: <DiceIcon/> , highlight: true },
+  { to: '/groups', label: 'Familia', icon: <GroupIcon/> },
+  { to: '/shopping-lists', label: 'Compras', icon: <ListToBuyIcon/> },
+]
+
 export default function Sidebar() {
   const { user, setUser } = useAuth()
   const navigate = useNavigate()
 
   function handleLogout() {
+    if (!window.confirm('¿Estás seguro de que querés cerrar sesión?')) return
     localStorage.removeItem('token')
     setUser(null)
-    navigate('/login')
   }
 
   return (
@@ -32,7 +41,7 @@ export default function Sidebar() {
         </div>
 
         <nav className={styles.nav}>
-          {navItems.map(({ to, label, icon }) => (
+          {desktopNav.map(({ to, label, icon }) => (
             <NavLink
               key={to}
               to={to}
@@ -65,13 +74,13 @@ export default function Sidebar() {
       </aside>
 
       <nav className={styles.mobileNav}>
-        {navItems.map(({ to, label, icon }) => (
+        {mobileNav.map(({ to, label, icon, highlight }) => (
           <NavLink
             key={to}
             to={to}
             end={to === '/dashboard'}
             className={({ isActive }) =>
-              `${styles.mobileLink} ${isActive ? styles.mobileActive : ''}`
+              `${styles.mobileLink} ${isActive ? styles.mobileActive : ''} ${highlight ? styles.mobileHighlight : ''}`
             }
           >
             <span className={styles.mobileIcon}>{icon}</span>

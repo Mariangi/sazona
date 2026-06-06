@@ -2,14 +2,6 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import styles from './DashboardPage.module.css'
 
-const categories = [
-  { emoji: '🥗', label: 'Ensaladas', color: '#22c55e' },
-  { emoji: '🍝', label: 'Pastas', color: '#f59e0b' },
-  { emoji: '🥩', label: 'Carnes', color: '#ef4444' },
-  { emoji: '🐟', label: 'Pescados', color: '#3b82f6' },
-  { emoji: '🥘', label: 'Guisos', color: '#8b5cf6' },
-  { emoji: '🍰', label: 'Postres', color: '#ec4899' },
-]
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -18,37 +10,12 @@ export default function DashboardPage() {
   return (
     <div className={styles.container}>
       <section className={styles.hero}>
-        <h1 className={styles.greeting}>¡Hola, {user?.username?.split(' ')[0]}! 👋</h1>
+        <h1 className={styles.greeting}>¡Hola, {user?.username?.split(' ')[0]}!</h1>
         <p className={styles.question}>¿Qué tenés ganas de comer hoy?</p>
-        <div className={styles.searchBar}>
-          <span className={styles.searchIcon}>🔍</span>
-          <input
-            className={styles.searchInput}
-            placeholder="Buscá recetas, ingredientes..."
-            onFocus={() => navigate('/recipes')}
-          />
-        </div>
       </section>
 
-      <section className={styles.categories}>
-        <h2 className={styles.sectionTitle}>Categorías</h2>
-        <div className={styles.categoryScroll}>
-          {categories.map((cat) => (
-            <button
-              key={cat.label}
-              className={styles.categoryChip}
-              style={{ '--chip-color': cat.color } as React.CSSProperties}
-              onClick={() => navigate('/recipes')}
-            >
-              <span className={styles.categoryEmoji}>{cat.emoji}</span>
-              <span className={styles.categoryLabel}>{cat.label}</span>
-            </button>
-          ))}
-        </div>
-      </section>
 
       <section className={styles.actions}>
-        <h2 className={styles.sectionTitle}>Empezá acá</h2>
         <div className={styles.actionGrid}>
           <button className={styles.actionCard} onClick={() => navigate('/recipes/new')}>
             <div className={styles.actionIcon} style={{ background: 'linear-gradient(135deg, #FF8240, #e86a2a)' }}>

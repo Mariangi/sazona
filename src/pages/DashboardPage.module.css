@@ -13,10 +13,10 @@
 }
 
 .hero {
-  background: linear-gradient(135deg, #FF8240 0%, #e86a2a 100%);
+  /* background: linear-gradient(135deg, #FF8240 0%, #e86a2a 100%); */
   border-radius: var(--radius-xl);
   padding: 2rem 2rem 1.5rem;
-  color: white;
+  color: var(--c-text);
   position: relative;
   overflow: hidden;
 }

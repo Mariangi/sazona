@@ -11,7 +11,7 @@ export const Popup = ({ title, onClose, children }: PopupProps) => {
   return (
     <div className={styles.popupOverlay} onClick={onClose}>
       <div className={styles.popupContent} onClick={(e) => e.stopPropagation()}>
-        <h2>{title}</h2>
+        <h2 className={styles.title}>{title}</h2>
         {children}
       </div>
     </div>

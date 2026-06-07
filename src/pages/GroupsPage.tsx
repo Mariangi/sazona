@@ -117,7 +117,7 @@ export default function GroupsPage() {
 
       {groups.length === 0 ? (
         <div className={styles.empty}>
-          <div className={styles.emptyVisual}>👥</div>
+          {/* <div className={styles.emptyVisual}></div> */}
           <p className={styles.emptyText}>Creá un grupo familiar o unite a uno existente</p>
         </div>
       ) : (

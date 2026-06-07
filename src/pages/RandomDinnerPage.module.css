@@ -43,7 +43,7 @@
 }
 
 .slotWindow {
-  background: linear-gradient(135deg, #1a1a2e, #2d2d4e);
+  background: var(--c-surface);
   border: 3px solid var(--c-primary);
   border-radius: var(--radius-xl);
   padding: 1.5rem 2.5rem;
@@ -58,7 +58,7 @@
 .slotText {
   font-size: 1.5rem;
   font-weight: 700;
-  color: white;
+   color: var(--c-text);
   text-align: center;
   transition: transform 0.05s;
 }
@@ -85,6 +85,9 @@
   box-shadow: 0 4px 20px rgba(255,130,64,0.4);
   transition: all 0.2s;
   animation: pulse 2s infinite;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 @keyframes pulse {
@@ -167,6 +170,12 @@
   font-size: 0.9rem;
   color: var(--c-text-secondary);
   margin-bottom: 1.5rem;
+  
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
 }
 
 .resultSection {

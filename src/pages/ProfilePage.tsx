@@ -6,7 +6,7 @@ import AvatarUpload from "../components/profile/AvatarUpload";
 import ProfileForm from "../components/profile/ProfileForm";
 import ChangePasswordForm from "../components/profile/ChangePasswordForm";
 import styles from "./ProfilePage.module.css";
-import { ArrowRightIcon } from "../components/ui/Icons";
+import { ArrowRightIcon, CutleryIcon } from "../components/ui/Icons";
 import { Popup } from "../components/ui/Popup";
 import LogOut from "../components/Auth/LogOut";
 import { NavLink } from "react-router-dom";
@@ -64,7 +64,7 @@ export default function ProfilePage() {
                         className={styles.favoriteImage}
                       />
                     ) : (
-                      <div className={styles.favoritePlaceholder}>🍽️</div>
+                      <div className={styles.favoritePlaceholder}><CutleryIcon height="12" width="12" /></div>
                     )}
                   </div>
                   <span className={styles.favoriteTitle}>{recipe.name}</span>
@@ -98,7 +98,7 @@ export default function ProfilePage() {
                         className={styles.favoriteImage}
                       />
                     ) : (
-                      <div className={styles.favoritePlaceholder}>🍽️</div>
+                      <div className={styles.favoritePlaceholder}><CutleryIcon height="12" width="12" /></div>
                     )}
                   </div>
                   <span className={styles.favoriteTitle}>{recipe.name}</span>

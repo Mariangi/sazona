@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import type { SavedRecipe } from '@sasona/shared'
 import { api } from '../api/client'
 import styles from './SavedRecipesPage.module.css'
+import { ClockIcon, CutleryIcon, PeopleIcon, SavedIcon, SaveIcon } from '../components/ui/Icons'
 
 export default function SavedRecipesPage() {
   const navigate = useNavigate()
@@ -29,7 +30,7 @@ export default function SavedRecipesPage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h2 className={styles.pageTitle}>🔖 Guardados</h2>
+        <h2 className={styles.pageTitle}><SavedIcon/> Guardados</h2>
         <p className={styles.subtitle}>Recetas que guardaste para ver más tarde</p>
       </div>
 
@@ -37,7 +38,7 @@ export default function SavedRecipesPage() {
 
       {recipes.length === 0 ? (
         <div className={styles.empty}>
-          <div className={styles.emptyVisual}>🔖</div>
+          <div className={styles.emptyVisual}><SaveIcon /></div>
           <p className={styles.emptyText}>Aún no tenés recetas guardadas</p>
           <p className={styles.emptyHint}>Desde el detalle de una receta podés guardarla</p>
         </div>
@@ -50,14 +51,14 @@ export default function SavedRecipesPage() {
                   {r.imageUrl ? (
                     <img src={r.imageUrl} alt={r.name} className={styles.image} />
                   ) : (
-                    <div className={styles.placeholder}>🍽️</div>
+                    <div className={styles.placeholder}><CutleryIcon height='12' width='12'/></div>
                   )}
                 </div>
                 <div className={styles.body}>
                   <h3 className={styles.name}>{r.name}</h3>
                   <div className={styles.meta}>
-                    <span>👥 {r.servings}</span>
-                    <span>⏱️ {r.prepTime}min</span>
+                    <span><PeopleIcon height='12' width='12'/> {r.servings}</span>
+                    <span><ClockIcon height='12' width='12'/> {r.prepTime}min</span>
                   </div>
                   <div className={styles.counts}>
                     <span>{r.ingredientCount} ingredientes</span>

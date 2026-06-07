@@ -3,13 +3,14 @@ import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { mkdirSync, existsSync } from 'fs';
+import { mkdirSync, existsSync, readFileSync } from 'fs';
 import { authRoutes } from './routes/auth.js';
 import { recipeRoutes } from './routes/recipes.js';
 import { groupRoutes } from './routes/groups.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOADS_DIR = join(__dirname, '..', 'uploads');
+const DIST_DIR = join(__dirname, '..', '..', '..', 'dist');
 
 if (!existsSync(UPLOADS_DIR)) {
   mkdirSync(UPLOADS_DIR, { recursive: true });
@@ -31,6 +32,27 @@ await app.register(fastifyStatic, {
 authRoutes(app);
 recipeRoutes(app);
 groupRoutes(app);
+
+if (existsSync(DIST_DIR)) {
+  await app.register(fastifyStatic, {
+    root: DIST_DIR,
+    prefix: '/',
+    decorateReply: false,
+  });
+
+  app.setNotFoundHandler((_request, reply) => {
+    try {
+      const html = readFileSync(join(DIST_DIR, 'index.html'), 'utf-8');
+      reply.type('text/html').send(html);
+    } catch {
+      reply.status(404).send({ message: 'Not found', statusCode: 404 });
+    }
+  });
+
+  console.log('Frontend build detectado, sirviendo archivos estáticos');
+} else {
+  console.log('Modo desarrollo: no se sirve frontend estático');
+}
 
 const start = async () => {
   try {

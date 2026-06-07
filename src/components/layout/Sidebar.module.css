@@ -41,23 +41,37 @@
   text-decoration: none;
   transition: all 0.2s;
   font-weight: 500;
+
+  svg path {
+    transition: all 0.2s;
+  }
+
 }
 
 .link:hover {
   background: var(--c-primary-light);
   color: var(--c-primary);
+
+  svg path {
+    fill: var(--c-primary);
+  }
 }
 
 .active {
   background: var(--c-primary-light);
   color: var(--c-primary);
   font-weight: 600;
+
+  svg path {
+    fill: var(--c-primary);
+  }
 }
 
 .icon {
-  font-size: 1.15rem;
   width: 1.5rem;
-  text-align: center;
+display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .label {

@@ -61,7 +61,7 @@ export default function GroupsPage() {
     <div className={styles.container}>
       <div className={styles.header}>
         <div>
-          <h2 className={styles.pageTitle}>👥 Mis grupos</h2>
+          <h2 className={styles.pageTitle}>Mis grupos</h2>
           <p className={styles.subtitle}>Cociná y decidí en familia</p>
         </div>
         <div className={styles.headerActions}>
@@ -69,7 +69,7 @@ export default function GroupsPage() {
             Unirse
           </Button>
           <Button onClick={() => setShowCreate(true)}>
-            + Crear
+            +  Crear
           </Button>
         </div>
       </div>

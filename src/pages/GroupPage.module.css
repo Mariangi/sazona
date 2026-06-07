@@ -1,16 +1,16 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 4rem);
-  max-width: 720px;
-  margin: -2rem auto;
+  height: 100%;
+  /* max-width: 720px; */
+  /* margin: -2rem auto; */
   width: 100%;
 }
 
 @media (max-width: 768px) {
   .container {
-    height: calc(100vh - 4rem - 3.5rem);
-    margin: -1.25rem -1rem -2rem;
+    /* height: calc(100vh - 4rem - 3.5rem); */
+    /* margin: -1.25rem -1rem -2rem; */
     max-width: 100%;
   }
 }
@@ -41,6 +41,7 @@
   background: var(--c-surface);
   border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
+  border-radius: var(--radius-md);
 }
 
 @media (max-width: 768px) {
@@ -236,7 +237,12 @@
 .acceptedBadge {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #16a34a;
+  color: var(--c-success);
+  text-align: center;
+  background-color: #10b9812f;
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--c-success);
 }
 
 .inputArea {
@@ -292,10 +298,14 @@
 }
 
 .pickerCancel {
-  padding: 0.4rem;
   border: none;
   background: none;
   color: var(--c-error);
+  text-align: center;
+  background-color: #ef44442f;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--c-error);
   font-size: 0.8rem;
   cursor: pointer;
   margin-top: 0.3rem;

@@ -56,7 +56,7 @@ export default function ShoppingListsPage() {
     <div className={styles.container}>
       <div className={styles.header}>
         <div>
-          <h2 className={styles.pageTitle}>🛒 Listas de compra</h2>
+          <h2 className={styles.pageTitle}>Listas de compra</h2>
           <p className={styles.subtitle}>Organizá tus compras del super</p>
         </div>
         <Button onClick={() => setShowCreate(true)}>+ Nueva lista</Button>
@@ -85,7 +85,7 @@ export default function ShoppingListsPage() {
 
       {lists.length === 0 ? (
         <div className={styles.empty}>
-          <div className={styles.emptyVisual}>🛒</div>
+          {/* <div className={styles.emptyVisual}>🛒</div> */}
           <p className={styles.emptyText}>Creá listas para tus compras o genera una desde una receta</p>
         </div>
       ) : (

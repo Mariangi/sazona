@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import type { ShoppingListDetail as ShoppingListDetailType } from '@sasona/shared'
 import { api } from '../api/client'
 import styles from './ShoppingListDetail.module.css'
+import { ArrowLeftIcon } from '../components/ui/Icons'
 
 export default function ShoppingListDetail() {
   const { id } = useParams()
@@ -42,7 +43,7 @@ export default function ShoppingListDetail() {
     <div className={styles.container}>
       <div className={styles.header}>
         <button className={styles.backBtn} onClick={() => navigate('/shopping-lists')}>
-          ← Listas
+          <ArrowLeftIcon height='12' width='12' fill='var(--c-primary)'/> Listas
         </button>
         <h2 className={styles.pageTitle}>{list.name}</h2>
         <span className={styles.meta}>
@@ -60,7 +61,7 @@ export default function ShoppingListDetail() {
 
       {list.items.length === 0 ? (
         <div className={styles.empty}>
-          <div className={styles.emptyVisual}>🛒</div>
+          {/* <div className={styles.emptyVisual}>🛒</div> */}
           <p>No hay items en esta lista</p>
         </div>
       ) : (

@@ -18,7 +18,14 @@ export default function MyRecipesPage() {
       .finally(() => setLoading(false))
   }, [])
 
-  if (loading) return <div className={styles.center}>Cargando recetas...</div>
+  if (loading) return (
+    <div className={styles.container}>
+      <div className={styles.skeletonHeader} />
+      <div className={styles.grid}>
+        {[1,2,3,4].map(i => <div key={i} className={styles.skeletonCard} />)}
+      </div>
+    </div>
+  )
 
   return (
     <div className={styles.container}>
@@ -27,13 +34,13 @@ export default function MyRecipesPage() {
           <h2 className={styles.title}>Mis recetas</h2>
           <p className={styles.subtitle}>
             {recipes.length === 0
-              ? 'Todavía no tienes recetas'
-              : `Tienes ${recipes.length} receta${recipes.length === 1 ? '' : 's'} guardada${recipes.length === 1 ? '' : 's'}`
+              ? 'Todavía no tenés recetas'
+              : `Tenés ${recipes.length} receta${recipes.length === 1 ? '' : 's'}`
             }
           </p>
         </div>
         <button className={styles.addBtn} onClick={() => navigate('/recipes/new')}>
-          + Nueva receta
+          + Nueva
         </button>
       </div>
 
@@ -41,8 +48,8 @@ export default function MyRecipesPage() {
 
       {recipes.length === 0 && !loading && !error && (
         <div className={styles.empty}>
-          <span className={styles.emptyIcon}>🍳</span>
-          <p>Crea tu primera receta para empezar</p>
+          <div className={styles.emptyVisual}>🍳</div>
+          <p className={styles.emptyText}>Crea tu primera receta para empezar</p>
           <button className={styles.emptyBtn} onClick={() => navigate('/recipes/new')}>
             Crear receta
           </button>

@@ -1,14 +1,26 @@
-import { Avatar } from "../profile/Avatar";
-import { Logo } from "../ui/Icons";
+import { useNavigate, NavLink } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 import styles from "./Header.module.css";
+import { Logo } from "../ui/Icons";
 
 export const Header = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
-        <Logo height="70"/>
+        <NavLink to="/dashboard">
+          <Logo height="45" />
+        </NavLink>
       </div>
-      <Avatar />
+      <button className={styles.avatarBtn} onClick={() => navigate("/profile")}>
+        {user?.avatarUrl ? (
+          <img src={user.avatarUrl} alt="" />
+        ) : (
+          user?.username?.[0]?.toUpperCase() || "?"
+        )}
+      </button>
     </header>
   );
 };

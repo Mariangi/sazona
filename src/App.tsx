@@ -6,6 +6,7 @@ import CreateRecipePage from './pages/CreateRecipePage'
 import MyRecipesPage from './pages/MyRecipesPage'
 import RecipeDetailPage from './pages/RecipeDetailPage'
 import ProfilePage from './pages/ProfilePage'
+import DiscoverPage from './pages/DiscoverPage'
 import RandomDinnerPage from './pages/RandomDinnerPage'
 import FridgePage from './pages/FridgePage'
 import SavedRecipesPage from './pages/SavedRecipesPage'
@@ -60,6 +61,10 @@ export default function App() {
 
       <Route path="/saved" element={<ProtectedRoute />}>
         <Route index element={<SavedRecipesPage />} />
+      </Route>
+
+      <Route path="/discover" element={<ProtectedRoute />}>
+        <Route index element={<DiscoverPage />} />
       </Route>
 
       <Route path="/recipes/:id" element={<ProtectedRoute />}>

@@ -1,15 +1,17 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 4rem);
-  max-width: 680px;
-  margin: -2rem;
+  height: 100%;
+  /* max-width: 720px; */
+  /* margin: -2rem auto; */
+  width: 100%;
 }
 
 @media (max-width: 768px) {
   .container {
-    height: calc(100vh - 4rem - 3.5rem);
-    margin: -1.5rem -1rem -2.5rem;
+    /* height: calc(100vh - 4rem - 3.5rem); */
+    /* margin: -1.25rem -1rem -2rem; */
+    max-width: 100%;
   }
 }
 
@@ -18,36 +20,63 @@
   align-items: center;
   justify-content: center;
   height: 50vh;
-  color: #6b7280;
+  color: var(--c-text-secondary);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--c-border);
+  border-top-color: var(--c-primary);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .header {
   padding: 1rem 2rem;
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
+  border-radius: var(--radius-md);
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+  }
 }
 
 .backBtn {
   background: none;
   border: none;
-  color: #4f46e5;
+  color: var(--c-primary);
   font-size: 0.9rem;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 0.5rem;
-  padding: 0;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-full);
+  transition: background 0.2s;
+}
+
+.backBtn:hover {
+  background: var(--c-primary-light);
 }
 
 .groupName {
   font-size: 1.2rem;
-  color: #111827;
+  font-weight: 700;
+  color: var(--c-text);
   margin: 0;
 }
 
 .groupCode {
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: var(--c-text-tertiary);
 }
 
 .chat {
@@ -59,16 +88,28 @@
   gap: 1rem;
 }
 
+@media (max-width: 768px) {
+  .chat {
+    padding: 1rem;
+  }
+}
+
 .emptyChat {
   text-align: center;
   padding: 4rem 1rem;
-  color: #9ca3af;
+  color: var(--c-text-tertiary);
 }
 
-.emptyChat span {
-  font-size: 3rem;
-  display: block;
-  margin-bottom: 0.5rem;
+.emptyVisual {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  background: var(--c-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 0.75rem;
 }
 
 .bubbleWrapper {
@@ -82,21 +123,20 @@
 
 .bubble {
   max-width: 75%;
-  background: white;
-  border-radius: 16px;
+  background: var(--c-surface);
+  border-radius: var(--radius-lg);
   padding: 0.85rem 1rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  border: 1px solid #e5e7eb;
+  box-shadow: var(--shadow-sm);
+  border: 1.5px solid var(--c-border);
 }
 
 .own .bubble {
-  background: #eef2ff;
-  border-color: #c7d2fe;
+  background: var(--c-primary-light);
+  border-color: var(--c-primary);
 }
 
 .proposal {
-  border-left: 3px solid #4f46e5;
-  background: #fafaff;
+  border-left: 3px solid var(--c-primary);
 }
 
 .bubbleHeader {
@@ -109,18 +149,18 @@
 .bubbleUser {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #4f46e5;
+  color: var(--c-primary);
 }
 
 .bubbleTime {
   font-size: 0.7rem;
-  color: #9ca3af;
+  color: var(--c-text-tertiary);
 }
 
 .bubbleText {
   margin: 0;
   font-size: 0.9rem;
-  color: #374151;
+  color: var(--c-text);
   line-height: 1.4;
 }
 
@@ -134,7 +174,7 @@
 .proposalRecipe {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--c-text);
 }
 
 .votes {
@@ -151,16 +191,16 @@
 .voteBtn {
   flex: 1;
   padding: 0.4rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background: white;
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface);
   font-size: 0.8rem;
   cursor: pointer;
   transition: all 0.15s;
 }
 
 .voteBtn:hover {
-  border-color: #4f46e5;
+  border-color: var(--c-primary);
 }
 
 .votedSi {
@@ -180,55 +220,72 @@
 
 .closeVoteBtn {
   padding: 0.4rem;
-  border: 1px solid #4f46e5;
-  background: white;
-  color: #4f46e5;
-  border-radius: 8px;
+  border: 1.5px solid var(--c-primary);
+  background: var(--c-surface);
+  color: var(--c-primary);
+  border-radius: var(--radius-sm);
   font-size: 0.8rem;
   cursor: pointer;
   transition: all 0.15s;
+  font-weight: 500;
 }
 
 .closeVoteBtn:hover {
-  background: #eef2ff;
+  background: var(--c-primary-light);
 }
 
 .acceptedBadge {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #16a34a;
+  color: var(--c-success);
+  text-align: center;
+  background-color: #10b9812f;
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--c-success);
 }
 
 .inputArea {
   flex-shrink: 0;
-  border-top: 1px solid #e5e7eb;
-  background: white;
+  border-top: 1px solid var(--c-border);
+  background: var(--c-surface);
   padding: 1rem 2rem;
 }
 
+@media (max-width: 768px) {
+  .inputArea {
+    padding: 0.75rem 1rem;
+  }
+}
+
 .recipePicker {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
   margin-bottom: 0.75rem;
   padding: 0.75rem;
-  background: #f9fafb;
-  border-radius: 12px;
-  max-height: 200px;
-  overflow-y: auto;
+  background: var(--c-bg);
+  border-radius: var(--radius-md);
 }
 
 .pickerTitle {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--c-text-secondary);
   font-weight: 500;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.pickerScroll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  max-height: 160px;
+  overflow-y: auto;
 }
 
 .pickerItem {
   padding: 0.5rem 0.75rem;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--radius-sm);
   font-size: 0.85rem;
   cursor: pointer;
   text-align: left;
@@ -236,17 +293,23 @@
 }
 
 .pickerItem:hover {
-  border-color: #4f46e5;
-  background: #eef2ff;
+  border-color: var(--c-primary);
+  background: var(--c-primary-light);
 }
 
 .pickerCancel {
-  padding: 0.4rem;
   border: none;
   background: none;
-  color: #ef4444;
+  color: var(--c-error);
+  text-align: center;
+  background-color: #ef44442f;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--c-error);
   font-size: 0.8rem;
   cursor: pointer;
+  margin-top: 0.3rem;
+  font-weight: 500;
 }
 
 .inputRow {
@@ -257,51 +320,58 @@
 .attachBtn {
   width: 44px;
   height: 44px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  background: white;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--c-border);
+  background: var(--c-surface);
   font-size: 1.2rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: all 0.2s;
 }
 
 .attachBtn:hover {
-  border-color: #4f46e5;
+  border-color: var(--c-primary);
+  background: var(--c-primary-light);
 }
 
 .chatInput {
   flex: 1;
-  padding: 0.7rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--radius-md);
   font-size: 0.95rem;
   outline: none;
+  background: var(--c-surface);
+  color: var(--c-text);
+  transition: border-color 0.2s;
 }
 
 .chatInput:focus {
-  border-color: #4f46e5;
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 3px rgba(255,130,64,0.1);
 }
 
 .sendBtn {
-  padding: 0.7rem 1.2rem;
-  background: #4f46e5;
+  padding: 0.75rem 1.25rem;
+  background: var(--c-primary);
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.sendBtn:hover:not(:disabled) {
+  background: var(--c-primary-hover);
 }
 
 .sendBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.sendBtn:hover:not(:disabled) {
-  background: #4338ca;
 }

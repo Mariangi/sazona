@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import type { ShoppingList } from '@sasona/shared'
 import { api } from '../api/client'
 import Button from '../components/ui/Button'
+import { Popup } from '../components/ui/Popup'
 import styles from './ShoppingListsPage.module.css'
 
 export default function ShoppingListsPage() {
@@ -13,7 +14,7 @@ export default function ShoppingListsPage() {
   const [name, setName] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
-  const [deleting, setDeleting] = useState<number | null>(null)
+  const [showDeletePopup, setShowDeletePopup] = useState<number | null>(null)
 
   useEffect(() => {
     api.getShoppingLists()
@@ -39,23 +40,25 @@ export default function ShoppingListsPage() {
     }
   }
 
-  async function handleDelete(id: number) {
-    if (!confirm('¿Eliminar lista permanentemente?')) return
-    setDeleting(id)
+  async function handleDeleteConfirmed() {
+    if (showDeletePopup === null) return
+    const id = showDeletePopup
+    setShowDeletePopup(null)
     try {
       await api.deleteShoppingList(id)
       setLists(prev => prev.filter(l => l.id !== id))
-    } catch {} finally {
-      setDeleting(null)
-    }
+    } catch {}
   }
 
-  if (loading) return <div className={styles.center}>Cargando...</div>
+  if (loading) return <div className={styles.center}><div className={styles.spinner} /></div>
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h2 className={styles.pageTitle}>🛒 Listas de compra</h2>
+        <div>
+          <h2 className={styles.pageTitle}>Listas de compra</h2>
+          <p className={styles.subtitle}>Organizá tus compras del super</p>
+        </div>
         <Button onClick={() => setShowCreate(true)}>+ Nueva lista</Button>
       </div>
 
@@ -82,8 +85,8 @@ export default function ShoppingListsPage() {
 
       {lists.length === 0 ? (
         <div className={styles.empty}>
-          <span className={styles.emptyIcon}>🛒</span>
-          <p>Crea listas para tus compras o genera una desde una receta</p>
+          {/* <div className={styles.emptyVisual}>🛒</div> */}
+          <p className={styles.emptyText}>Creá listas para tus compras o genera una desde una receta</p>
         </div>
       ) : (
         <div className={styles.list}>
@@ -102,13 +105,25 @@ export default function ShoppingListsPage() {
               </div>
               <button
                 className={styles.deleteBtn}
-                onClick={(e) => { e.stopPropagation(); handleDelete(l.id) }}
-                disabled={deleting === l.id}
+                onClick={(e) => { e.stopPropagation(); setShowDeletePopup(l.id) }}
                 title="Eliminar"
               >✕</button>
             </div>
           ))}
         </div>
+      )}
+      {showDeletePopup !== null && (
+        <Popup title="Eliminar lista" onClose={() => setShowDeletePopup(null)}>
+          <p style={{ margin: '0 0 1.5rem', color: 'var(--c-text-secondary)' }}>
+            ¿Eliminar lista permanentemente?
+          </p>
+          <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+            <Button variant="secondary" onClick={() => setShowDeletePopup(null)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleDeleteConfirmed}>Eliminar</Button>
+          </div>
+        </Popup>
       )}
     </div>
   )

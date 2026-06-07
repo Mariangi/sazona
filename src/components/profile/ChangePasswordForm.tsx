@@ -38,7 +38,6 @@ export default function ChangePasswordForm() {
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      <h3 className={styles.title}>Cambiar contraseña</h3>
 
       {error && <div className={styles.bannerError}>{error}</div>}
       {success && <div className={styles.bannerSuccess}>Contraseña actualizada correctamente</div>}

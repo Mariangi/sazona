@@ -7,23 +7,25 @@
 .label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--c-text);
 }
 
 .dropzone {
-  border: 2px dashed #d1d5db;
-  border-radius: 12px;
+  border: 2px dashed var(--c-border);
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
   min-height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  background: var(--c-bg);
 }
 
 .dropzone:hover {
-  border-color: #4f46e5;
+  border-color: var(--c-primary);
+  background: var(--c-primary-light);
 }
 
 .preview {
@@ -44,7 +46,7 @@
   right: 8px;
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   border: none;
   background: rgba(0, 0, 0, 0.6);
   color: white;
@@ -53,6 +55,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background 0.2s;
+}
+
+.removeBtn:hover {
+  background: rgba(239, 68, 68, 0.8);
 }
 
 .placeholder {
@@ -61,12 +68,19 @@
   align-items: center;
   gap: 0.5rem;
   padding: 2rem;
-  color: #9ca3af;
+  color: var(--c-text-tertiary);
 }
 
 .placeholder span {
   font-size: 2rem;
   font-weight: 300;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--c-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .placeholder p {

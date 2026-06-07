@@ -7,28 +7,38 @@
 .label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--c-text);
 }
 
 .input {
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--radius-md);
   font-size: 1rem;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
   outline: none;
+  background: var(--c-surface);
+  color: var(--c-text);
+}
+
+.input::placeholder {
+  color: var(--c-text-tertiary);
 }
 
 .input:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 3px rgba(255,130,64,0.15);
 }
 
 .inputError {
-  border-color: #ef4444;
+  border-color: var(--c-error);
+}
+
+.inputError:focus {
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.15);
 }
 
 .error {
   font-size: 0.8rem;
-  color: #ef4444;
+  color: var(--c-error);
 }

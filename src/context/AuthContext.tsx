@@ -6,12 +6,14 @@ interface AuthContextType {
   user: UserResponse | null
   loading: boolean
   setUser: (user: UserResponse | null) => void
+  logout: () => void
 }
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   setUser: () => {},
+  logout: () => {},
 })
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -33,8 +35,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => setLoading(false))
   }, [])
 
+  function logout() {
+    localStorage.removeItem('token')
+    setUser(null)
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, setUser }}>
+    <AuthContext.Provider value={{ user, loading, setUser, logout }}>
       {children}
     </AuthContext.Provider>
   )

@@ -1,95 +1,82 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import styles from './Sidebar.module.css'
-import { HomeIcon } from '../ui/Icons'
+import { BookIcon, DiceIcon, FridgeIcon, GroupIcon, HomeIcon, ListToBuyIcon, Logo, SaveIcon, SearchIcon } from '../ui/Icons'
+
+const desktopNav = [
+  { to: '/dashboard', label: 'Inicio', icon: <HomeIcon  fill='var(--c-text-secondary)'/> },
+  { to: '/recipes', label: 'Recetas', icon: <BookIcon fill='var(--c-text-secondary)'/> },
+  { to: '/fridge', label: 'Heladera', icon: <FridgeIcon fill='var(--c-text-secondary)'/> },
+  { to: '/saved', label: 'Guardados', icon: <SaveIcon fill='var(--c-text-secondary)'/>   },
+  { to: '/shopping-lists', label: 'Compras', icon: <ListToBuyIcon  fill='var(--c-text-secondary)' /> },
+  { to: '/groups', label: 'Grupos', icon: <GroupIcon  fill='var(--c-text-secondary)'/> },
+  { to: '/random-dinner', label: 'Sorpresa', icon: <DiceIcon  fill='var(--c-text-secondary)'/> },
+]
+
+const mobileNav = [
+  { to: '/dashboard', label: 'Inicio',  icon: <HomeIcon/> },
+  { to: '/discover', label: 'Descubrí', icon:<SearchIcon/> },
+  { to: '/random-dinner', label: 'Sorpresa', icon: <DiceIcon/> , highlight: true },
+  { to: '/groups', label: 'Familia', icon: <GroupIcon/> },
+  { to: '/shopping-lists', label: 'Compras', icon: <ListToBuyIcon/> },
+]
 
 export default function Sidebar() {
   const { user, setUser } = useAuth()
   const navigate = useNavigate()
 
-  function handleLogout() {
-    localStorage.removeItem('token')
-    setUser(null)
-    navigate('/login')
-  }
-
   return (
-    <aside className={styles.sidebar}>
-      <div className={styles.logo}>Sasona</div>
+    <>
+      <aside className={styles.sidebar}>
+        <div className={styles.logo} onClick={() => navigate('/dashboard')}>
+          <Logo />
+        </div>
 
-      <nav className={styles.nav}>
-        <NavLink to="/dashboard" className={({ isActive }) =>
-          `${styles.link} ${isActive ? styles.active : ''}`
-        }>
-          <span className={styles.icon}><HomeIcon /></span>
-          home
-        </NavLink>
-{/* 
-        <NavLink to="/recipes" className={({ isActive }) =>
-          `${styles.link} ${isActive ? styles.active : ''}`
-        }>
-          <span className={styles.icon}>📋</span>
-          Mis recetas
-        </NavLink> */}
+        <nav className={styles.nav}>
+          {desktopNav.map(({ to, label, icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={to === '/dashboard'}
+              className={({ isActive }) =>
+                `${styles.link} ${isActive ? styles.active : ''}`
+              }
+            >
+              <span className={styles.icon}>{icon}</span>
+              <span className={styles.label}>{label}</span>
+            </NavLink>
+          ))}
+        </nav>
 
-        {/* <NavLink to="/recipes/new" className={({ isActive }) =>
-          `${styles.link} ${isActive ? styles.active : ''}`
-        }>
-          <span className={styles.icon}>➕</span>
-          Nueva receta
-        </NavLink> */}
+        <div className={styles.footer}>
+          <button className={styles.userBtn} onClick={() => navigate('/profile')}>
+            <span className={styles.avatar}>
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt="" className={styles.avatarImg} />
+              ) : (
+                user?.username?.[0]?.toUpperCase() || '?'
+              )}
+            </span>
+            <span className={styles.username}>{user?.username}</span>
+          </button>
+        </div>
+      </aside>
 
-        {/* <NavLink to="/saved" className={({ isActive }) =>
-          `${styles.link} ${isActive ? styles.active : ''}`
-        }>
-          <span className={styles.icon}>🔖</span>
-          Guardados
-        </NavLink> */}
-
-        <NavLink to="/fridge" className={({ isActive }) =>
-          `${styles.link} ${isActive ? styles.active : ''}`
-        }>
-          <span className={styles.icon}>🧊</span>
-          Mi heladera
-        </NavLink>
-
-        <NavLink to="/shopping-lists" className={({ isActive }) =>
-          `${styles.link} ${isActive ? styles.active : ''}`
-        }>
-          <span className={styles.icon}>🛒</span>
-          Listas de compra
-        </NavLink>
-
-        <NavLink to="/groups" className={({ isActive }) =>
-          `${styles.link} ${isActive ? styles.active : ''}`
-        }>
-          <span className={styles.icon}>👨‍👩‍👧‍👧</span>
-          Mis grupos
-        </NavLink>
-
-        {/* <NavLink to="/random-dinner" className={({ isActive }) =>
-          `${styles.link} ${isActive ? styles.active : ''}`
-        }>
-          <span className={styles.icon}>🎲</span>
-          ¿Qué cenamos hoy?
-        </NavLink> */}
+      <nav className={styles.mobileNav}>
+        {mobileNav.map(({ to, label, icon, highlight }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={to === '/dashboard'}
+            className={({ isActive }) =>
+              `${styles.mobileLink} ${isActive ? styles.mobileActive : ''} ${highlight ? styles.mobileHighlight : ''}`
+            }
+          >
+            <span className={styles.mobileIcon}>{icon}</span>
+            <span className={styles.mobileLabel}>{label}</span>
+          </NavLink>
+        ))}
       </nav>
-
-      <div className={styles.footer}>
-        <button className={styles.userBtn} onClick={() => navigate('/profile')}>
-          <span className={styles.avatar}>
-            {user?.avatarUrl ? (
-              <img src={user.avatarUrl} alt="" className={styles.avatarImg} />
-            ) : (
-              user?.username[0].toUpperCase()
-            )}
-          </span>
-          <span className={styles.username}>{user?.username}</span>
-        </button>
-        <button className={styles.logoutBtn} onClick={handleLogout}>
-          🚪 Cerrar sesión
-        </button>
-      </div>
-    </aside>
+    </>
   )
 }

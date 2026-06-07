@@ -19,7 +19,7 @@ export default function Button({
       disabled={disabled || isLoading}
       {...props}
     >
-      {isLoading ? 'Cargando...' : children}
+      {isLoading ? <span className={styles.spinner} /> : children}
     </button>
   )
 }

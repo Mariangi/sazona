@@ -55,18 +55,21 @@ export default function GroupsPage() {
     }
   }
 
-  if (loading) return <div className={styles.center}>Cargando...</div>
+  if (loading) return <div className={styles.center}><div className={styles.spinner} /></div>
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h2 className={styles.pageTitle}>👨‍👩‍👧‍👧 Mis grupos</h2>
+        <div>
+          <h2 className={styles.pageTitle}>Mis grupos</h2>
+          <p className={styles.subtitle}>Cociná y decidí en familia</p>
+        </div>
         <div className={styles.headerActions}>
           <Button variant="secondary" onClick={() => setShowJoin(true)}>
             Unirse
           </Button>
           <Button onClick={() => setShowCreate(true)}>
-            + Crear grupo
+            +  Crear
           </Button>
         </div>
       </div>
@@ -96,7 +99,7 @@ export default function GroupsPage() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <h3>Unirse a un grupo</h3>
-            <p className={styles.modalHint}>Ingresa el código de invitación</p>
+            <p className={styles.modalHint}>Ingresá el código de invitación</p>
             <input
               className={styles.modalInput}
               placeholder="Ej: ABC12345"
@@ -114,8 +117,8 @@ export default function GroupsPage() {
 
       {groups.length === 0 ? (
         <div className={styles.empty}>
-          <span className={styles.emptyIcon}>👨‍👩‍👧‍👧</span>
-          <p>Crea un grupo familiar o únete a uno existente</p>
+          {/* <div className={styles.emptyVisual}></div> */}
+          <p className={styles.emptyText}>Creá un grupo familiar o unite a uno existente</p>
         </div>
       ) : (
         <div className={styles.list}>
@@ -125,7 +128,7 @@ export default function GroupsPage() {
                 <strong className={styles.groupName}>{g.name}</strong>
                 <span className={styles.groupMeta}>{g.memberCount} miembros</span>
               </div>
-              <span className={styles.groupCode}>Código: {g.inviteCode}</span>
+              <span className={styles.groupCode}>{g.inviteCode}</span>
             </div>
           ))}
         </div>

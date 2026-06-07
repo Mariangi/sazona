@@ -24,6 +24,11 @@
   z-index: 1;
   text-align: center;
   padding: 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .heroLogo {
@@ -33,7 +38,7 @@
 
 .tagline {
   color: white;
-  font-size: 1.75rem;
+  font-size: 1rem;
   font-weight: 500;
   opacity: 0.9;
   letter-spacing: -0.02em;
@@ -91,7 +96,7 @@
   }
 
   .tagline {
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
 
   .formPanel {

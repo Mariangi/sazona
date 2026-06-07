@@ -5,6 +5,7 @@ import { BookIcon, DiceIcon, FridgeIcon, GroupIcon, HomeIcon, ListToBuyIcon, Log
 
 const desktopNav = [
   { to: '/dashboard', label: 'Inicio', icon: <HomeIcon  fill='var(--c-text-secondary)'/> },
+    { to: '/discover', label: 'Descubrí', icon:<SearchIcon fill='var(--c-text-secondary)' /> },
   { to: '/recipes', label: 'Recetas', icon: <BookIcon fill='var(--c-text-secondary)'/> },
   { to: '/fridge', label: 'Heladera', icon: <FridgeIcon fill='var(--c-text-secondary)'/> },
   { to: '/saved', label: 'Guardados', icon: <SaveIcon fill='var(--c-text-secondary)'/>   },
@@ -29,7 +30,7 @@ export default function Sidebar() {
     <>
       <aside className={styles.sidebar}>
         <div className={styles.logo} onClick={() => navigate('/dashboard')}>
-          <Logo />
+          <Logo width='100%' />
         </div>
 
         <nav className={styles.nav}>

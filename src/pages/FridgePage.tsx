@@ -43,7 +43,7 @@ export default function FridgePage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h2 className={styles.pageTitle}>🧊 Mi heladera</h2>
+        <h2 className={styles.pageTitle}>Mi heladera</h2>
         <p className={styles.subtitle}>
           Ingresá los ingredientes que tenés y te sugerimos recetas
         </p>

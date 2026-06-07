@@ -1,5 +1,6 @@
 .sidebar {
-  width: 260px;
+  width: 100%;
+  max-width: 350px;
   min-height: 100vh;
   background: var(--c-surface);
   border-right: 1px solid var(--c-border);
@@ -16,11 +17,7 @@
   padding: 0 0.75rem;
   margin-bottom: 2rem;
   cursor: pointer;
-}
-
-.logo svg {
-  max-width: 120px;
-  height: auto;
+  width: 100%;
 }
 
 .nav {
@@ -45,7 +42,6 @@
   svg path {
     transition: all 0.2s;
   }
-
 }
 
 .link:hover {
@@ -68,14 +64,14 @@
 }
 
 .icon {
-  width: 1.5rem;
-display: flex;
+  width: 2.5rem;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .label {
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .footer {
@@ -126,7 +122,7 @@ display: flex;
 }
 
 .username {
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: var(--c-text);
   font-weight: 600;
 }
@@ -230,7 +226,7 @@ display: flex;
   .mobileActive.mobileHighlight .mobileLabel {
     color: var(--c-primary);
   }
-  
+
   .mobileActive.mobileHighlight .mobileIcon svg path {
     fill: var(--c-surface) !important;
   }

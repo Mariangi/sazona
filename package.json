@@ -9,6 +9,7 @@
     "dev": "npm run dev:server & vite",
     "dev:server": "npm run dev -w packages/server",
     "dev:front": "vite",
+    "dev:tunnel": "concurrently -n server,front,ngrok \"npm run dev:server\" \"vite\" \"ngrok http 5173\"",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "db:generate": "npm run db:generate -w packages/server",
@@ -24,6 +25,7 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
+    "concurrently": "^9.2.1",
     "typescript": "^6.0.3",
     "vite": "^8.0.16"
   }

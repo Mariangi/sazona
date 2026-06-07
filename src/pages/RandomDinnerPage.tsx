@@ -8,18 +8,15 @@ import {
   ClockIcon,
   CutleryIcon,
   DiceIcon,
-  ListToBuyIcon,
   PeopleIcon,
 } from "../components/ui/Icons";
 
 const CONFETTI_COLORS = [
   "#FF8240",
   "#f59e0b",
-  "#10b981",
-  "#ef4444",
-  "#8b5cf6",
-  "#06b6d4",
-  "#ec4899",
+  "#FCA838",
+  "#F36A46",
+  "#FF8240",
 ];
 
 export default function RandomDinnerPage() {

@@ -1,13 +1,31 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { RecipeListItem } from '@sasona/shared'
 import { CATEGORIES } from '@sasona/shared'
 import { api } from '../api/client'
 import styles from './DiscoverPage.module.css'
-import { ArrowLeftIcon, ArrowRightIcon, ClockIcon, CutleryIcon, PeopleIcon } from '../components/ui/Icons'
+import { ClockIcon, CutleryIcon, PeopleIcon } from '../components/ui/Icons'
 
 type DiscoverRecipe = RecipeListItem & {
   author: { id: number; username: string; avatarUrl: string | null } | null
+}
+
+const LIMIT = 12
+
+function SkeletonCard() {
+  return (
+    <div className={styles.skeletonCard}>
+      <div className={styles.skelImage} />
+      <div className={styles.skelBody}>
+        <div className={styles.skelLine} style={{ width: '70%' }} />
+        <div className={styles.skelLine} style={{ width: '40%' }} />
+        <div className={styles.skelMeta}>
+          <div className={styles.skelLine} style={{ width: '30%' }} />
+          <div className={styles.skelLine} style={{ width: '30%' }} />
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default function DiscoverPage() {
@@ -16,32 +34,60 @@ export default function DiscoverPage() {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('')
-  const limit = 12
+  const sentinelRef = useRef<HTMLDivElement>(null)
+
+  const hasMore = recipes.length < total
 
   useEffect(() => {
-    setLoading(true)
-    api.getDiscoverRecipes(page, limit, selectedCategory || undefined)
+    setRecipes([])
+    setPage(1)
+    setTotal(0)
+  }, [selectedCategory])
+
+  useEffect(() => {
+    if (page === 1) setLoading(true)
+    else setLoadingMore(true)
+
+    api.getDiscoverRecipes(page, LIMIT, selectedCategory || undefined)
       .then(data => {
-        setRecipes(data.recipes)
+        if (page === 1) {
+          setRecipes(data.recipes)
+        } else {
+          setRecipes(prev => [...prev, ...data.recipes])
+        }
         setTotal(data.total)
       })
       .catch(() => {})
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setLoading(false)
+        setLoadingMore(false)
+      })
   }, [page, selectedCategory])
 
-  const totalPages = Math.ceil(total / limit)
-
   useEffect(() => {
-    setPage(1)
-  }, [selectedCategory])
+    if (!sentinelRef.current || !hasMore || loading || loadingMore) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setPage(p => p + 1)
+        }
+      },
+      { rootMargin: '200px' }
+    )
+
+    observer.observe(sentinelRef.current)
+    return () => observer.disconnect()
+  }, [hasMore, loading, loadingMore])
 
   if (loading) return (
     <div className={styles.container}>
       <h2 className={styles.pageTitle}>Descubrí</h2>
       <div className={styles.masonry}>
         {Array.from({ length: 6 }, (_, i) => (
-          <div key={i} className={styles.skeletonCard} style={{ height: `${180 + Math.random() * 120}px` }} />
+          <SkeletonCard key={i} />
         ))}
       </div>
     </div>
@@ -118,29 +164,20 @@ export default function DiscoverPage() {
               </div>
             </div>
           ))}
+          {loadingMore && (
+            <>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </>
+          )}
         </div>
       )}
 
-      {totalPages > 1 && (
-        <div className={styles.pagination}>
-          <button
-            className={styles.pageBtn}
-            disabled={page <= 1}
-            onClick={() => setPage(p => p - 1)}
-          >
-            <ArrowLeftIcon height="16" width="16" fill="var(--c-text-secondary)" />
-            Anterior
-          </button>
-          <span className={styles.pageInfo}>{page} / {totalPages}</span>
-          <button
-            className={styles.pageBtn}
-            disabled={page >= totalPages}
-            onClick={() => setPage(p => p + 1)}
-          >
-            Siguiente 
-            <ArrowRightIcon height="16" width="16" fill="var(--c-text-secondary)" />
-          </button>
-        </div>
+      {hasMore && <div ref={sentinelRef} className={styles.sentinel} />}
+
+      {!hasMore && recipes.length > 0 && (
+        <p className={styles.endMessage}>Ya viste todas las recetas</p>
       )}
     </div>
   )

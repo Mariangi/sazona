@@ -253,7 +253,7 @@ export default function RandomDinnerPage() {
 
       {showConfetti && (
         <div className={styles.confettiContainer}>
-           {Array.from({ length: 120 }).map((_, i) => (
+           {Array.from({ length: 250 }).map((_, i) => (
             <div
               key={i}
               className={styles.confetti}

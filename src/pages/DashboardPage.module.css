@@ -8,8 +8,14 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hero {
@@ -22,10 +28,64 @@
 }
 
 .hero::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 100% 0%, rgba(255,255,255,0.15) 0%, transparent 50%);
+  background: radial-gradient(
+    circle at 100% 0%,
+    rgba(255, 255, 255, 0.15) 0%,
+    transparent 50%
+  );
+}
+
+.banner {
+  background: linear-gradient(135deg, #ff8240 0%, #e86a2a 100%);
+  border-radius: var(--radius-xl);
+  padding: 2rem 1.5rem;
+  color: var(--c-surface);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 100% 0%,
+    rgba(255, 255, 255, 0.15) 0%,
+    transparent 50%
+  );
+}
+
+.bannerContent {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+.bannerIcon {
+  position: absolute;
+  z-index: 2;
+  right: -30px;
+  bottom: -30px;
+  transform: rotate(25deg);
+  opacity: 0.8;
+
+  svg {
+    width: 180px;
+    height: 180px;
+
+    @media (max-width: 480px) {
+      opacity: 0.7;
+      path {
+        fill: #fca838;
+      }
+    }
+  }
 }
 
 .greeting {
@@ -45,11 +105,11 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(8px);
   border-radius: var(--radius-full);
   padding: 0.7rem 1rem;
-  border: 1px solid rgba(255,255,255,0.25);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   position: relative;
 }
 
@@ -68,7 +128,7 @@
 }
 
 .searchInput::placeholder {
-  color: rgba(255,255,255,0.6);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .sectionTitle {
@@ -136,7 +196,7 @@
 .categoryChip:hover {
   border-color: var(--chip-color, var(--c-primary));
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .categoryEmoji {
@@ -193,7 +253,7 @@
   box-shadow: var(--shadow-md);
 }
 
-.actionBtn{
+.actionBtn {
   color: var(--c-surface);
   background: var(--c-primary);
   font-size: 0.85rem;
@@ -212,8 +272,7 @@
   transform: rotate(-25deg);
   opacity: 0.15;
 
-
- svg  {
+  svg {
     width: 180px;
     height: 180px;
   }
@@ -242,7 +301,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 
 .trendingGrid {
   display: grid;

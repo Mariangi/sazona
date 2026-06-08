@@ -44,14 +44,6 @@ export default function RegisterForm() {
     <form onSubmit={handleSubmit} className={styles.form}>
       {error && <div className={styles.errorBanner}>{error}</div>}
 
-      <Input
-        label="Email"
-        type="email"
-        value={form.email}
-        onChange={(e) => setForm({ ...form, email: e.target.value })}
-        required
-        autoComplete="email"
-      />
 
       <Input
         label="Usuario"
@@ -59,6 +51,15 @@ export default function RegisterForm() {
         onChange={(e) => setForm({ ...form, username: e.target.value })}
         required
         autoComplete="username"
+      />
+
+      <Input
+        label="Email"
+        type="email"
+        value={form.email}
+        onChange={(e) => setForm({ ...form, email: e.target.value })}
+        required
+        autoComplete="email"
       />
 
       <Input

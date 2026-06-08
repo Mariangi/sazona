@@ -66,7 +66,7 @@ export default function FridgePage() {
 
         <div className={styles.actions}>
           <Button onClick={handleSearch} isLoading={loading}>
-            🔍 Buscar recetas
+            Buscar recetas
           </Button>
           {searched && (
             <Button variant="secondary" onClick={handleClear}>

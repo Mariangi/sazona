@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import styles from "./DashboardPage.module.css";
 import {
@@ -22,6 +22,19 @@ export default function DashboardPage() {
         </h1>
         <p className={styles.question}>¿Qué tenés ganas de comer hoy?</p>
       </section>
+
+      <NavLink to="/recipes/new">
+        <section className={styles.banner}>
+          <div className={styles.bannerContent}>
+            <h1 className={styles.greeting}>¡Comparte tus recetas!</h1>
+            <p className={styles.question}>Cuentanos tus mejores recetas</p>
+          </div>
+
+          <div className={styles.bannerIcon}>
+            <ChefIcon fill="var(--c-surface)" />
+          </div>
+        </section>
+      </NavLink>
 
       <section className={styles.actions}>
         <div className={styles.actionGrid}>
@@ -118,7 +131,9 @@ export default function DashboardPage() {
             </div>
             <div className={styles.actionContent}>
               <div className={styles.actionBody}>
-                <span className={styles.actionTitle}>Tus creaciones culinarias</span>
+                <span className={styles.actionTitle}>
+                  Tus creaciones culinarias
+                </span>
                 <p className={styles.actionDesc}>
                   Volvé a preparar tus mejores platos.
                 </p>

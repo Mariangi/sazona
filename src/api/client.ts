@@ -44,6 +44,9 @@ export const api = {
   getRecipes: () =>
     request<RecipeListItem[]>('/recipes'),
 
+  getAllRecipes: () =>
+    request<RecipeListItem[]>('/recipes/all'),
+
   getDiscoverRecipes: (page = 1, limit = 12) =>
     request<{ recipes: (RecipeListItem & { author: { id: number; username: string; avatarUrl: string | null } | null })[]; total: number; page: number; limit: number }>(`/recipes/discover?page=${page}&limit=${limit}`),
 
@@ -119,6 +122,9 @@ export const api = {
 
   isRecipeSaved: (recipeId: number) =>
     request<{ saved: boolean }>('/recipes/' + recipeId + '/saved'),
+
+  deleteRecipe: (id: number) =>
+    request<{ message: string }>('/recipes/' + id, { method: 'DELETE' }),
 
   createRecipe: (data: {
     name: string;

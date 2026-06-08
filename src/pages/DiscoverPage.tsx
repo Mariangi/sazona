@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import type { RecipeListItem } from '@sasona/shared'
 import { api } from '../api/client'
 import styles from './DiscoverPage.module.css'
-import { ClockIcon, CutleryIcon, PeopleIcon } from '../components/ui/Icons'
+import { ArrowLeftIcon, ArrowRightIcon, ClockIcon, CutleryIcon, PeopleIcon } from '../components/ui/Icons'
 
 type DiscoverRecipe = RecipeListItem & {
   author: { id: number; username: string; avatarUrl: string | null } | null
@@ -106,7 +106,8 @@ export default function DiscoverPage() {
             disabled={page <= 1}
             onClick={() => setPage(p => p - 1)}
           >
-            ← Anterior
+            <ArrowLeftIcon height="16" width="16" fill="var(--c-text-secondary)" />
+            Anterior
           </button>
           <span className={styles.pageInfo}>{page} / {totalPages}</span>
           <button
@@ -114,7 +115,8 @@ export default function DiscoverPage() {
             disabled={page >= totalPages}
             onClick={() => setPage(p => p + 1)}
           >
-            Siguiente →
+            Siguiente 
+            <ArrowRightIcon height="16" width="16" fill="var(--c-text-secondary)" />
           </button>
         </div>
       )}

@@ -45,6 +45,7 @@ export default function App() {
       <Route path="/recipes" element={<ProtectedRoute />}>
         <Route index element={<MyRecipesPage />} />
         <Route path="new" element={<CreateRecipePage />} />
+        <Route path=":id/edit" element={<CreateRecipePage />} />
       </Route>
 
       <Route path="/profile" element={<ProtectedRoute />}>

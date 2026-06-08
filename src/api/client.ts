@@ -44,6 +44,9 @@ export const api = {
   getRecipes: () =>
     request<RecipeListItem[]>('/recipes'),
 
+  getDiscoverRecipes: (page = 1, limit = 12) =>
+    request<{ recipes: (RecipeListItem & { author: { id: number; username: string; avatarUrl: string | null } | null })[]; total: number; page: number; limit: number }>(`/recipes/discover?page=${page}&limit=${limit}`),
+
   updateProfile: (data: { email: string; username: string }) =>
     request<UserResponse>('/auth/profile', { method: 'PUT', body: JSON.stringify(data) }),
 
@@ -126,4 +129,14 @@ export const api = {
     steps: { description: string }[];
   }) =>
     request<RecipeResponse>('/recipes', { method: 'POST', body: JSON.stringify(data) }),
+
+  updateRecipe: (id: number, data: {
+    name: string;
+    imageBase64?: string;
+    servings: number;
+    prepTime: number;
+    ingredients: { name: string; quantity: string; unit: string }[];
+    steps: { description: string }[];
+  }) =>
+    request<RecipeResponse>(`/recipes/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
 }

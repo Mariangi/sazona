@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { RecipeResponse } from "@sasona/shared";
 import { api } from "../api/client";
+import { useAuth } from "../hooks/useAuth";
 import Button from "../components/ui/Button";
 import styles from "./RecipeDetailPage.module.css";
-import { ArrowLeftIcon, ClockIcon, PeopleIcon, SavedIcon, SaveIcon } from "../components/ui/Icons";
+import { ArrowLeftIcon, ClockIcon, EditIcon, PeopleIcon, SavedIcon, SaveIcon } from "../components/ui/Icons";
 
 export default function RecipeDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [recipe, setRecipe] = useState<RecipeResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -127,14 +129,25 @@ export default function RecipeDetailPage() {
               </span>
             </div>
           </div>
-          <button
-            className={`${styles.saveBtn} ${saved ? styles.saved : ""}`}
-            onClick={handleToggleSave}
-            disabled={togglingSave}
-            title={saved ? "Quitar de guardados" : "Guardar"}
-          >
-            {saved ? <SavedIcon fill="var(--c-primary)"/> : <SaveIcon fill="var(--c-primary)"/>}
-          </button>
+          <div className={styles.actionsRow}>
+            {recipe.userId === user?.id && (
+              <button
+                className={styles.editBtn}
+                onClick={() => navigate(`/recipes/${recipe.id}/edit`)}
+                title="Editar receta"
+              >
+                <EditIcon fill="var(--c-primary)" height="24" width="24"/>
+              </button>
+            )}
+            <button
+              className={`${styles.saveBtn} ${saved ? styles.saved : ""}`}
+              onClick={handleToggleSave}
+              disabled={togglingSave}
+              title={saved ? "Quitar de guardados" : "Guardar"}
+            >
+              {saved ? <SavedIcon fill="var(--c-primary)"/> : <SaveIcon fill="var(--c-primary)"/>}
+            </button>
+          </div>
         </div>
 
         <div className={styles.section}>

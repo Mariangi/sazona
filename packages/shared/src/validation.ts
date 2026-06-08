@@ -30,6 +30,15 @@ export const createRecipeSchema = z.object({
   steps: z.array(stepSchema).min(1, 'Al menos un paso'),
 });
 
+export const updateRecipeSchema = z.object({
+  name: z.string().min(1, 'Nombre de la receta requerido'),
+  imageBase64: z.string().optional(),
+  servings: z.coerce.number().int().min(1, 'Al menos 1 comensal'),
+  prepTime: z.coerce.number().int().min(1, 'Tiempo mínimo 1 minuto'),
+  ingredients: z.array(ingredientSchema).min(1, 'Al menos un ingrediente'),
+  steps: z.array(stepSchema).min(1, 'Al menos un paso'),
+});
+
 export const updateProfileSchema = z.object({
   email: z.string().email('Email inválido'),
   username: z.string().min(3, 'Usuario debe tener al menos 3 caracteres').max(30),
@@ -80,5 +89,6 @@ export const findIngredientsSchema = z.object({
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;
+export type UpdateRecipeInput = z.infer<typeof updateRecipeSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;

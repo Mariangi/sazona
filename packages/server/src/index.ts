@@ -16,7 +16,7 @@ if (!existsSync(UPLOADS_DIR)) {
   mkdirSync(UPLOADS_DIR, { recursive: true });
 }
 
-const app = Fastify({ logger: true, bodyLimit: 5 * 1024 * 1024 });
+const app = Fastify({ logger: true, bodyLimit: 15 * 1024 * 1024 });
 
 await app.register(cors, {
   origin: true,

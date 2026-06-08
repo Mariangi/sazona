@@ -4,11 +4,14 @@ import styles from './ImageUpload.module.css'
 interface ImageUploadProps {
   value: string | null
   onChange: (base64: string | null) => void
+  existingImage?: string
 }
 
-export default function ImageUpload({ value, onChange }: ImageUploadProps) {
+export default function ImageUpload({ value, onChange, existingImage }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [preview, setPreview] = useState<string | null>(value)
+
+  const showExisting = !preview && existingImage
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -39,6 +42,17 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
         {preview ? (
           <div className={styles.preview}>
             <img src={preview} alt="Vista previa" />
+            <button
+              type="button"
+              className={styles.removeBtn}
+              onClick={(e) => { e.stopPropagation(); handleRemove() }}
+            >
+              ×
+            </button>
+          </div>
+        ) : showExisting ? (
+          <div className={styles.preview}>
+            <img src={existingImage} alt="Vista previa" />
             <button
               type="button"
               className={styles.removeBtn}

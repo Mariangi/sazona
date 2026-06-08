@@ -6,8 +6,8 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { db, schema } from '../db/index.js';
 import { authMiddleware } from '../auth/middleware.js';
-import { createRecipeSchema, findIngredientsSchema } from '@sasona/shared';
-import { eq, desc, inArray, and, sql } from 'drizzle-orm';
+import { createRecipeSchema, updateRecipeSchema, findIngredientsSchema } from '@sasona/shared';
+import { eq, ne, desc, inArray, and, sql } from 'drizzle-orm';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOADS_DIR = join(__dirname, '..', '..', 'uploads');
@@ -46,6 +46,65 @@ export function recipeRoutes(app: FastifyInstance) {
       stepCount: allSteps.filter(s => s.recipeId === recipe.id).length,
       createdAt: recipe.createdAt,
     }));
+  });
+
+  app.get('/api/recipes/discover', { preHandler: authMiddleware }, async (request) => {
+    const { userId } = (request as any).user;
+    const query = request.query as { page?: string; limit?: string };
+    const page = Math.max(1, Number(query.page) || 1);
+    const limit = Math.min(50, Math.max(1, Number(query.limit) || 12));
+    const offset = (page - 1) * limit;
+
+    const total = db.select({ count: sql<number>`count(*)` })
+      .from(schema.recipes)
+      .where(ne(schema.recipes.userId, userId))
+      .get()!;
+
+    const recipes = db.select()
+      .from(schema.recipes)
+      .where(ne(schema.recipes.userId, userId))
+      .orderBy(desc(schema.recipes.createdAt))
+      .limit(limit)
+      .offset(offset)
+      .all();
+
+    if (recipes.length === 0) return { recipes: [], total: Number(total.count), page, limit };
+
+    const recipeIds = recipes.map(r => r.id);
+
+    const allIngredients = db.select()
+      .from(schema.recipeIngredients)
+      .where(inArray(schema.recipeIngredients.recipeId, recipeIds))
+      .all();
+
+    const allSteps = db.select()
+      .from(schema.recipeSteps)
+      .where(inArray(schema.recipeSteps.recipeId, recipeIds))
+      .all();
+
+    const authorIds = [...new Set(recipes.map(r => r.userId))];
+    const authors = db.select({ id: schema.users.id, username: schema.users.username, avatarUrl: schema.users.avatarUrl })
+      .from(schema.users)
+      .where(inArray(schema.users.id, authorIds))
+      .all();
+    const authorMap = new Map(authors.map(a => [a.id, a]));
+
+    return {
+      recipes: recipes.map(recipe => ({
+        id: recipe.id,
+        name: recipe.name,
+        imageUrl: recipe.imageUrl,
+        servings: recipe.servings,
+        prepTime: recipe.prepTime,
+        ingredientCount: allIngredients.filter(i => i.recipeId === recipe.id).length,
+        stepCount: allSteps.filter(s => s.recipeId === recipe.id).length,
+        createdAt: recipe.createdAt,
+        author: authorMap.get(recipe.userId) || null,
+      })),
+      total: Number(total.count),
+      page,
+      limit,
+    };
   });
 
   app.get('/api/recipes/random', { preHandler: authMiddleware }, async (request, reply) => {
@@ -95,7 +154,7 @@ export function recipeRoutes(app: FastifyInstance) {
       .where(eq(schema.recipes.id, Number(id)))
       .get();
 
-    if (!recipe || recipe.userId !== userId) {
+    if (!recipe) {
       return reply.status(404).send({ message: 'Receta no encontrada', statusCode: 404 });
     }
 
@@ -274,6 +333,114 @@ export function recipeRoutes(app: FastifyInstance) {
       createdAt: recipe.createdAt,
       updatedAt: recipe.updatedAt,
     });
+  });
+
+  app.put('/api/recipes/:id', { preHandler: authMiddleware }, async (request, reply) => {
+    const { userId } = (request as any).user;
+    const { id } = request.params as { id: string };
+
+    const existing = db.select().from(schema.recipes)
+      .where(eq(schema.recipes.id, Number(id)))
+      .get();
+
+    if (!existing || existing.userId !== userId) {
+      return reply.status(404).send({ message: 'Receta no encontrada', statusCode: 404 });
+    }
+
+    const parsed = updateRecipeSchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.status(400).send({
+        message: parsed.error.errors[0].message,
+        statusCode: 400,
+      });
+    }
+
+    const { name, imageBase64, servings, prepTime, ingredients, steps } = parsed.data;
+
+    let imageUrl = existing.imageUrl;
+
+    if (imageBase64 !== undefined) {
+      if (imageBase64 === '') {
+        imageUrl = null;
+      } else {
+        const matches = imageBase64.match(/^data:(image\/\w+);base64,(.+)$/);
+        if (matches) {
+          const ext = matches[1].split('/')[1];
+          const buffer = Buffer.from(matches[2], 'base64');
+          const filename = `${randomUUID()}.${ext}`;
+          const filepath = join(UPLOADS_DIR, filename);
+
+          if (!existsSync(UPLOADS_DIR)) {
+            await mkdir(UPLOADS_DIR, { recursive: true });
+          }
+
+          await writeFile(filepath, buffer);
+          imageUrl = `/uploads/${filename}`;
+        }
+      }
+    }
+
+    db.update(schema.recipes)
+      .set({ name, imageUrl, servings, prepTime })
+      .where(eq(schema.recipes.id, Number(id)))
+      .run();
+
+    db.delete(schema.recipeIngredients)
+      .where(eq(schema.recipeIngredients.recipeId, Number(id)))
+      .run();
+    if (ingredients.length > 0) {
+      db.insert(schema.recipeIngredients).values(
+        ingredients.map((ing, i) => ({
+          recipeId: Number(id),
+          name: ing.name,
+          quantity: ing.quantity || null,
+          unit: ing.unit || null,
+          orderIndex: i,
+        }))
+      ).run();
+    }
+
+    db.delete(schema.recipeSteps)
+      .where(eq(schema.recipeSteps.recipeId, Number(id)))
+      .run();
+    if (steps.length > 0) {
+      db.insert(schema.recipeSteps).values(
+        steps.map((step, i) => ({
+          recipeId: Number(id),
+          description: step.description,
+          orderIndex: i,
+        }))
+      ).run();
+    }
+
+    const savedIngredients = db.select()
+      .from(schema.recipeIngredients)
+      .where(eq(schema.recipeIngredients.recipeId, Number(id)))
+      .all()
+      .map(({ name, quantity, unit }) => ({ name, quantity: quantity || '', unit: unit || '' }));
+
+    const savedSteps = db.select()
+      .from(schema.recipeSteps)
+      .where(eq(schema.recipeSteps.recipeId, Number(id)))
+      .all()
+      .map(({ description }) => ({ description }));
+
+    const updated = db.select().from(schema.recipes)
+      .where(eq(schema.recipes.id, Number(id)))
+      .get()!;
+
+    return {
+      id: updated.id,
+      userId: updated.userId,
+      name: updated.name,
+      imageUrl: updated.imageUrl,
+      servings: updated.servings,
+      prepTime: updated.prepTime,
+      ingredients: savedIngredients,
+      steps: savedSteps,
+      createdAt: updated.createdAt,
+      updatedAt: updated.updatedAt,
+    };
   });
 
   // ─── SAVED RECIPES ──────────────────────────────────────────

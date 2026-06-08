@@ -60,6 +60,12 @@
   font-size: 0.8rem;
   color: var(--c-text-secondary);
   margin-bottom: 0.3rem;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
 }
 
 .counts {

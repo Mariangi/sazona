@@ -99,6 +99,32 @@
   }
 }
 
+.actionsRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.editBtn {
+  background: none;
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--radius-full);
+  width: 44px;
+  height: 44px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.editBtn:hover {
+  border-color: var(--c-primary);
+  background: var(--c-primary-light);
+}
+
 .saveBtn {
   background: none;
   border: 1.5px solid var(--c-primary);

@@ -48,7 +48,7 @@ export default function MyRecipesPage() {
 
       {recipes.length === 0 && !loading && !error && (
         <div className={styles.empty}>
-          <div className={styles.emptyVisual}>🍳</div>
+          {/* <div className={styles.emptyVisual}>🍳</div> */}
           <p className={styles.emptyText}>Crea tu primera receta para empezar</p>
           <button className={styles.emptyBtn} onClick={() => navigate('/recipes/new')}>
             Crear receta

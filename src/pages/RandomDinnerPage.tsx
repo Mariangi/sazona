@@ -22,7 +22,9 @@ const CONFETTI_COLORS = [
 export default function RandomDinnerPage() {
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState<RecipeListItem[]>([]);
+  const [savedRecipes, setSavedRecipes] = useState<RecipeListItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mode, setMode] = useState<'all' | 'favorites'>('all');
   const [spinning, setSpinning] = useState(false);
   const [selected, setSelected] = useState<RecipeResponse | null>(null);
   const [slotText, setSlotText] = useState('...');
@@ -30,10 +32,28 @@ export default function RandomDinnerPage() {
   const [showResult, setShowResult] = useState(false);
   const [fetchingDetails, setFetchingDetails] = useState(false);
 
+  const activeRecipes = mode === 'favorites' ? savedRecipes : recipes;
+
   useEffect(() => {
-    api
-      .getRecipes()
-      .then(setRecipes)
+    Promise.all([
+      api.getRecipes(),
+      api.getSavedRecipes(),
+    ])
+      .then(([allRecipes, saved]) => {
+        setRecipes(allRecipes);
+        setSavedRecipes(
+          saved.map((r) => ({
+            id: r.recipeId,
+            name: r.name,
+            imageUrl: r.imageUrl,
+            servings: r.servings,
+            prepTime: r.prepTime,
+            ingredientCount: r.ingredientCount,
+            stepCount: r.stepCount,
+            createdAt: r.savedAt,
+          }))
+        );
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -44,13 +64,13 @@ export default function RandomDinnerPage() {
   }, []);
 
   function spin() {
-    if (spinning || recipes.length === 0) return;
+    if (spinning || activeRecipes.length === 0) return;
     setSpinning(true);
     setSelected(null);
     setShowResult(false);
     setShowConfetti(false);
 
-    const names = recipes.map((r) => r.name);
+    const names = activeRecipes.map((r) => r.name);
     let speed = 50;
     let rounds = 0;
     const maxRounds = 15 + Math.floor(Math.random() * 10);
@@ -60,7 +80,7 @@ export default function RandomDinnerPage() {
       setSlotText(names[randomIndex]);
       rounds++;
       if (rounds >= maxRounds) {
-        const winner = recipes[Math.floor(Math.random() * recipes.length)];
+        const winner = activeRecipes[Math.floor(Math.random() * activeRecipes.length)];
         setSlotText(winner.name);
         setSpinning(false);
         setFetchingDetails(true);
@@ -99,17 +119,30 @@ export default function RandomDinnerPage() {
     );
   }
 
-  if (recipes.length === 0) {
+  const showEmpty = mode === 'favorites'
+    ? savedRecipes.length === 0
+    : recipes.length === 0;
+
+  if (showEmpty) {
     return (
       <div className={styles.container}>
         <div className={styles.empty}>
-          {/* <div className={styles.emptyVisual}></div> */}
-          <h2 className={styles.emptyTitle}>No tenés recetas aún</h2>
+          <h2 className={styles.emptyTitle}>
+            {mode === 'favorites'
+              ? 'No tenés recetas favoritas'
+              : 'No tenés recetas aún'}
+          </h2>
           <p className={styles.emptyText}>
-            Creá algunas recetas para usar el selector aleatorio
+            {mode === 'favorites'
+              ? 'Guardá algunas recetas como favoritas para usar el selector'
+              : 'Creá algunas recetas para usar el selector aleatorio'}
           </p>
-          <Button onClick={() => navigate("/recipes/new")}>
-            Crear primera receta
+          <Button
+            onClick={() =>
+              navigate(mode === 'favorites' ? '/recipes' : '/recipes/new')
+            }
+          >
+            {mode === 'favorites' ? 'Ver recetas' : 'Crear primera receta'}
           </Button>
         </div>
       </div>
@@ -118,6 +151,20 @@ export default function RandomDinnerPage() {
 
   return (
     <div className={styles.container}>
+      <div className={styles.modeToggle}>
+        <button
+          className={`${styles.modeBtn} ${mode === 'all' ? styles.modeActive : ''}`}
+          onClick={() => { setMode('all'); reset(); }}
+        >
+          Todas las recetas
+        </button>
+        <button
+          className={`${styles.modeBtn} ${mode === 'favorites' ? styles.modeActive : ''}`}
+          onClick={() => { setMode('favorites'); reset(); }}
+        >
+          Favoritas
+        </button>
+      </div>
       <div className={styles.machine}>
         <div className={styles.slotWindow}>
           <span

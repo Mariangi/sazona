@@ -48,6 +48,7 @@
   background: var(--c-surface);
   color: var(--c-text);
   transition: border-color 0.2s;
+  width: 100%;
 }
 
 .input:focus, .qty:focus, .unit:focus {

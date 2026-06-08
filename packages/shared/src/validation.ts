@@ -59,6 +59,10 @@ export const createGroupSchema = z.object({
   name: z.string().min(1, 'Nombre del grupo requerido').max(50),
 });
 
+export const updateGroupSchema = z.object({
+  name: z.string().min(1, 'Nombre del grupo requerido').max(50),
+});
+
 export const joinGroupSchema = z.object({
   inviteCode: z.string().min(1, 'Código de invitación requerido'),
 });

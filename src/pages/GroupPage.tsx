@@ -5,7 +5,7 @@ import { api } from '../api/client'
 import { useAuth } from '../hooks/useAuth'
 import Button from '../components/ui/Button'
 import styles from './GroupPage.module.css'
-import { ArrowLeftIcon, CutleryIcon, ThumbDownIcon, ThumbsUpDownIcon, ThumbUpIcon } from '../components/ui/Icons'
+import { ArrowLeftIcon, CutleryIcon, EditIcon, ThumbDownIcon, ThumbsUpDownIcon, ThumbUpIcon } from '../components/ui/Icons'
 
 export default function GroupPage() {
   const { id } = useParams()
@@ -18,7 +18,25 @@ export default function GroupPage() {
   const [showRecipePicker, setShowRecipePicker] = useState(false)
   const [recipes, setRecipes] = useState<any[]>([])
   const [sending, setSending] = useState(false)
+  const [editingName, setEditingName] = useState(false)
+  const [editNameValue, setEditNameValue] = useState('')
+  const editInputRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
+
+  function startEdit() {
+    setEditNameValue(group?.name ?? '')
+    setEditingName(true)
+    setTimeout(() => editInputRef.current?.focus(), 0)
+  }
+
+  async function handleSaveName() {
+    if (!editNameValue.trim() || !id) return
+    try {
+      const updated = await api.updateGroup(Number(id), editNameValue.trim())
+      setGroup((prev: any) => ({ ...prev, name: updated.name }))
+      setEditingName(false)
+    } catch {}
+  }
 
   useEffect(() => {
     if (!id) return
@@ -80,8 +98,27 @@ export default function GroupPage() {
     <div className={styles.container}>
       <div className={styles.header}>
         <button className={styles.backBtn} onClick={() => navigate('/groups')}><ArrowLeftIcon height='12' width='12' fill='var(--c-primary)'/> Grupos</button>
-        <div>
-          <h2 className={styles.groupName}>{group.name}</h2>
+        <div className={styles.nameRow}>
+          {editingName ? (
+            <div className={styles.editNameRow}>
+              <input
+                ref={editInputRef}
+                className={styles.nameInput}
+                value={editNameValue}
+                onChange={(e) => setEditNameValue(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' ? handleSaveName() : e.key === 'Escape' ? setEditingName(false) : undefined}
+              />
+              <button className={styles.saveNameBtn} onClick={handleSaveName}>Guardar</button>
+              <button className={styles.cancelNameBtn} onClick={() => setEditingName(false)}>Cancelar</button>
+            </div>
+          ) : (
+            <div className={styles.nameDisplay}>
+              <h2 className={styles.groupName}>{group.name}</h2>
+              <button className={styles.editNameBtn} onClick={startEdit} title="Editar nombre">
+                <EditIcon height="16" width="16" fill="var(--c-text-tertiary)" />
+              </button>
+            </div>
+          )}
           <span className={styles.groupCode}>Código: {group.inviteCode} · {group.memberCount} miembros</span>
         </div>
       </div>

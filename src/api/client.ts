@@ -81,6 +81,9 @@ export const api = {
   getGroup: (id: number) =>
     request<any>('/groups/' + id),
 
+  updateGroup: (id: number, name: string) =>
+    request<FamilyGroup>('/groups/' + id, { method: 'PUT', body: JSON.stringify({ name }) }),
+
   // Messages
   getMessages: (groupId: number) =>
     request<GroupMessage[]>('/groups/' + groupId + '/messages'),

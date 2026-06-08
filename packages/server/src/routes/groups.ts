@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto';
 import { db, schema } from '../db/index.js';
 import { authMiddleware } from '../auth/middleware.js';
 import {
-  createGroupSchema, joinGroupSchema, createMessageSchema,
+  createGroupSchema, updateGroupSchema, joinGroupSchema, createMessageSchema,
   castVoteSchema, createShoppingListSchema,
 } from '@sasona/shared';
 import { eq, desc, inArray, and, sql } from 'drizzle-orm';
@@ -102,6 +102,28 @@ export function groupRoutes(app: FastifyInstance) {
       createdBy: group.createdBy, memberCount: count?.count || 0,
       members, createdAt: group.createdAt,
     };
+  });
+
+  app.put('/api/groups/:id', { preHandler: authMiddleware }, async (request, reply) => {
+    const { userId } = (request as any).user;
+    const { id } = request.params as { id: string };
+
+    const group = db.select().from(schema.familyGroups).where(eq(schema.familyGroups.id, Number(id))).get();
+    if (!group) return reply.status(404).send({ message: 'Grupo no encontrado', statusCode: 404 });
+
+    const membership = db.select().from(schema.familyMembers)
+      .where(and(eq(schema.familyMembers.groupId, group.id), eq(schema.familyMembers.userId, userId))).get();
+    if (!membership) return reply.status(403).send({ message: 'No eres miembro de este grupo', statusCode: 403 });
+
+    const parsed = updateGroupSchema.safeParse(request.body);
+    if (!parsed.success) return reply.status(400).send({ message: parsed.error.errors[0].message, statusCode: 400 });
+
+    db.update(schema.familyGroups)
+      .set({ name: parsed.data.name })
+      .where(eq(schema.familyGroups.id, group.id))
+      .run();
+
+    return { id: group.id, name: parsed.data.name, inviteCode: group.inviteCode, createdAt: group.createdAt };
   });
 
   // ─── MESSAGES / PROPOSALS ────────────────────────────────

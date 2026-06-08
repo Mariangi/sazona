@@ -36,7 +36,7 @@ export default function RandomDinnerPage() {
 
   useEffect(() => {
     Promise.all([
-      api.getRecipes(),
+      api.getAllRecipes(),
       api.getSavedRecipes(),
     ])
       .then(([allRecipes, saved]) => {

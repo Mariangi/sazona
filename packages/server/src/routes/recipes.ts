@@ -107,6 +107,37 @@ export function recipeRoutes(app: FastifyInstance) {
     };
   });
 
+  app.get('/api/recipes/all', { preHandler: authMiddleware }, async () => {
+    const recipes = db.select().from(schema.recipes)
+      .orderBy(desc(schema.recipes.createdAt))
+      .all();
+
+    if (recipes.length === 0) return [];
+
+    const recipeIds = recipes.map(r => r.id);
+
+    const allIngredients = db.select()
+      .from(schema.recipeIngredients)
+      .where(inArray(schema.recipeIngredients.recipeId, recipeIds))
+      .all();
+
+    const allSteps = db.select()
+      .from(schema.recipeSteps)
+      .where(inArray(schema.recipeSteps.recipeId, recipeIds))
+      .all();
+
+    return recipes.map(recipe => ({
+      id: recipe.id,
+      name: recipe.name,
+      imageUrl: recipe.imageUrl,
+      servings: recipe.servings,
+      prepTime: recipe.prepTime,
+      ingredientCount: allIngredients.filter(i => i.recipeId === recipe.id).length,
+      stepCount: allSteps.filter(s => s.recipeId === recipe.id).length,
+      createdAt: recipe.createdAt,
+    }));
+  });
+
   app.get('/api/recipes/random', { preHandler: authMiddleware }, async (request, reply) => {
     const { userId } = (request as any).user;
 
@@ -537,5 +568,36 @@ export function recipeRoutes(app: FastifyInstance) {
       .get();
 
     return { saved: !!saved };
+  });
+
+  app.delete('/api/recipes/:id', { preHandler: authMiddleware }, async (request, reply) => {
+    const { userId } = (request as any).user;
+    const { id } = request.params as { id: string };
+
+    const existing = db.select().from(schema.recipes)
+      .where(eq(schema.recipes.id, Number(id)))
+      .get();
+
+    if (!existing || existing.userId !== userId) {
+      return reply.status(404).send({ message: 'Receta no encontrada', statusCode: 404 });
+    }
+
+    db.delete(schema.recipeIngredients)
+      .where(eq(schema.recipeIngredients.recipeId, Number(id)))
+      .run();
+
+    db.delete(schema.recipeSteps)
+      .where(eq(schema.recipeSteps.recipeId, Number(id)))
+      .run();
+
+    db.delete(schema.savedRecipes)
+      .where(eq(schema.savedRecipes.recipeId, Number(id)))
+      .run();
+
+    db.delete(schema.recipes)
+      .where(eq(schema.recipes.id, Number(id)))
+      .run();
+
+    return { message: 'Receta eliminada' };
   });
 }

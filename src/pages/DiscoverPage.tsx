@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import type { RecipeListItem } from '@sasona/shared'
 import { api } from '../api/client'
 import styles from './DiscoverPage.module.css'
-import { ClockIcon, PeopleIcon } from '../components/ui/Icons'
+import { ClockIcon, CutleryIcon, PeopleIcon } from '../components/ui/Icons'
 
 type DiscoverRecipe = RecipeListItem & {
   author: { id: number; username: string; avatarUrl: string | null } | null
@@ -68,7 +68,7 @@ export default function DiscoverPage() {
             {recipe.imageUrl ? (
               <img src={recipe.imageUrl} alt={recipe.name} className={styles.cardImage} />
             ) : (
-              <div className={styles.cardPlaceholder}>🍽️</div>
+              <div className={styles.cardPlaceholder}><CutleryIcon height='16' width='16' /></div>
             )}
             <div className={styles.cardBody}>
               <h3 className={styles.cardName}>{recipe.name}</h3>

@@ -5,7 +5,7 @@ import { api } from "../api/client";
 import { useAuth } from "../hooks/useAuth";
 import Button from "../components/ui/Button";
 import styles from "./RecipeDetailPage.module.css";
-import { ArrowLeftIcon, ClockIcon, EditIcon, PeopleIcon, SavedIcon, SaveIcon } from "../components/ui/Icons";
+import { ArrowLeftIcon, ClockIcon, EditIcon, PeopleIcon, SavedIcon, SaveIcon, TrashIcon } from "../components/ui/Icons";
 
 export default function RecipeDetailPage() {
   const { id } = useParams();
@@ -47,6 +47,16 @@ export default function RecipeDetailPage() {
     } catch {
     } finally {
       setTogglingSave(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (!recipe || !window.confirm(`¿Eliminar "${recipe.name}"? Esta acción no se puede deshacer.`)) return;
+    try {
+      await api.deleteRecipe(recipe.id);
+      navigate('/recipes', { replace: true });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al eliminar');
     }
   }
 
@@ -131,13 +141,22 @@ export default function RecipeDetailPage() {
           </div>
           <div className={styles.actionsRow}>
             {recipe.userId === user?.id && (
-              <button
-                className={styles.editBtn}
-                onClick={() => navigate(`/recipes/${recipe.id}/edit`)}
-                title="Editar receta"
-              >
-                <EditIcon fill="var(--c-primary)" height="24" width="24"/>
-              </button>
+              <>
+                <button
+                  className={styles.editBtn}
+                  onClick={() => navigate(`/recipes/${recipe.id}/edit`)}
+                  title="Editar receta"
+                >
+                  <EditIcon fill="var(--c-primary)" height="24" width="24"/>
+                </button>
+                <button
+                  className={styles.deleteBtn}
+                  onClick={handleDelete}
+                  title="Eliminar receta"
+                >
+                  <TrashIcon />
+                </button>
+              </>
             )}
             <button
               className={`${styles.saveBtn} ${saved ? styles.saved : ""}`}

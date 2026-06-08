@@ -26,6 +26,7 @@ export const createRecipeSchema = z.object({
   imageBase64: z.string().optional(),
   servings: z.coerce.number().int().min(1, 'Al menos 1 comensal'),
   prepTime: z.coerce.number().int().min(1, 'Tiempo mínimo 1 minuto'),
+  category: z.string().optional(),
   ingredients: z.array(ingredientSchema).min(1, 'Al menos un ingrediente'),
   steps: z.array(stepSchema).min(1, 'Al menos un paso'),
 });
@@ -35,6 +36,7 @@ export const updateRecipeSchema = z.object({
   imageBase64: z.string().optional(),
   servings: z.coerce.number().int().min(1, 'Al menos 1 comensal'),
   prepTime: z.coerce.number().int().min(1, 'Tiempo mínimo 1 minuto'),
+  category: z.string().optional(),
   ingredients: z.array(ingredientSchema).min(1, 'Al menos un ingrediente'),
   steps: z.array(stepSchema).min(1, 'Al menos un paso'),
 });

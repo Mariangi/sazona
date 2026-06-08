@@ -63,6 +63,9 @@ export default function IngredientInput({ ingredients, onChange }: IngredientInp
             <option value="g">g</option>
             <option value="kg">kg</option>
             <option value="unid">unid</option>
+            <option value="cucharadita">cucharadita</option>
+            <option value="cucharada">cucharada</option>
+            <option value="pizca">pizca</option>
           </select>
           <button
             type="button"

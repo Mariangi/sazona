@@ -47,8 +47,8 @@ export const api = {
   getAllRecipes: () =>
     request<RecipeListItem[]>('/recipes/all'),
 
-  getDiscoverRecipes: (page = 1, limit = 12) =>
-    request<{ recipes: (RecipeListItem & { author: { id: number; username: string; avatarUrl: string | null } | null })[]; total: number; page: number; limit: number }>(`/recipes/discover?page=${page}&limit=${limit}`),
+  getDiscoverRecipes: (page = 1, limit = 12, category?: string) =>
+    request<{ recipes: (RecipeListItem & { author: { id: number; username: string; avatarUrl: string | null } | null })[]; total: number; page: number; limit: number }>(`/recipes/discover?page=${page}&limit=${limit}${category ? `&category=${encodeURIComponent(category)}` : ''}`),
 
   updateProfile: (data: { email: string; username: string }) =>
     request<UserResponse>('/auth/profile', { method: 'PUT', body: JSON.stringify(data) }),

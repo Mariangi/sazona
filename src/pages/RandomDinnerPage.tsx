@@ -48,6 +48,7 @@ export default function RandomDinnerPage() {
             imageUrl: r.imageUrl,
             servings: r.servings,
             prepTime: r.prepTime,
+            category: r.category,
             ingredientCount: r.ingredientCount,
             stepCount: r.stepCount,
             createdAt: r.savedAt,

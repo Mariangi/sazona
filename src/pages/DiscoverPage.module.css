@@ -25,6 +25,47 @@
   margin: 0 0 1.5rem;
 }
 
+.categoryFilter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.catBtn {
+  padding: 0.4rem 1rem;
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--c-surface);
+  color: var(--c-text-secondary);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.catBtn:hover {
+  border-color: var(--c-primary);
+  color: var(--c-primary);
+}
+
+.catActive {
+  background: var(--c-primary);
+  color: white;
+  border-color: var(--c-primary);
+}
+
+.categoryBadge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--c-primary);
+  background: var(--c-primary-light);
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 0.4rem;
+}
+
 .masonry {
   column-count: 2;
   column-gap: 1rem;

@@ -52,12 +52,18 @@ export default function IngredientInput({ ingredients, onChange }: IngredientInp
             value={ing.quantity}
             onChange={(e) => update(i, 'quantity', e.target.value)}
           />
-          <input
+          <select
             className={styles.unit}
-            placeholder="Unidad"
             value={ing.unit}
             onChange={(e) => update(i, 'unit', e.target.value)}
-          />
+          >
+            <option value="">Unidad</option>
+            <option value="ml">ml</option>
+            <option value="l">l</option>
+            <option value="g">g</option>
+            <option value="kg">kg</option>
+            <option value="unid">unid</option>
+          </select>
           <button
             type="button"
             className={styles.removeBtn}

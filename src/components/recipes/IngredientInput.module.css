@@ -46,7 +46,7 @@
   font-size: 0.9rem;
   outline: none;
   background: var(--c-surface);
-  color: var(--c-text);
+  color: var(--c-text-secondary);
   transition: border-color 0.2s;
   width: 100%;
 }
@@ -58,7 +58,16 @@
 
 .input { flex: 1; }
 .qty { width: 70px; }
-.unit { width: 90px; }
+.unit {
+  width: 90px;
+  appearance: none;
+  cursor: pointer;
+}
+
+.unit option {
+  background: var(--c-surface);
+  color: var(--c-text);
+}
 
 .removeBtn {
   width: 32px;

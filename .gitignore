@@ -1,2 +1,3 @@
-/node_modules/packages/server/data/*.db-shm
+/node_modules/
+packages/server/data/*.db-shm
 packages/server/data/*.db-wal

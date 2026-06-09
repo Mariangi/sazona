@@ -131,6 +131,20 @@ export interface SavedRecipe {
   savedAt: string;
 }
 
+export interface MealPlan {
+  id: number;
+  weekStart: string;
+  createdAt: string;
+  entries: MealPlanEntry[];
+}
+
+export interface MealPlanEntry {
+  dayOfWeek: number;
+  recipeId: number;
+  recipeName: string;
+  recipeImage: string | null;
+}
+
 export interface ShoppingListDetail {
   id: number;
   groupId: number | null;

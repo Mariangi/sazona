@@ -87,6 +87,17 @@ export const createShoppingListSchema = z.object({
   })),
 });
 
+export const createMealPlanSchema = z.object({
+  weekStart: z.string().min(1, 'Fecha requerida'),
+});
+
+export const updateMealPlanEntriesSchema = z.object({
+  entries: z.array(z.object({
+    dayOfWeek: z.number().int().min(0).max(6),
+    recipeId: z.number().int().positive(),
+  })),
+});
+
 export const findIngredientsSchema = z.object({
   ingredients: z.array(z.string().min(1)).min(1, 'Al menos un ingrediente'),
   allowExtra: z.boolean(),

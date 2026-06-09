@@ -96,3 +96,18 @@ export const shoppingListItems = sqliteTable('shopping_list_items', {
   checked: integer('checked', { mode: 'boolean' }).notNull().$default(() => false),
   orderIndex: integer('order_index').notNull(),
 });
+
+export const mealPlans = sqliteTable('meal_plans', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  userId: integer('user_id').notNull().references(() => users.id),
+  weekStart: text('week_start').notNull(),
+  createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
+});
+
+export const mealPlanEntries = sqliteTable('meal_plan_entries', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  mealPlanId: integer('meal_plan_id').notNull().references(() => mealPlans.id),
+  recipeId: integer('recipe_id').notNull().references(() => recipes.id),
+  dayOfWeek: integer('day_of_week').notNull(),
+  createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
+});

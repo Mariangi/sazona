@@ -1,7 +1,7 @@
 import type {
   AuthResponse, UserResponse, RecipeResponse, RecipeListItem, RecipeMatch,
   FamilyGroup, GroupMessage, ShoppingList, ShoppingListDetail,
-  SavedRecipe,
+  SavedRecipe, MealPlan,
 } from '@sasona/shared'
 
 const API_BASE = '/api'
@@ -125,6 +125,25 @@ export const api = {
 
   isRecipeSaved: (recipeId: number) =>
     request<{ saved: boolean }>('/recipes/' + recipeId + '/saved'),
+
+  // Meal plans
+  getMealPlans: () =>
+    request<MealPlan[]>('/meal-plans'),
+
+  createMealPlan: (weekStart: string) =>
+    request<MealPlan>('/meal-plans', { method: 'POST', body: JSON.stringify({ weekStart }) }),
+
+  getMealPlan: (id: number) =>
+    request<MealPlan>('/meal-plans/' + id),
+
+  updateMealPlanEntries: (id: number, entries: { dayOfWeek: number; recipeId: number }[]) =>
+    request<MealPlan>('/meal-plans/' + id + '/entries', { method: 'PUT', body: JSON.stringify({ entries }) }),
+
+  generateShoppingListFromMealPlan: (id: number) =>
+    request<{ id: number; name: string }>('/meal-plans/' + id + '/generate-list', { method: 'POST' }),
+
+  deleteMealPlan: (id: number) =>
+    request<{ message: string }>('/meal-plans/' + id, { method: 'DELETE' }),
 
   deleteRecipe: (id: number) =>
     request<{ message: string }>('/recipes/' + id, { method: 'DELETE' }),

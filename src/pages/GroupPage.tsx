@@ -43,7 +43,7 @@ export default function GroupPage() {
     const gid = Number(id)
     api.getGroup(gid).then(setGroup).catch(() => navigate('/groups'))
     api.getMessages(gid).then(setMessages).catch(() => {})
-    api.getRecipes().then(setRecipes).catch(() => {})
+    api.getAllRecipes().then(setRecipes).catch(() => {})
       .finally(() => setLoading(false))
   }, [id, navigate])
 

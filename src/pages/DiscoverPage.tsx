@@ -4,7 +4,7 @@ import type { RecipeListItem } from '@sasona/shared'
 import { CATEGORIES } from '@sasona/shared'
 import { api } from '../api/client'
 import styles from './DiscoverPage.module.css'
-import { ClockIcon, CutleryIcon, PeopleIcon } from '../components/ui/Icons'
+import { ClockIcon, CutleryIcon, PeopleIcon, SearchIcon } from '../components/ui/Icons'
 
 type DiscoverRecipe = RecipeListItem & {
   author: { id: number; username: string; avatarUrl: string | null } | null
@@ -118,7 +118,7 @@ export default function DiscoverPage() {
 
       {recipes.length === 0 ? (
         <div className={styles.empty}>
-          <div className={styles.emptyVisual}>🔍</div>
+          <div className={styles.emptyVisual}><SearchIcon height='24' width='24'  fill='var(--c-surface)'/> </div>
           <p>No hay recetas{selectedCategory ? ` en "${selectedCategory}"` : ''} de otros chefs</p>
         </div>
       ) : (

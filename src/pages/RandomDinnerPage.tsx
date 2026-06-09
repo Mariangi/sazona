@@ -48,6 +48,7 @@ export default function RandomDinnerPage() {
             imageUrl: r.imageUrl,
             servings: r.servings,
             prepTime: r.prepTime,
+            category: r.category,
             ingredientCount: r.ingredientCount,
             stepCount: r.stepCount,
             createdAt: r.savedAt,
@@ -139,7 +140,7 @@ export default function RandomDinnerPage() {
           </p>
           <Button
             onClick={() =>
-              navigate(mode === 'favorites' ? '/recipes' : '/recipes/new')
+              navigate(mode === 'favorites' ? '/discover' : '/recipes/new')
             }
           >
             {mode === 'favorites' ? 'Ver recetas' : 'Crear primera receta'}
@@ -252,7 +253,7 @@ export default function RandomDinnerPage() {
 
       {showConfetti && (
         <div className={styles.confettiContainer}>
-          {Array.from({ length: 60 }).map((_, i) => (
+           {Array.from({ length: 250 }).map((_, i) => (
             <div
               key={i}
               className={styles.confetti}

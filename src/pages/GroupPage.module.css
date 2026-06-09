@@ -67,11 +67,82 @@
   background: var(--c-primary-light);
 }
 
+.nameRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nameDisplay {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .groupName {
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--c-text);
   margin: 0;
+}
+
+.editNameBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.editNameBtn:hover {
+  opacity: 1;
+}
+
+.editNameRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.nameInput {
+  flex: 1;
+  padding: 0.4rem 0.6rem;
+  border: 1.5px solid var(--c-primary);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 700;
+  outline: none;
+  background: var(--c-surface);
+  color: var(--c-text);
+}
+
+.saveNameBtn {
+  background: var(--c-primary);
+  color: white;
+  border: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.cancelNameBtn {
+  background: none;
+  color: var(--c-text-secondary);
+  border: 1.5px solid var(--c-border);
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .groupCode {

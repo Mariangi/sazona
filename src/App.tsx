@@ -14,6 +14,7 @@ import GroupsPage from './pages/GroupsPage'
 import GroupPage from './pages/GroupPage'
 import ShoppingListsPage from './pages/ShoppingListsPage'
 import ShoppingListDetail from './pages/ShoppingListDetail'
+import MealPlannerPage from './pages/MealPlannerPage'
 import AuthLayout from './components/layout/AuthLayout'
 import { useAuth } from './hooks/useAuth'
 
@@ -80,6 +81,10 @@ export default function App() {
       <Route path="/shopping-lists" element={<ProtectedRoute />}>
         <Route index element={<ShoppingListsPage />} />
         <Route path=":id" element={<ShoppingListDetail />} />
+      </Route>
+
+      <Route path="/meal-planner" element={<ProtectedRoute />}>
+        <Route index element={<MealPlannerPage />} />
       </Route>
     </Routes>
   )

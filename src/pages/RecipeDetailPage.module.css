@@ -5,8 +5,14 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .center {
@@ -26,7 +32,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .errorText {
@@ -40,7 +48,7 @@
   color: var(--c-primary);
   font-size: 0.9rem;
   cursor: pointer;
-  font-weight:700;
+  font-weight: 700;
   margin-bottom: 1rem;
   padding: 0.4rem 0.75rem;
   border-radius: var(--radius-full);
@@ -127,7 +135,7 @@
 
 .deleteBtn {
   background: none;
-  border: 1.5px solid var(--c-error, #dc2626);
+  border: 1.5px solid var(--c-border);
   border-radius: var(--radius-full);
   width: 44px;
   height: 44px;

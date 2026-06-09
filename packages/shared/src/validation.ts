@@ -26,6 +26,7 @@ export const createRecipeSchema = z.object({
   imageBase64: z.string().optional(),
   servings: z.coerce.number().int().min(1, 'Al menos 1 comensal'),
   prepTime: z.coerce.number().int().min(1, 'Tiempo mínimo 1 minuto'),
+  category: z.string().optional(),
   ingredients: z.array(ingredientSchema).min(1, 'Al menos un ingrediente'),
   steps: z.array(stepSchema).min(1, 'Al menos un paso'),
 });
@@ -35,6 +36,7 @@ export const updateRecipeSchema = z.object({
   imageBase64: z.string().optional(),
   servings: z.coerce.number().int().min(1, 'Al menos 1 comensal'),
   prepTime: z.coerce.number().int().min(1, 'Tiempo mínimo 1 minuto'),
+  category: z.string().optional(),
   ingredients: z.array(ingredientSchema).min(1, 'Al menos un ingrediente'),
   steps: z.array(stepSchema).min(1, 'Al menos un paso'),
 });
@@ -54,6 +56,10 @@ export const avatarSchema = z.object({
 });
 
 export const createGroupSchema = z.object({
+  name: z.string().min(1, 'Nombre del grupo requerido').max(50),
+});
+
+export const updateGroupSchema = z.object({
   name: z.string().min(1, 'Nombre del grupo requerido').max(50),
 });
 
@@ -78,6 +84,17 @@ export const createShoppingListSchema = z.object({
     name: z.string().min(1),
     quantity: z.string().optional(),
     unit: z.string().optional(),
+  })),
+});
+
+export const createMealPlanSchema = z.object({
+  weekStart: z.string().min(1, 'Fecha requerida'),
+});
+
+export const updateMealPlanEntriesSchema = z.object({
+  entries: z.array(z.object({
+    dayOfWeek: z.number().int().min(0).max(6),
+    recipeId: z.number().int().positive(),
   })),
 });
 

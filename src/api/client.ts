@@ -1,7 +1,7 @@
 import type {
   AuthResponse, UserResponse, RecipeResponse, RecipeListItem, RecipeMatch,
   FamilyGroup, GroupMessage, ShoppingList, ShoppingListDetail,
-  SavedRecipe,
+  SavedRecipe, MealPlan,
 } from '@sasona/shared'
 
 const API_BASE = '/api'
@@ -47,8 +47,8 @@ export const api = {
   getAllRecipes: () =>
     request<RecipeListItem[]>('/recipes/all'),
 
-  getDiscoverRecipes: (page = 1, limit = 12) =>
-    request<{ recipes: (RecipeListItem & { author: { id: number; username: string; avatarUrl: string | null } | null })[]; total: number; page: number; limit: number }>(`/recipes/discover?page=${page}&limit=${limit}`),
+  getDiscoverRecipes: (page = 1, limit = 12, category?: string) =>
+    request<{ recipes: (RecipeListItem & { author: { id: number; username: string; avatarUrl: string | null } | null })[]; total: number; page: number; limit: number }>(`/recipes/discover?page=${page}&limit=${limit}${category ? `&category=${encodeURIComponent(category)}` : ''}`),
 
   updateProfile: (data: { email: string; username: string }) =>
     request<UserResponse>('/auth/profile', { method: 'PUT', body: JSON.stringify(data) }),
@@ -80,6 +80,9 @@ export const api = {
 
   getGroup: (id: number) =>
     request<any>('/groups/' + id),
+
+  updateGroup: (id: number, name: string) =>
+    request<FamilyGroup>('/groups/' + id, { method: 'PUT', body: JSON.stringify({ name }) }),
 
   // Messages
   getMessages: (groupId: number) =>
@@ -122,6 +125,25 @@ export const api = {
 
   isRecipeSaved: (recipeId: number) =>
     request<{ saved: boolean }>('/recipes/' + recipeId + '/saved'),
+
+  // Meal plans
+  getMealPlans: () =>
+    request<MealPlan[]>('/meal-plans'),
+
+  createMealPlan: (weekStart: string) =>
+    request<MealPlan>('/meal-plans', { method: 'POST', body: JSON.stringify({ weekStart }) }),
+
+  getMealPlan: (id: number) =>
+    request<MealPlan>('/meal-plans/' + id),
+
+  updateMealPlanEntries: (id: number, entries: { dayOfWeek: number; recipeId: number }[]) =>
+    request<MealPlan>('/meal-plans/' + id + '/entries', { method: 'PUT', body: JSON.stringify({ entries }) }),
+
+  generateShoppingListFromMealPlan: (id: number) =>
+    request<{ id: number; name: string }>('/meal-plans/' + id + '/generate-list', { method: 'POST' }),
+
+  deleteMealPlan: (id: number) =>
+    request<{ message: string }>('/meal-plans/' + id, { method: 'DELETE' }),
 
   deleteRecipe: (id: number) =>
     request<{ message: string }>('/recipes/' + id, { method: 'DELETE' }),

@@ -42,6 +42,7 @@ export function recipeRoutes(app: FastifyInstance) {
       imageUrl: recipe.imageUrl,
       servings: recipe.servings,
       prepTime: recipe.prepTime,
+      category: recipe.category,
       ingredientCount: allIngredients.filter(i => i.recipeId === recipe.id).length,
       stepCount: allSteps.filter(s => s.recipeId === recipe.id).length,
       createdAt: recipe.createdAt,
@@ -50,19 +51,26 @@ export function recipeRoutes(app: FastifyInstance) {
 
   app.get('/api/recipes/discover', { preHandler: authMiddleware }, async (request) => {
     const { userId } = (request as any).user;
-    const query = request.query as { page?: string; limit?: string };
+    const query = request.query as { page?: string; limit?: string; category?: string };
     const page = Math.max(1, Number(query.page) || 1);
     const limit = Math.min(50, Math.max(1, Number(query.limit) || 12));
     const offset = (page - 1) * limit;
 
+    const conditions = [ne(schema.recipes.userId, userId)];
+    if (query.category) {
+      conditions.push(eq(schema.recipes.category, query.category));
+    }
+
+    const whereClause = and(...conditions);
+
     const total = db.select({ count: sql<number>`count(*)` })
       .from(schema.recipes)
-      .where(ne(schema.recipes.userId, userId))
+      .where(whereClause)
       .get()!;
 
     const recipes = db.select()
       .from(schema.recipes)
-      .where(ne(schema.recipes.userId, userId))
+      .where(whereClause)
       .orderBy(desc(schema.recipes.createdAt))
       .limit(limit)
       .offset(offset)
@@ -99,6 +107,7 @@ export function recipeRoutes(app: FastifyInstance) {
         ingredientCount: allIngredients.filter(i => i.recipeId === recipe.id).length,
         stepCount: allSteps.filter(s => s.recipeId === recipe.id).length,
         createdAt: recipe.createdAt,
+        category: recipe.category,
         author: authorMap.get(recipe.userId) || null,
       })),
       total: Number(total.count),
@@ -132,6 +141,7 @@ export function recipeRoutes(app: FastifyInstance) {
       imageUrl: recipe.imageUrl,
       servings: recipe.servings,
       prepTime: recipe.prepTime,
+      category: recipe.category,
       ingredientCount: allIngredients.filter(i => i.recipeId === recipe.id).length,
       stepCount: allSteps.filter(s => s.recipeId === recipe.id).length,
       createdAt: recipe.createdAt,
@@ -170,6 +180,7 @@ export function recipeRoutes(app: FastifyInstance) {
       imageUrl: recipe.imageUrl,
       servings: recipe.servings,
       prepTime: recipe.prepTime,
+      category: recipe.category,
       ingredients,
       steps,
       createdAt: recipe.createdAt,
@@ -208,6 +219,7 @@ export function recipeRoutes(app: FastifyInstance) {
       imageUrl: recipe.imageUrl,
       servings: recipe.servings,
       prepTime: recipe.prepTime,
+      category: recipe.category,
       ingredients,
       steps,
       createdAt: recipe.createdAt,
@@ -288,7 +300,7 @@ export function recipeRoutes(app: FastifyInstance) {
       });
     }
 
-    const { name, imageBase64, servings, prepTime, ingredients, steps } = parsed.data;
+    const { name, imageBase64, servings, prepTime, category, ingredients, steps } = parsed.data;
     const { userId } = (request as any).user;
 
     let imageUrl: string | null = null;
@@ -316,6 +328,7 @@ export function recipeRoutes(app: FastifyInstance) {
       imageUrl,
       servings,
       prepTime,
+      category: category || null,
     }).returning().get();
 
     if (ingredients.length > 0) {
@@ -359,6 +372,7 @@ export function recipeRoutes(app: FastifyInstance) {
       imageUrl: recipe.imageUrl,
       servings: recipe.servings,
       prepTime: recipe.prepTime,
+      category: recipe.category,
       ingredients: savedIngredients,
       steps: savedSteps,
       createdAt: recipe.createdAt,
@@ -386,7 +400,7 @@ export function recipeRoutes(app: FastifyInstance) {
       });
     }
 
-    const { name, imageBase64, servings, prepTime, ingredients, steps } = parsed.data;
+    const { name, imageBase64, servings, prepTime, category, ingredients, steps } = parsed.data;
 
     let imageUrl = existing.imageUrl;
 
@@ -412,7 +426,7 @@ export function recipeRoutes(app: FastifyInstance) {
     }
 
     db.update(schema.recipes)
-      .set({ name, imageUrl, servings, prepTime })
+      .set({ name, imageUrl, servings, prepTime, category: category || null })
       .where(eq(schema.recipes.id, Number(id)))
       .run();
 
@@ -467,6 +481,7 @@ export function recipeRoutes(app: FastifyInstance) {
       imageUrl: updated.imageUrl,
       servings: updated.servings,
       prepTime: updated.prepTime,
+      category: updated.category,
       ingredients: savedIngredients,
       steps: savedSteps,
       createdAt: updated.createdAt,
@@ -486,6 +501,7 @@ export function recipeRoutes(app: FastifyInstance) {
       imageUrl: schema.recipes.imageUrl,
       servings: schema.recipes.servings,
       prepTime: schema.recipes.prepTime,
+      category: schema.recipes.category,
       savedAt: schema.savedRecipes.createdAt,
     }).from(schema.savedRecipes)
       .innerJoin(schema.recipes, eq(schema.savedRecipes.recipeId, schema.recipes.id))
@@ -523,6 +539,7 @@ export function recipeRoutes(app: FastifyInstance) {
       imageUrl: s.imageUrl,
       servings: s.servings,
       prepTime: s.prepTime,
+      category: s.category,
       ingredientCount: ingCountMap.get(s.recipeId) || 0,
       stepCount: stepCountMap.get(s.recipeId) || 0,
       savedAt: s.savedAt,

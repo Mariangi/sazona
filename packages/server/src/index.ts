@@ -7,6 +7,7 @@ import { mkdirSync, existsSync, readFileSync } from 'fs';
 import { authRoutes } from './routes/auth.js';
 import { recipeRoutes } from './routes/recipes.js';
 import { groupRoutes } from './routes/groups.js';
+import { mealPlanRoutes } from './routes/mealPlans.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOADS_DIR = join(__dirname, '..', 'uploads');
@@ -32,6 +33,7 @@ await app.register(fastifyStatic, {
 authRoutes(app);
 recipeRoutes(app);
 groupRoutes(app);
+mealPlanRoutes(app);
 
 if (existsSync(DIST_DIR)) {
   await app.register(fastifyStatic, {

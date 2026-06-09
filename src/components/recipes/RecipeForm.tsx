@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { RecipeResponse } from '@sasona/shared'
+import { CATEGORIES } from '@sasona/shared'
 import { api } from '../../api/client'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
@@ -34,6 +35,7 @@ export default function RecipeForm({ recipe }: RecipeFormProps) {
   const [imageBase64, setImageBase64] = useState<string | null>(null)
   const [servings, setServings] = useState(recipe?.servings.toString() ?? '')
   const [prepTime, setPrepTime] = useState(recipe?.prepTime.toString() ?? '')
+  const [category, setCategory] = useState(recipe?.category ?? '')
   const [ingredients, setIngredients] = useState<Ingredient[]>(
     recipe?.ingredients.map(i => ({ name: i.name, quantity: i.quantity, unit: i.unit })) ?? [
       { name: '', quantity: '', unit: '' },
@@ -67,6 +69,7 @@ export default function RecipeForm({ recipe }: RecipeFormProps) {
         imageBase64: imageBase64 === null && isEdit && recipe?.imageUrl ? '' : (imageBase64 || undefined),
         servings: Number(servings),
         prepTime: Number(prepTime),
+        category: category || undefined,
         ingredients: ingredients.filter((i) => i.name.trim()),
         steps: steps.filter((s) => s.description.trim()),
       }
@@ -97,6 +100,20 @@ export default function RecipeForm({ recipe }: RecipeFormProps) {
       />
 
       <ImageUpload value={imageBase64} onChange={setImageBase64} existingImage={recipe?.imageUrl ?? undefined} />
+
+      <div className={styles.field}>
+        <label className={styles.fieldLabel}>Categoría</label>
+        <select
+          className={styles.select}
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="">Sin categoría</option>
+          {CATEGORIES.map((cat) => (
+            <option key={cat} value={cat}>{cat}</option>
+          ))}
+        </select>
+      </div>
 
       <div className={styles.row}>
         <Input

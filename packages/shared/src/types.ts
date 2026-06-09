@@ -33,6 +33,7 @@ export interface RecipeResponse {
   imageUrl: string | null;
   servings: number;
   prepTime: number;
+  category: string | null;
   ingredients: Ingredient[];
   steps: Step[];
   createdAt: string;
@@ -45,6 +46,7 @@ export interface RecipeListItem {
   imageUrl: string | null;
   servings: number;
   prepTime: number;
+  category: string | null;
   ingredientCount: number;
   stepCount: number;
   createdAt: string;
@@ -123,9 +125,24 @@ export interface SavedRecipe {
   imageUrl: string | null;
   servings: number;
   prepTime: number;
+  category: string | null;
   ingredientCount: number;
   stepCount: number;
   savedAt: string;
+}
+
+export interface MealPlan {
+  id: number;
+  weekStart: string;
+  createdAt: string;
+  entries: MealPlanEntry[];
+}
+
+export interface MealPlanEntry {
+  dayOfWeek: number;
+  recipeId: number;
+  recipeName: string;
+  recipeImage: string | null;
 }
 
 export interface ShoppingListDetail {

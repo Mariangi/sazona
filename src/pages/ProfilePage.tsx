@@ -144,6 +144,8 @@ export default function ProfilePage() {
           <LogOut />
         </Popup>
       )}
+
+      <p className={styles.version}>v1.1.0</p>
     </div>
   );
 }

@@ -47,8 +47,8 @@ export const api = {
   getAllRecipes: () =>
     request<RecipeListItem[]>('/recipes/all'),
 
-  getDiscoverRecipes: (page = 1, limit = 12, category?: string) =>
-    request<{ recipes: (RecipeListItem & { author: { id: number; username: string; avatarUrl: string | null } | null })[]; total: number; page: number; limit: number }>(`/recipes/discover?page=${page}&limit=${limit}${category ? `&category=${encodeURIComponent(category)}` : ''}`),
+  getDiscoverRecipes: (page = 1, limit = 12, category?: string, search?: string) =>
+    request<{ recipes: (RecipeListItem & { author: { id: number; username: string; avatarUrl: string | null } | null })[]; total: number; page: number; limit: number }>(`/recipes/discover?page=${page}&limit=${limit}${category ? `&category=${encodeURIComponent(category)}` : ''}${search ? `&search=${encodeURIComponent(search)}` : ''}`),
 
   updateProfile: (data: { email: string; username: string }) =>
     request<UserResponse>('/auth/profile', { method: 'PUT', body: JSON.stringify(data) }),
@@ -94,8 +94,8 @@ export const api = {
   castVote: (messageId: number, vote: string) =>
     request<{ si: number; no: number; tal_vez: number; userVote: string }>('/messages/' + messageId + '/vote', { method: 'POST', body: JSON.stringify({ vote }) }),
 
-  closeVote: (messageId: number) =>
-    request<{ accepted: boolean; shoppingListId?: number; si: number; no: number; tal_vez: number }>('/messages/' + messageId + '/close-vote', { method: 'POST' }),
+  closeVote: (messageId: number, servingsMultiplier?: number) =>
+    request<{ accepted: boolean; shoppingListId?: number; si: number; no: number; tal_vez: number }>('/messages/' + messageId + '/close-vote', { method: 'POST', body: JSON.stringify({ servingsMultiplier: servingsMultiplier || 1 }) }),
 
   // Shopping lists
   getShoppingLists: () =>
@@ -136,11 +136,14 @@ export const api = {
   getMealPlan: (id: number) =>
     request<MealPlan>('/meal-plans/' + id),
 
-  updateMealPlanEntries: (id: number, entries: { dayOfWeek: number; recipeId: number }[]) =>
+  updateMealPlanServings: (id: number, servingsMultiplier: number) =>
+    request<MealPlan>('/meal-plans/' + id + '/servings', { method: 'PUT', body: JSON.stringify({ servingsMultiplier }) }),
+
+  updateMealPlanEntries: (id: number, entries: { dayOfWeek: number; mealType: string; recipeId: number }[]) =>
     request<MealPlan>('/meal-plans/' + id + '/entries', { method: 'PUT', body: JSON.stringify({ entries }) }),
 
-  generateShoppingListFromMealPlan: (id: number) =>
-    request<{ id: number; name: string }>('/meal-plans/' + id + '/generate-list', { method: 'POST' }),
+  generateShoppingListFromMealPlan: (id: number, servingsMultiplier?: number) =>
+    request<{ id: number; name: string }>('/meal-plans/' + id + '/generate-list', { method: 'POST', body: JSON.stringify({ servingsMultiplier: servingsMultiplier || 1 }) }),
 
   deleteMealPlan: (id: number) =>
     request<{ message: string }>('/meal-plans/' + id, { method: 'DELETE' }),
@@ -153,6 +156,7 @@ export const api = {
     imageBase64?: string;
     servings: number;
     prepTime: number;
+    category?: string;
     ingredients: { name: string; quantity: string; unit: string }[];
     steps: { description: string }[];
   }) =>
@@ -163,6 +167,7 @@ export const api = {
     imageBase64?: string;
     servings: number;
     prepTime: number;
+    category?: string;
     ingredients: { name: string; quantity: string; unit: string }[];
     steps: { description: string }[];
   }) =>

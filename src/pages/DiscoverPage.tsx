@@ -36,9 +36,25 @@ export default function DiscoverPage() {
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchTimeout, setSearchTimeout] = useState<ReturnType<typeof setTimeout> | null>(null)
   const sentinelRef = useRef<HTMLDivElement>(null)
 
   const hasMore = recipes.length < total
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value)
+    
+    if (searchTimeout) clearTimeout(searchTimeout)
+    
+    const timeout = setTimeout(() => {
+      setRecipes([])
+      setPage(1)
+      setTotal(0)
+    }, 300)
+    
+    setSearchTimeout(timeout)
+  }
 
   useEffect(() => {
     setRecipes([])
@@ -50,7 +66,7 @@ export default function DiscoverPage() {
     if (page === 1) setLoading(true)
     else setLoadingMore(true)
 
-    api.getDiscoverRecipes(page, LIMIT, selectedCategory || undefined)
+    api.getDiscoverRecipes(page, LIMIT, selectedCategory || undefined, searchQuery || undefined)
       .then(data => {
         if (page === 1) {
           setRecipes(data.recipes)
@@ -64,7 +80,7 @@ export default function DiscoverPage() {
         setLoading(false)
         setLoadingMore(false)
       })
-  }, [page, selectedCategory])
+  }, [page, selectedCategory, searchQuery])
 
   useEffect(() => {
     if (!sentinelRef.current || !hasMore || loading || loadingMore) return
@@ -98,6 +114,25 @@ export default function DiscoverPage() {
       <h2 className={styles.pageTitle}>Descubrí</h2>
       <p className={styles.subtitle}>Recetas de otros chefs</p>
 
+      <div className={styles.searchBox}>
+        <SearchIcon height="16" width="16" fill="var(--c-text-secondary)" />
+        <input
+          type="text"
+          placeholder="Buscar recetas..."
+          value={searchQuery}
+          onChange={(e) => handleSearchChange(e.target.value)}
+          className={styles.searchInput}
+        />
+        {searchQuery && (
+          <button
+            className={styles.clearButton}
+            onClick={() => handleSearchChange('')}
+          >
+            ✕
+          </button>
+        )}
+      </div>
+
       <div className={styles.categoryFilter}>
         <button
           className={`${styles.catBtn} ${selectedCategory === '' ? styles.catActive : ''}`}
@@ -119,7 +154,7 @@ export default function DiscoverPage() {
       {recipes.length === 0 ? (
         <div className={styles.empty}>
           <div className={styles.emptyVisual}><SearchIcon height='24' width='24'  fill='var(--c-surface)'/> </div>
-          <p>No hay recetas{selectedCategory ? ` en "${selectedCategory}"` : ''} de otros chefs</p>
+          <p>No hay recetas{selectedCategory ? ` en "${selectedCategory}"` : ''}{ searchQuery ? ` que coincidan con "${searchQuery}"` : ''} de otros chefs</p>
         </div>
       ) : (
         <div className={styles.masonry}>

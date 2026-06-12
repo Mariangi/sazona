@@ -134,12 +134,14 @@ export interface SavedRecipe {
 export interface MealPlan {
   id: number;
   weekStart: string;
+  servingsMultiplier: number;
   createdAt: string;
   entries: MealPlanEntry[];
 }
 
 export interface MealPlanEntry {
   dayOfWeek: number;
+  mealType: string; // 'breakfast' | 'lunch' | 'snack' | 'dinner'
   recipeId: number;
   recipeName: string;
   recipeImage: string | null;

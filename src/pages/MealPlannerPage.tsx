@@ -86,8 +86,8 @@ export default function MealPlannerPage() {
     setShowPicker(null);
     try {
       const existing = mealPlan.entries.filter(e => e.dayOfWeek !== dayOfWeek);
-      const newEntry = { dayOfWeek, recipeId };
-      const updated = await api.updateMealPlanEntries(mealPlan.id, [...existing.map(e => ({ dayOfWeek: e.dayOfWeek, recipeId: e.recipeId })), newEntry]);
+      const newEntry = { dayOfWeek, recipeId, mealType: 'lunch' };
+      const updated = await api.updateMealPlanEntries(mealPlan.id, [...existing.map(e => ({ dayOfWeek: e.dayOfWeek, recipeId: e.recipeId, mealType: e.mealType })), newEntry]);
       setMealPlan(updated);
     } catch { } finally {
       setSaving(false);
@@ -99,7 +99,7 @@ export default function MealPlannerPage() {
     setSaving(true);
     try {
       const remaining = mealPlan.entries.filter(e => e.dayOfWeek !== dayOfWeek);
-      const updated = await api.updateMealPlanEntries(mealPlan.id, remaining.map(e => ({ dayOfWeek: e.dayOfWeek, recipeId: e.recipeId })));
+      const updated = await api.updateMealPlanEntries(mealPlan.id, remaining.map(e => ({ dayOfWeek: e.dayOfWeek, recipeId: e.recipeId, mealType: e.mealType })));
       setMealPlan(updated);
     } catch { } finally {
       setSaving(false);

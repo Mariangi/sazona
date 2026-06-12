@@ -253,6 +253,7 @@ export function groupRoutes(app: FastifyInstance) {
   app.post('/api/messages/:id/close-vote', { preHandler: authMiddleware }, async (request, reply) => {
     const { userId } = (request as any).user;
     const { id } = request.params as { id: string };
+    const { servingsMultiplier = 1 } = request.body as { servingsMultiplier?: number };
 
     const msg = db.select().from(schema.groupMessages).where(eq(schema.groupMessages.id, Number(id))).get();
     if (!msg) return reply.status(404).send({ message: 'Mensaje no encontrado', statusCode: 404 });
@@ -278,10 +279,48 @@ export function groupRoutes(app: FastifyInstance) {
       }).returning().get();
 
       if (ingredients.length > 0) {
+        const aggregated = new Map<string, { quantity: string; unit: string }[]>();
+        for (const ing of ingredients) {
+          const key = ing.name.toLowerCase().trim();
+          if (!aggregated.has(key)) aggregated.set(key, []);
+          aggregated.get(key)!.push({
+            quantity: ing.quantity || '',
+            unit: ing.unit || '',
+          });
+        }
+
+        const items = Array.from(aggregated.entries()).map(([name, instances]) => {
+          const first = instances[0];
+          const allSameUnit = instances.every(i => i.unit === first.unit);
+
+          if (allSameUnit && first.quantity) {
+            let totalQty = instances.reduce((sum, i) => {
+              const q = parseFloat(i.quantity.replace(',', '.'));
+              return sum + (isNaN(q) ? 0 : q);
+            }, 0);
+            totalQty *= servingsMultiplier;
+            return {
+              name: name.charAt(0).toUpperCase() + name.slice(1),
+              quantity: totalQty > 0 ? String(Math.round(totalQty * 100) / 100) : null,
+              unit: first.unit,
+            };
+          }
+
+          const parts = instances.map(i =>
+            [i.quantity, i.unit].filter(Boolean).join(' ')
+          ).filter(Boolean).join(' + ');
+
+          return {
+            name: name.charAt(0).toUpperCase() + name.slice(1),
+            quantity: parts || null,
+            unit: '',
+          };
+        });
+
         db.insert(schema.shoppingListItems).values(
-          ingredients.map((ing, i) => ({
+          items.map((ing, i) => ({
             listId: list.id, name: ing.name,
-            quantity: ing.quantity || null, unit: ing.unit || null,
+            quantity: ing.quantity, unit: ing.unit || null,
             orderIndex: i,
           }))
         ).run();

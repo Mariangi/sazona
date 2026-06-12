@@ -51,7 +51,7 @@ export function recipeRoutes(app: FastifyInstance) {
 
   app.get('/api/recipes/discover', { preHandler: authMiddleware }, async (request) => {
     const { userId } = (request as any).user;
-    const query = request.query as { page?: string; limit?: string; category?: string };
+    const query = request.query as { page?: string; limit?: string; category?: string; search?: string };
     const page = Math.max(1, Number(query.page) || 1);
     const limit = Math.min(50, Math.max(1, Number(query.limit) || 12));
     const offset = (page - 1) * limit;
@@ -59,6 +59,9 @@ export function recipeRoutes(app: FastifyInstance) {
     const conditions = [ne(schema.recipes.userId, userId)];
     if (query.category) {
       conditions.push(eq(schema.recipes.category, query.category));
+    }
+    if (query.search) {
+      conditions.push(sql`lower(${schema.recipes.name}) like lower('%' || ${query.search} || '%')`);
     }
 
     const whereClause = and(...conditions);
@@ -228,8 +231,6 @@ export function recipeRoutes(app: FastifyInstance) {
   });
 
   app.post('/api/recipes/find-by-ingredients', { preHandler: authMiddleware }, async (request, reply) => {
-    const { userId } = (request as any).user;
-
     const parsed = findIngredientsSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ message: 'Datos inválidos', statusCode: 400 });
@@ -240,15 +241,13 @@ export function recipeRoutes(app: FastifyInstance) {
       i.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     );
 
-    const userRecipes = db.select().from(schema.recipes)
-      .where(eq(schema.recipes.userId, userId))
-      .all();
+    const allRecipes = db.select().from(schema.recipes).all();
 
-    if (userRecipes.length === 0) {
-      return reply.status(404).send({ message: 'No tienes recetas aún', statusCode: 404 });
+    if (allRecipes.length === 0) {
+      return [];
     }
 
-    const recipeIds = userRecipes.map(r => r.id);
+    const recipeIds = allRecipes.map(r => r.id);
 
     const allIngredients = db.select()
       .from(schema.recipeIngredients)
@@ -261,7 +260,7 @@ export function recipeRoutes(app: FastifyInstance) {
       recipeMap.get(ing.recipeId)!.push(ing);
     }
 
-    const results = userRecipes.map(recipe => {
+    const results = allRecipes.map(recipe => {
       const recipeIngs = recipeMap.get(recipe.id) || [];
       const matchInfo = recipeIngs.map(ri => {
         const normalizedName = ri.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');

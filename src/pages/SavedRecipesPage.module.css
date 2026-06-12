@@ -194,3 +194,23 @@
 .unsaveBtn:hover {
   background: var(--c-error);
 }
+
+.skeletonCard {
+  background: var(--c-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1.5px solid var(--c-border);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.endMessage {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--c-text-secondary);
+  font-size: 0.9rem;
+}

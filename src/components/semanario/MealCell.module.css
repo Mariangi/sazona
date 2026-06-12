@@ -1,0 +1,138 @@
+.emptyCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0.5rem;
+}
+
+.addButton {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed var(--c-primary);
+  background: transparent;
+  color: var(--c-primary);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.addButton:hover {
+  background: var(--c-primary-light);
+  color: var(--c-primary-dark);
+}
+
+.filledCell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--c-surface);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.filledCell:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 50px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
+.recipeName {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--c-text);
+  margin: 0;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.removeButton {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: var(--c-error);
+  color: white;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.filledCell:hover .removeButton {
+  opacity: 1;
+}
+
+.removeButton:hover {
+  background: var(--c-error-dark);
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-top: 1px solid var(--c-border);
+  background: var(--c-bg);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.filledCell:hover .actions {
+  opacity: 1;
+}
+
+.changeButton {
+  flex: 1;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--c-primary);
+  background: transparent;
+  color: var(--c-primary);
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.changeButton:hover {
+  background: var(--c-primary);
+  color: white;
+}

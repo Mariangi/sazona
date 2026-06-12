@@ -101,6 +101,7 @@ export const mealPlans = sqliteTable('meal_plans', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   userId: integer('user_id').notNull().references(() => users.id),
   weekStart: text('week_start').notNull(),
+  servingsMultiplier: integer('servings_multiplier').notNull().$default(() => 1),
   createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
 });
 
@@ -109,5 +110,6 @@ export const mealPlanEntries = sqliteTable('meal_plan_entries', {
   mealPlanId: integer('meal_plan_id').notNull().references(() => mealPlans.id),
   recipeId: integer('recipe_id').notNull().references(() => recipes.id),
   dayOfWeek: integer('day_of_week').notNull(),
+  mealType: text('meal_type').notNull().$default(() => 'lunch'), // 'breakfast' | 'lunch' | 'snack' | 'dinner'
   createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
 });

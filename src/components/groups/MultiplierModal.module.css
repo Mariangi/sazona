@@ -1,0 +1,173 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  background: var(--c-surface);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 2rem 1.5rem;
+  width: 100%;
+  max-width: 100%;
+  animation: slideUp 0.3s ease;
+  border-top: 1.5px solid var(--c-border);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 768px) {
+  .overlay {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal {
+    border-radius: var(--radius-xl);
+    width: 90%;
+    max-width: 400px;
+    border: 1.5px solid var(--c-border);
+  }
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--c-text);
+  margin: 0 0 0.5rem;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--c-text-secondary);
+  margin: 0 0 1.5rem;
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.decreaseBtn,
+.increaseBtn {
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--radius-md);
+  background: var(--c-surface);
+  color: var(--c-text);
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.decreaseBtn:hover,
+.increaseBtn:hover {
+  background: var(--c-bg);
+  border-color: var(--c-primary);
+  color: var(--c-primary);
+}
+
+.decreaseBtn:active,
+.increaseBtn:active {
+  transform: scale(0.95);
+}
+
+.input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--radius-md);
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: var(--c-primary);
+}
+
+/* Remove number input spinner */
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.cancelBtn,
+.confirmBtn {
+  flex: 1;
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelBtn {
+  background: var(--c-bg);
+  color: var(--c-text);
+  border: 1.5px solid var(--c-border);
+}
+
+.cancelBtn:hover {
+  background: var(--c-border);
+}
+
+.confirmBtn {
+  background: var(--c-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 130, 64, 0.3);
+}
+
+.confirmBtn:hover {
+  background: var(--c-primary-hover);
+  transform: translateY(-1px);
+}
+
+.confirmBtn:active {
+  transform: translateY(0);
+}

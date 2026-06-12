@@ -4,6 +4,7 @@ import type { GroupMessage } from '@sasona/shared'
 import { api } from '../api/client'
 import { useAuth } from '../hooks/useAuth'
 import Button from '../components/ui/Button'
+import MultiplierModal from '../components/groups/MultiplierModal'
 import styles from './GroupPage.module.css'
 import { ArrowLeftIcon, CutleryIcon, EditIcon, ThumbDownIcon, ThumbsUpDownIcon, ThumbUpIcon } from '../components/ui/Icons'
 
@@ -20,6 +21,8 @@ export default function GroupPage() {
   const [sending, setSending] = useState(false)
   const [editingName, setEditingName] = useState(false)
   const [editNameValue, setEditNameValue] = useState('')
+  const [showMultiplierModal, setShowMultiplierModal] = useState(false)
+  const [pendingCloseVoteMsgId, setPendingCloseVoteMsgId] = useState<number | null>(null)
   const editInputRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
 
@@ -78,15 +81,29 @@ export default function GroupPage() {
   }
 
   async function handleCloseVote(msgId: number) {
+    setPendingCloseVoteMsgId(msgId)
+    setShowMultiplierModal(true)
+  }
+
+  async function handleConfirmCloseVote(multiplier: number) {
+    if (!pendingCloseVoteMsgId) return
     try {
-      const res = await api.closeVote(msgId)
+      const res = await api.closeVote(pendingCloseVoteMsgId, multiplier)
       setMessages(prev => prev.map(m =>
-        m.id === msgId ? { ...m, status: res.accepted ? 'accepted' : 'active' } : m
+        m.id === pendingCloseVoteMsgId ? { ...m, status: res.accepted ? 'accepted' : 'active' } : m
       ))
       if (res.accepted) {
         alert(' Propuesta aceptada! Se generó una lista de compras.')
       }
-    } catch {}
+    } catch {} finally {
+      setShowMultiplierModal(false)
+      setPendingCloseVoteMsgId(null)
+    }
+  }
+
+  function handleCancelCloseVote() {
+    setShowMultiplierModal(false)
+    setPendingCloseVoteMsgId(null)
   }
 
   const isOwn = (uid: number) => uid === user?.id
@@ -96,6 +113,12 @@ export default function GroupPage() {
 
   return (
     <div className={styles.container}>
+      <MultiplierModal
+        isOpen={showMultiplierModal}
+        onConfirm={handleConfirmCloseVote}
+        onCancel={handleCancelCloseVote}
+      />
+
       <div className={styles.header}>
         <button className={styles.backBtn} onClick={() => navigate('/groups')}><ArrowLeftIcon height='12' width='12' fill='var(--c-primary)'/> Grupos</button>
         <div className={styles.nameRow}>

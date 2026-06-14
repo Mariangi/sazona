@@ -3,6 +3,7 @@ import { useAuth } from "../hooks/useAuth";
 import styles from "./DashboardPage.module.css";
 import {
   BookIcon,
+  CalendarIcon,
   ChefIcon,
   DiceIcon,
   FridgeIcon,
@@ -56,6 +57,27 @@ export default function DashboardPage() {
               </div>
 
               <span className={styles.actionBtn}>¡Sorpréndeme!</span>
+            </div>
+          </button>
+
+          <button
+            className={styles.actionCard}
+            onClick={() => navigate("/semanario")}
+          >
+            <div className={styles.actionIcon}>
+              <CalendarIcon />
+            </div>
+            <div className={styles.actionContent}>
+              <div className={styles.actionBody}>
+                <span className={styles.actionTitle}>
+                  Organizá tu semana
+                </span>
+                <p className={styles.actionDesc}>
+                  Planificá el menú semanal con desayuno, almuerzo, merienda y cena.
+                </p>
+              </div>
+
+              <span className={styles.actionBtn}>¡Planificá!</span>
             </div>
           </button>
 

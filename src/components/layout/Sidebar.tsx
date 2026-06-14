@@ -20,8 +20,8 @@ const mobileNav = [
   { to: '/discover', label: 'Descubrí', icon:<SearchIcon/> },
   { to: '/random-dinner', label: 'Sorpresa', icon: <DiceIcon/> , highlight: true },
   { to: '/groups', label: 'Familia', icon: <GroupIcon/> },
-  { to: '/shopping-lists', label: 'Compras', icon: <ListToBuyIcon/> },
-]
+  { to: '/fridge', label: 'Heladera', icon: <FridgeIcon /> },
+ ]
 
 export default function Sidebar() {
   const { user, setUser } = useAuth()

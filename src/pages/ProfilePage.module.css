@@ -156,6 +156,48 @@
   border-color: var(--c-primary);
 }
 
+.cardLink {
+  text-decoration: none;
+  display: block;
+}
+
+.emptySection {
+  margin-bottom: 0.5rem;
+}
+
+.emptyState {
+  background: var(--c-bg);
+  border: 1.5px dashed var(--c-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--c-text-secondary);
+}
+
+.emptyLink {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--c-primary);
+  text-decoration: none;
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--c-primary-light);
+  transition: all 0.2s;
+}
+
+.emptyLink:hover {
+  background: var(--c-primary);
+  color: white;
+}
 
 @media (max-width: 480px) {
   .favoriteCard {

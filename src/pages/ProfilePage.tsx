@@ -6,7 +6,12 @@ import AvatarUpload from "../components/profile/AvatarUpload";
 import ProfileForm from "../components/profile/ProfileForm";
 import ChangePasswordForm from "../components/profile/ChangePasswordForm";
 import styles from "./ProfilePage.module.css";
-import { ArrowRightIcon, CutleryIcon } from "../components/ui/Icons";
+import {
+  ArrowRightIcon,
+  CalendarIcon,
+  CutleryIcon,
+  ListToBuyIcon,
+} from "../components/ui/Icons";
 import { Popup } from "../components/ui/Popup";
 import LogOut from "../components/Auth/LogOut";
 import AppVersion from "../components/ui/AppVersion";
@@ -48,15 +53,17 @@ export default function ProfilePage() {
             <h2>Chef {user?.username}</h2>
           </div>
 
-          {recipes.length > 0 && (
-            <section>
-              <div className={styles.sectionHeader}>
-                <h2 className={styles.sectionTitle}>Mis recetas</h2>
+          <section className={styles.emptySection}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Mis recetas</h2>
+              {recipes.length > 0 && (
                 <NavLink to="/recipes" className={styles.allLink}>
                   <span className={styles.all}>ver todas</span>
                 </NavLink>
-              </div>
+              )}
+            </div>
 
+            {recipes.length > 0 ? (
               <div className={styles.favorites}>
                 {recipes.slice(0, 3).map((recipe) => (
                   <NavLink
@@ -81,18 +88,27 @@ export default function ProfilePage() {
                   </NavLink>
                 ))}
               </div>
-            </section>
-          )}
+            ) : (
+              <div className={styles.emptyState}>
+                <p>Todavía no creaste ninguna receta</p>
+                <NavLink to="/recipes/new" className={styles.emptyLink}>
+                  Crear tu primera receta
+                </NavLink>
+              </div>
+            )}
+          </section>
 
-          {favorites.length > 0 && (
-            <section>
-              <div className={styles.sectionHeader}>
-                <h2 className={styles.sectionTitle}>Mis favoritos</h2>
+          <section className={styles.emptySection}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Mis favoritos</h2>
+              {favorites.length > 0 && (
                 <NavLink to="/saved" className={styles.allLink}>
                   <span className={styles.all}>ver todos</span>
                 </NavLink>
-              </div>
+              )}
+            </div>
 
+            {favorites.length > 0 ? (
               <div className={styles.favorites}>
                 {favorites.slice(0, 3).map((recipe) => (
                   <NavLink
@@ -117,8 +133,29 @@ export default function ProfilePage() {
                   </NavLink>
                 ))}
               </div>
-            </section>
-          )}
+            ) : (
+              <div className={styles.emptyState}>
+                <p>Todavía no guardaste recetas</p>
+                <NavLink to="/discover" className={styles.emptyLink}>
+                  Descubrir recetas
+                </NavLink>
+              </div>
+            )}
+          </section>
+
+          <NavLink to="/meal-planner" className={styles.cardLink}>
+            <div className={styles.card}>
+              <span>Menu semanal</span>
+              <CalendarIcon height="20" width="20" fill="var(--c-text)" />
+            </div>
+          </NavLink>
+
+          <NavLink to="/shopping-lists" className={styles.cardLink}>
+            <div className={styles.card}>
+              <span>Lista de compras</span>
+              <ListToBuyIcon height="20" width="20" fill="var(--c-text)" />
+            </div>
+          </NavLink>
 
           <div className={styles.card} onClick={() => setShowPopupEdit(true)}>
             <span>Editar perfil</span>

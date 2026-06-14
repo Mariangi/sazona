@@ -8,8 +8,14 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .pageTitle {
@@ -220,6 +226,7 @@
 .authorName {
   font-size: 0.75rem;
   color: var(--c-text-secondary);
+  text-overflow: ellipsis;
 }
 
 .sentinel {
@@ -264,7 +271,12 @@
 .skelImage {
   width: 100%;
   height: 160px;
-  background: linear-gradient(90deg, var(--c-border) 25%, #e8e0d6 50%, var(--c-border) 75%);
+  background: linear-gradient(
+    90deg,
+    var(--c-border) 25%,
+    #e8e0d6 50%,
+    var(--c-border) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -279,7 +291,12 @@
 .skelLine {
   height: 12px;
   border-radius: 4px;
-  background: linear-gradient(90deg, var(--c-border) 25%, #e8e0d6 50%, var(--c-border) 75%);
+  background: linear-gradient(
+    90deg,
+    var(--c-border) 25%,
+    #e8e0d6 50%,
+    var(--c-border) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -291,6 +308,10 @@
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }

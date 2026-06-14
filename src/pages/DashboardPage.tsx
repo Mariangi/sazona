@@ -62,7 +62,7 @@ export default function DashboardPage() {
 
           <button
             className={styles.actionCard}
-            onClick={() => navigate("/semanario")}
+            onClick={() => navigate("/meal-planner")}
           >
             <div className={styles.actionIcon}>
               <CalendarIcon />

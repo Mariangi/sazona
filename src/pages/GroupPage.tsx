@@ -5,6 +5,7 @@ import { api } from '../api/client'
 import { useAuth } from '../hooks/useAuth'
 import Button from '../components/ui/Button'
 import MultiplierModal from '../components/groups/MultiplierModal'
+import RecipePickerModal from '../components/groups/RecipePickerModal'
 import styles from './GroupPage.module.css'
 import { ArrowLeftIcon, CutleryIcon, EditIcon, ThumbDownIcon, ThumbsUpDownIcon, ThumbUpIcon } from '../components/ui/Icons'
 
@@ -92,8 +93,14 @@ export default function GroupPage() {
       setMessages(prev => prev.map(m =>
         m.id === pendingCloseVoteMsgId ? { ...m, status: res.accepted ? 'accepted' : 'active' } : m
       ))
-      if (res.accepted) {
-        alert(' Propuesta aceptada! Se generó una lista de compras.')
+      if (res.accepted && res.shoppingListId) {
+        const msg = messages.find(m => m.id === pendingCloseVoteMsgId)
+        const recipeName = msg?.recipeName || 'la receta'
+        const listMsg = await api.sendMessage(Number(id), {
+          message: `📋 "${recipeName}" fue aceptada! Se generó una lista de compras.`,
+        })
+        setMessages(prev => [listMsg, ...prev])
+        navigate('/shopping-lists/' + res.shoppingListId)
       }
     } catch {} finally {
       setShowMultiplierModal(false)
@@ -203,19 +210,10 @@ export default function GroupPage() {
 
       <div className={styles.inputArea}>
         {showRecipePicker && (
-          <div className={styles.recipePicker}>
-            <span className={styles.pickerTitle}>Elegí una receta:</span>
-            <div className={styles.pickerScroll}>
-              {recipes.map(r => (
-                <button key={r.id} className={styles.pickerItem} onClick={() => handleSend(r.id)}>
-                  {r.name}
-                </button>
-              ))}
-            </div>
-            <button className={styles.pickerCancel} onClick={() => setShowRecipePicker(false)}>
-              Cancelar
-            </button>
-          </div>
+          <RecipePickerModal
+            onSelect={(recipeId) => handleSend(recipeId)}
+            onClose={() => setShowRecipePicker(false)}
+          />
         )}
 
         <div className={styles.inputRow}>

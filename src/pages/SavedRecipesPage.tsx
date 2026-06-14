@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import type { SavedRecipe } from '@sasona/shared'
 import { api } from '../api/client'
 import styles from './SavedRecipesPage.module.css'
-import { ClockIcon, CutleryIcon, PeopleIcon, SavedIcon, SaveIcon } from '../components/ui/Icons'
+import { ClockIcon, CloseIcon, CutleryIcon, PeopleIcon, SavedIcon, SaveIcon } from '../components/ui/Icons'
 
 const ITEMS_PER_PAGE = 12
 
@@ -106,7 +106,7 @@ export default function SavedRecipesPage() {
                   </div>
                 </div>
                 <button className={styles.unsaveBtn} onClick={() => handleUnsave(r.recipeId)} title="Quitar de guardados">
-                  ✕
+                  <CloseIcon fill='var(--c-text-tertiary)' />
                 </button>
               </div>
             ))}

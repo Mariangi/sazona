@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { MealPlan, MealPlanEntry } from '@sasona/shared'
 import MealCell from './MealCell'
 import RecipeSelector from './RecipeSelector'
@@ -21,9 +21,14 @@ interface WeeklyGridProps {
 
 export default function WeeklyGrid({ mealPlan, onEntriesChange }: WeeklyGridProps) {
   const [selectedCell, setSelectedCell] = useState<{ day: number; mealType: string } | null>(null)
+  const [localEntries, setLocalEntries] = useState<MealPlanEntry[]>(mealPlan.entries)
+
+  useEffect(() => {
+    setLocalEntries(mealPlan.entries)
+  }, [mealPlan.entries])
 
   const getEntryForCell = (day: number, mealType: string): MealPlanEntry | undefined => {
-    return mealPlan.entries.find(e => e.dayOfWeek === day && e.mealType === mealType)
+    return localEntries.find(e => e.dayOfWeek === day && e.mealType === mealType)
   }
 
   const handleSelectRecipe = (recipeId: number, recipeName: string, recipeImage: string | null) => {
@@ -37,19 +42,21 @@ export default function WeeklyGrid({ mealPlan, onEntriesChange }: WeeklyGridProp
       recipeImage,
     }
 
-    const filtered = mealPlan.entries.filter(
+    const filtered = localEntries.filter(
       e => !(e.dayOfWeek === selectedCell.day && e.mealType === selectedCell.mealType)
     )
     const updated = [...filtered, newEntry]
 
+    setLocalEntries(updated)
     onEntriesChange(updated)
     setSelectedCell(null)
   }
 
   const handleRemoveRecipe = (day: number, mealType: string) => {
-    const filtered = mealPlan.entries.filter(
+    const filtered = localEntries.filter(
       e => !(e.dayOfWeek === day && e.mealType === mealType)
     )
+    setLocalEntries(filtered)
     onEntriesChange(filtered)
   }
 
@@ -66,8 +73,10 @@ export default function WeeklyGrid({ mealPlan, onEntriesChange }: WeeklyGridProp
 
         {/* Meal rows */}
         {MEAL_TYPES.map(mealType => (
-          <div key={mealType}>
-            <div className={styles.mealTypeCell}>{MEAL_LABELS[mealType]}</div>
+          <>
+            <div key={`label-${mealType}`} className={styles.mealTypeCell}>
+              {MEAL_LABELS[mealType]}
+            </div>
             {DAY_VALUES.map(day => {
               const entry = getEntryForCell(day, mealType)
               return (
@@ -82,7 +91,7 @@ export default function WeeklyGrid({ mealPlan, onEntriesChange }: WeeklyGridProp
                 </div>
               )
             })}
-          </div>
+          </>
         ))}
       </div>
 

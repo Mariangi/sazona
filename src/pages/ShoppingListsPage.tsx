@@ -5,6 +5,7 @@ import { api } from '../api/client'
 import Button from '../components/ui/Button'
 import { Popup } from '../components/ui/Popup'
 import styles from './ShoppingListsPage.module.css'
+import { CloseIcon } from '../components/ui/Icons'
 
 export default function ShoppingListsPage() {
   const navigate = useNavigate()
@@ -107,7 +108,7 @@ export default function ShoppingListsPage() {
                 className={styles.deleteBtn}
                 onClick={(e) => { e.stopPropagation(); setShowDeletePopup(l.id) }}
                 title="Eliminar"
-              >✕</button>
+              ><CloseIcon fill='var(--c-text-tertiary)'/></button>
             </div>
           ))}
         </div>

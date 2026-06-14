@@ -9,6 +9,7 @@ import styles from "./ProfilePage.module.css";
 import { ArrowRightIcon, CutleryIcon } from "../components/ui/Icons";
 import { Popup } from "../components/ui/Popup";
 import LogOut from "../components/Auth/LogOut";
+import AppVersion from "../components/ui/AppVersion";
 import { NavLink } from "react-router-dom";
 
 export default function ProfilePage() {
@@ -159,7 +160,7 @@ export default function ProfilePage() {
           </Popup>
         )}
       </div>
-      <p className={styles.version}>v1.1.1</p>
+      <AppVersion />
     </section>
   );
 }

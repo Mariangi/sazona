@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 0.5rem;
+  padding: 0.25rem;
 }
 
 .addButton {
@@ -15,13 +15,29 @@
   border-radius: var(--radius-md);
   font-weight: 600;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .addButton:hover {
   background: var(--c-primary-light);
   color: var(--c-primary-dark);
+}
+
+.mealLabel {
+  display: block;
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--c-text-secondary);
+  padding: 0.25rem 0.5rem;
+  background: var(--c-bg);
+  border-bottom: 1px solid var(--c-border);
 }
 
 .filledCell {

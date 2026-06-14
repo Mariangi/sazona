@@ -3,6 +3,7 @@ import type { RecipeListItem } from '@sasona/shared'
 import { api } from '../../api/client'
 import { CATEGORIES } from '@sasona/shared'
 import styles from './RecipeSelector.module.css'
+import { CloseIcon } from '../ui/Icons'
 
 interface RecipeSelectorProps {
   day: number
@@ -65,7 +66,7 @@ export default function RecipeSelector({
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
         <div className={styles.header}>
           <h2>Selecciona receta para {MEAL_LABELS[mealType]}</h2>
-          <button className={styles.closeButton} onClick={onClose}>✕</button>
+          <button className={styles.closeButton} onClick={onClose}><CloseIcon fill='var(--c-text-tertiary)' /></button>
         </div>
 
         <div className={styles.filters}>

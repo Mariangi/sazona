@@ -1,5 +1,13 @@
 import type { MealPlanEntry } from '@sasona/shared'
 import styles from './MealCell.module.css'
+import { CloseIcon } from '../ui/Icons'
+
+const MEAL_LABELS: Record<string, string> = {
+  breakfast: 'Desayuno',
+  lunch: 'Almuerzo',
+  snack: 'Merienda',
+  dinner: 'Cena',
+}
 
 interface MealCellProps {
   entry?: MealPlanEntry
@@ -11,6 +19,7 @@ interface MealCellProps {
 
 export default function MealCell({
   entry,
+  mealType,
   onSelect,
   onRemove,
 }: MealCellProps) {
@@ -18,7 +27,7 @@ export default function MealCell({
     return (
       <div className={styles.emptyCell}>
         <button className={styles.addButton} onClick={onSelect}>
-          + Agregar
+          {MEAL_LABELS[mealType]}
         </button>
       </div>
     )
@@ -26,6 +35,7 @@ export default function MealCell({
 
   return (
     <div className={styles.filledCell}>
+      <span className={styles.mealLabel}>{MEAL_LABELS[mealType]}</span>
       <div className={styles.content}>
         {entry.recipeImage && (
           <img src={entry.recipeImage} alt={entry.recipeName} className={styles.image} />
@@ -34,7 +44,7 @@ export default function MealCell({
           <h4 className={styles.recipeName}>{entry.recipeName}</h4>
         </div>
         <button className={styles.removeButton} onClick={onRemove} title="Eliminar">
-          ✕
+          <CloseIcon fill='var(--c-text-tertiary)' />
         </button>
       </div>
       <div className={styles.actions}>

@@ -94,6 +94,7 @@ export const createMealPlanSchema = z.object({
 export const updateMealPlanEntriesSchema = z.object({
   entries: z.array(z.object({
     dayOfWeek: z.number().int().min(0).max(6),
+    mealType: z.string().min(1),
     recipeId: z.number().int().positive(),
   })),
 });

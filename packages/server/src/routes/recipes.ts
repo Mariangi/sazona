@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 import { db, schema } from '../db/index.js';
 import { authMiddleware } from '../auth/middleware.js';
 import { createRecipeSchema, updateRecipeSchema, findIngredientsSchema } from '@sasona/shared';
-import { eq, ne, desc, inArray, and, sql } from 'drizzle-orm';
+import { eq, desc, inArray, and, sql } from 'drizzle-orm';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOADS_DIR = join(__dirname, '..', '..', 'uploads');
@@ -56,7 +56,7 @@ export function recipeRoutes(app: FastifyInstance) {
     const limit = Math.min(50, Math.max(1, Number(query.limit) || 12));
     const offset = (page - 1) * limit;
 
-    const conditions = [ne(schema.recipes.userId, userId)];
+    const conditions: any[] = [];
     if (query.category) {
       conditions.push(eq(schema.recipes.category, query.category));
     }
@@ -271,6 +271,7 @@ export function recipeRoutes(app: FastifyInstance) {
       const matched = matchInfo.filter(m => m.matched);
       const missing = matchInfo.filter(m => !m.matched).map(m => m.name);
 
+      if (matched.length === 0) return null;
       if (!allowExtra && missing.length > 0) return null;
 
       return {

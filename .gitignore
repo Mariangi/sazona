@@ -5,6 +5,7 @@ packages/server/data/*.db
 packages/server/uploads/*
 .env
 .env.*
-android/.gradle/
-android/build/
-android/**/build/
+# This branch doesn't track the Capacitor Android project (that lives on `app`,
+# which has its own android/.gitignore). Ignore it wholesale here so leftover
+# native build output from switching branches doesn't show up as untracked.
+android/

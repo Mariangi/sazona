@@ -97,8 +97,24 @@
   color: var(--c-text-secondary);
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
+  .container {
+    max-width: none;
+    /* 1.25rem + 7.1rem match AuthLayout's mobile content padding (top gap +
+       fixed bottom-nav clearance); 5.25rem is the sticky mobile Header's own
+       height, which isn't otherwise expressible from this page's CSS. */
+    min-height: calc(100vh - 1.25rem - 7.1rem - 5.25rem);
+    margin: 0 -1rem;
+  }
+
   .deckContainer {
-    aspect-ratio: 3 / 4.2;
+    flex: 1;
+    width: 100%;
+    aspect-ratio: unset;
+    max-height: none;
+  }
+
+  .actions {
+    flex-shrink: 0;
   }
 }

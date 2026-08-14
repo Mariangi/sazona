@@ -6,7 +6,7 @@ import Button from "../components/ui/Button";
 import RecipeSwipeCard, {
   type RecipeSwipeCardHandle,
 } from "../components/recipes/RecipeSwipeCard";
-import { ChevronUpIcon, ThumbDownIcon, ThumbUpIcon } from "../components/ui/Icons";
+import { ArrowLeftIcon, ArrowRightIcon, ChevronUpIcon } from "../components/ui/Icons";
 import styles from "./SwipeDinnerPage.module.css";
 
 function shuffle<T>(arr: T[]): T[] {
@@ -61,7 +61,10 @@ export default function SwipeDinnerPage() {
     const top = deck[0];
     setDeck((prev) => prev.slice(1));
     setRevealedTopId(null);
-    if (top) api.saveRecipe(top.id).catch(() => {});
+    if (top) {
+      api.saveRecipe(top.id).catch(() => {});
+      navigate(`/recipes/${top.id}`);
+    }
   }
 
   function handleSwipeLeft() {
@@ -166,7 +169,7 @@ export default function SwipeDinnerPage() {
           aria-label="No, otra receta"
           onClick={() => topCardHandleRef.current?.triggerSwipe("left")}
         >
-          <ThumbDownIcon width="26" height="26" fill="var(--c-error)" />
+          <ArrowLeftIcon width="26" height="26" fill="var(--c-error)" />
         </button>
         <button
           type="button"
@@ -182,7 +185,7 @@ export default function SwipeDinnerPage() {
           aria-label="Sí, cocinar esto"
           onClick={() => topCardHandleRef.current?.triggerSwipe("right")}
         >
-          <ThumbUpIcon width="26" height="26" fill="var(--c-success)" />
+          <ArrowRightIcon width="26" height="26" fill="var(--c-success)" />
         </button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, type ReactNode } from 'react'
 import type { UserResponse } from '@sasona/shared'
 import { api } from '../api/client'
+import { getToken, clearToken } from '../api/storage'
 
 interface AuthContextType {
   user: UserResponse | null
@@ -21,22 +22,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      setLoading(false)
-      return
-    }
-    api.me()
-      .then(setUser)
-      .catch(() => {
-        localStorage.removeItem('token')
-        setUser(null)
-      })
-      .finally(() => setLoading(false))
+    getToken().then((token) => {
+      if (!token) {
+        setLoading(false)
+        return
+      }
+      api.me()
+        .then(setUser)
+        .catch(() => {
+          clearToken()
+          setUser(null)
+        })
+        .finally(() => setLoading(false))
+    })
   }, [])
 
   function logout() {
-    localStorage.removeItem('token')
+    clearToken()
     setUser(null)
   }
 

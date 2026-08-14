@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import type { RecipeMatch } from "@sasona/shared";
 import styles from "./RecipeMatchCard.module.css";
 import { ClockIcon, CutleryIcon, PeopleIcon } from "../ui/Icons";
+import { assetUrl } from "../../api/client";
 
 interface RecipeMatchCardProps {
   match: RecipeMatch;
@@ -19,7 +20,7 @@ export default function RecipeMatchCard({ match }: RecipeMatchCardProps) {
     >
       <div className={styles.imageWrapper}>
         {match.imageUrl ? (
-          <img src={match.imageUrl} alt={match.name} className={styles.image} />
+          <img src={assetUrl(match.imageUrl) ?? undefined} alt={match.name} className={styles.image} />
         ) : (
           <div className={styles.placeholder}><CutleryIcon/></div>
         )}

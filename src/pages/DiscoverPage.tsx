@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import type { RecipeListItem } from "@sasona/shared";
 import { CATEGORIES } from "@sasona/shared";
-import { api } from "../api/client";
+import { api, assetUrl } from "../api/client";
 import styles from "./DiscoverPage.module.css";
 import {
   ClockIcon,
@@ -172,7 +172,7 @@ export default function DiscoverPage() {
             >
               {recipe.imageUrl ? (
                 <img
-                  src={recipe.imageUrl}
+                  src={assetUrl(recipe.imageUrl) ?? undefined}
                   alt={recipe.name}
                   className={styles.cardImage}
                 />
@@ -211,7 +211,7 @@ export default function DiscoverPage() {
                     <span className={styles.authorAvatar}>
                       {recipe.author.avatarUrl ? (
                         <img
-                          src={recipe.author.avatarUrl}
+                          src={assetUrl(recipe.author.avatarUrl) ?? undefined}
                           alt=""
                           className={styles.authorAvatarImg}
                         />

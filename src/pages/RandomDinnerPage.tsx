@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { RecipeListItem, RecipeResponse } from "@sasona/shared";
-import { api } from "../api/client";
+import { api, assetUrl } from "../api/client";
 import Button from "../components/ui/Button";
 import styles from "./RandomDinnerPage.module.css";
 import {
@@ -190,7 +190,7 @@ export default function RandomDinnerPage() {
           <div className={styles.resultCard}>
             <div className={styles.resultImage}>
               {selected.imageUrl ? (
-                <img src={selected.imageUrl} alt={selected.name} />
+                <img src={assetUrl(selected.imageUrl) ?? undefined} alt={selected.name} />
               ) : (
                 <div className={styles.resultPlaceholder}>
                   <CutleryIcon />

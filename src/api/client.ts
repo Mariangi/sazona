@@ -3,11 +3,18 @@ import type {
   FamilyGroup, GroupMessage, ShoppingList, ShoppingListDetail,
   SavedRecipe, MealPlan,
 } from '@sasona/shared'
+import { getToken } from './storage'
 
-const API_BASE = '/api'
+const API_ORIGIN = import.meta.env.VITE_API_BASE_URL ?? ''
+const API_BASE = `${API_ORIGIN}/api`
+
+export function assetUrl(path: string | null | undefined): string | null {
+  if (!path) return null
+  return path.startsWith('/') ? `${API_ORIGIN}${path}` : path
+}
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const token = localStorage.getItem('token')
+  const token = await getToken()
   const headers: Record<string, string> = {
     ...(options.body ? { 'Content-Type': 'application/json' } : {}),
     ...(options.headers as Record<string, string>),

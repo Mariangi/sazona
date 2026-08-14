@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { MealPlan, RecipeListItem } from "@sasona/shared";
 import { CATEGORIES } from "@sasona/shared";
-import { api } from "../api/client";
+import { api, assetUrl } from "../api/client";
 import Button from "../components/ui/Button";
 import {
   ArrowLeftIcon,
@@ -394,7 +394,7 @@ export default function MealPlannerPage() {
                     >
                       <div className={styles.pickerItemImage}>
                         {recipe.imageUrl ? (
-                          <img src={recipe.imageUrl} alt={recipe.name} />
+                          <img src={assetUrl(recipe.imageUrl) ?? undefined} alt={recipe.name} />
                         ) : (
                           <CutleryIcon
                             height="20"

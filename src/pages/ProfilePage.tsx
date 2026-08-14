@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "../api/client";
+import { api, assetUrl } from "../api/client";
 import { useAuth } from "../hooks/useAuth";
 import type { SavedRecipe, RecipeListItem } from "@sasona/shared";
 import AvatarUpload from "../components/profile/AvatarUpload";
@@ -47,7 +47,7 @@ export default function ProfilePage() {
         <div className={styles.cards}>
           <div className={styles.info}>
             <AvatarUpload
-              currentUrl={user?.avatarUrl || null}
+              currentUrl={assetUrl(user?.avatarUrl)}
               onUpload={handleAvatarUpload}
             />
             <h2>Chef {user?.username}</h2>
@@ -74,7 +74,7 @@ export default function ProfilePage() {
                     <div className={styles.favoriteImageWrapper}>
                       {recipe.imageUrl ? (
                         <img
-                          src={recipe.imageUrl}
+                          src={assetUrl(recipe.imageUrl) ?? undefined}
                           alt={recipe.name}
                           className={styles.favoriteImage}
                         />
@@ -119,7 +119,7 @@ export default function ProfilePage() {
                     <div className={styles.favoriteImageWrapper}>
                       {recipe.imageUrl ? (
                         <img
-                          src={recipe.imageUrl}
+                          src={assetUrl(recipe.imageUrl) ?? undefined}
                           alt={recipe.name}
                           className={styles.favoriteImage}
                         />

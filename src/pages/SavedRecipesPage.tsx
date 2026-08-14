@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { SavedRecipe } from '@sasona/shared'
-import { api } from '../api/client'
+import { api, assetUrl } from '../api/client'
 import styles from './SavedRecipesPage.module.css'
 import { ClockIcon, CloseIcon, CutleryIcon, PeopleIcon, SavedIcon, SaveIcon } from '../components/ui/Icons'
 
@@ -87,7 +87,7 @@ export default function SavedRecipesPage() {
                 <div className={styles.cardMain} onClick={() => navigate('/recipes/' + r.recipeId)}>
                   <div className={styles.imageWrapper}>
                     {r.imageUrl ? (
-                      <img src={r.imageUrl} alt={r.name} className={styles.image} />
+                      <img src={assetUrl(r.imageUrl) ?? undefined} alt={r.name} className={styles.image} />
                     ) : (
                       <div className={styles.placeholder}><CutleryIcon height='12' width='12'/></div>
                     )}

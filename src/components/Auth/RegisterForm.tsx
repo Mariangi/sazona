@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { api } from '../../api/client'
+import { setToken } from '../../api/storage'
 import { useAuth } from '../../hooks/useAuth'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
@@ -30,7 +31,7 @@ export default function RegisterForm() {
         username: form.username,
         password: form.password,
       })
-      localStorage.setItem('token', res.token)
+      await setToken(res.token)
       setUser(res.user)
       navigate('/dashboard')
     } catch (err) {

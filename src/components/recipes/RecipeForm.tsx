@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { RecipeResponse } from '@sasona/shared'
 import { CATEGORIES } from '@sasona/shared'
-import { api } from '../../api/client'
+import { api, assetUrl } from '../../api/client'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
 import ImageUpload from './ImageUpload'
@@ -99,7 +99,7 @@ export default function RecipeForm({ recipe }: RecipeFormProps) {
         required
       />
 
-      <ImageUpload value={imageBase64} onChange={setImageBase64} existingImage={recipe?.imageUrl ?? undefined} />
+      <ImageUpload value={imageBase64} onChange={setImageBase64} existingImage={assetUrl(recipe?.imageUrl) ?? undefined} />
 
       <div className={styles.field}>
         <label className={styles.fieldLabel}>Categoría</label>

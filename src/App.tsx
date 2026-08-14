@@ -17,6 +17,7 @@ import ShoppingListDetail from './pages/ShoppingListDetail'
 import MealPlannerPage from './pages/MealPlannerPage'
 import AuthLayout from './components/layout/AuthLayout'
 import { useAuth } from './hooks/useAuth'
+import { useAndroidBackButton } from './hooks/useAndroidBackButton'
 
 function ProtectedRoute() {
   const { user, loading } = useAuth()
@@ -33,6 +34,8 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  useAndroidBackButton()
+
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/login" replace />} />

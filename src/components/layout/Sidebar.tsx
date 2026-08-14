@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import styles from './Sidebar.module.css'
-import { BookIcon, CalendarIcon, DiceIcon, FridgeIcon, GroupIcon, HomeIcon, ListToBuyIcon, Logo, SaveIcon, SearchIcon } from '../ui/Icons'
+import { BookIcon, CalendarIcon, ChefIcon, DiceIcon, FridgeIcon, GroupIcon, HomeIcon, ListToBuyIcon, Logo, SaveIcon, SearchIcon } from '../ui/Icons'
 
 const desktopNav = [
   { to: '/dashboard', label: 'Inicio', icon: <HomeIcon  fill='var(--c-text-secondary)'/> },
@@ -13,6 +13,7 @@ const desktopNav = [
   { to: '/groups', label: 'Grupos', icon: <GroupIcon  fill='var(--c-text-secondary)'/> },
   { to: '/meal-planner', label: 'Menu semanal', icon: <CalendarIcon fill='var(--c-text-secondary)'/> },
   { to: '/random-dinner', label: 'Sorpresa', icon: <DiceIcon  fill='var(--c-text-secondary)'/> },
+  { to: '/swipe', label: 'Antojo', icon: <ChefIcon  fill='var(--c-text-secondary)'/> },
 ]
 
 const mobileNav = [
@@ -21,6 +22,7 @@ const mobileNav = [
   { to: '/random-dinner', label: 'Sorpresa', icon: <DiceIcon/> , highlight: true },
   { to: '/groups', label: 'Familia', icon: <GroupIcon/> },
   { to: '/fridge', label: 'Heladera', icon: <FridgeIcon /> },
+  { to: '/swipe', label: 'Antojo', icon: <ChefIcon /> },
  ]
 
 export default function Sidebar() {

@@ -1,0 +1,149 @@
+.card {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--c-surface);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  touch-action: none;
+  user-select: none;
+  will-change: transform;
+}
+
+.imageArea {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--c-bg);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-user-drag: none;
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--c-primary-light), var(--c-bg));
+}
+
+.gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent 55%);
+  pointer-events: none;
+}
+
+.frontInfo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1.25rem;
+  color: #fff;
+}
+
+.name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+}
+
+.revealHint {
+  position: absolute;
+  left: 50%;
+  bottom: 0.75rem;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.9rem;
+  border: none;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  animation: bounceHint 1.8s ease-in-out infinite;
+}
+
+@keyframes bounceHint {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-4px); }
+}
+
+.revealPanel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 72%;
+  background: var(--c-surface);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 1.25rem;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 260ms ease;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.revealPanelOpen {
+  transform: translateY(0);
+}
+
+.closeReveal {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.4rem;
+  transform: rotate(180deg);
+}
+
+.revealDifficulty {
+  margin-bottom: 0.75rem;
+}
+
+.revealTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--c-text);
+  margin: 0 0 0.6rem;
+}
+
+.ingredientList {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--c-text-secondary);
+  line-height: 1.7;
+}
+
+.loadingHint {
+  font-size: 0.9rem;
+  color: var(--c-text-tertiary);
+}

@@ -8,6 +8,7 @@ import RecipeDetailPage from './pages/RecipeDetailPage'
 import ProfilePage from './pages/ProfilePage'
 import DiscoverPage from './pages/DiscoverPage'
 import RandomDinnerPage from './pages/RandomDinnerPage'
+import SwipeDinnerPage from './pages/SwipeDinnerPage'
 import FridgePage from './pages/FridgePage'
 import SavedRecipesPage from './pages/SavedRecipesPage'
 import GroupsPage from './pages/GroupsPage'
@@ -55,6 +56,10 @@ export default function App() {
 
       <Route path="/random-dinner" element={<ProtectedRoute />}>
         <Route index element={<RandomDinnerPage />} />
+      </Route>
+
+      <Route path="/swipe" element={<ProtectedRoute />}>
+        <Route index element={<SwipeDinnerPage />} />
       </Route>
 
       <Route path="/fridge" element={<ProtectedRoute />}>

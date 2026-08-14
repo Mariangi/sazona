@@ -697,3 +697,21 @@ export const StarIcon = ({
     </svg>
   );
 };
+
+export const ChevronUpIcon = ({
+  width = "24",
+  height = "24",
+  fill = "#1b1b1b",
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height={height}
+      viewBox="0 -960 960 960"
+      width={width}
+      fill={fill}
+    >
+      <path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z" />
+    </svg>
+  );
+};

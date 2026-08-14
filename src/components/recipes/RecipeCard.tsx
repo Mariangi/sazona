@@ -2,6 +2,7 @@ import type { RecipeListItem } from "@sasona/shared";
 import { useNavigate } from "react-router-dom";
 import styles from "./RecipeCard.module.css";
 import { ClockIcon, CutleryIcon, PeopleIcon } from "../ui/Icons";
+import DifficultyStars from "./DifficultyStars";
 
 interface RecipeCardProps {
   recipe: RecipeListItem;
@@ -40,6 +41,11 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
             {recipe.prepTime}min
           </span>
         </div>
+        {!!recipe.difficulty && (
+          <div className={styles.difficulty}>
+            <DifficultyStars value={recipe.difficulty} size="14" />
+          </div>
+        )}
         <div className={styles.counts}>
           <span>{recipe.ingredientCount} ingredientes</span>
           <span>·</span>

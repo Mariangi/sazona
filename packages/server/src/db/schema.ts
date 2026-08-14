@@ -17,6 +17,7 @@ export const recipes = sqliteTable('recipes', {
   servings: integer('servings').notNull(),
   prepTime: integer('prep_time').notNull(),
   category: text('category'),
+  difficulty: integer('difficulty'),
   createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
   updatedAt: text('updated_at').notNull().$defaultFn(() => new Date().toISOString()),
 });

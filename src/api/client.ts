@@ -157,6 +157,7 @@ export const api = {
     servings: number;
     prepTime: number;
     category?: string;
+    difficulty?: number;
     ingredients: { name: string; quantity: string; unit: string }[];
     steps: { description: string }[];
   }) =>
@@ -168,6 +169,7 @@ export const api = {
     servings: number;
     prepTime: number;
     category?: string;
+    difficulty?: number;
     ingredients: { name: string; quantity: string; unit: string }[];
     steps: { description: string }[];
   }) =>

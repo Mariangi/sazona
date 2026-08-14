@@ -6,7 +6,7 @@ import Button from "../components/ui/Button";
 import RecipeSwipeCard, {
   type RecipeSwipeCardHandle,
 } from "../components/recipes/RecipeSwipeCard";
-import { ArrowLeftIcon, ArrowRightIcon, ChevronUpIcon } from "../components/ui/Icons";
+import { ArrowLeftIcon, ArrowRightIcon } from "../components/ui/Icons";
 import styles from "./SwipeDinnerPage.module.css";
 
 function shuffle<T>(arr: T[]): T[] {
@@ -169,15 +169,8 @@ export default function SwipeDinnerPage() {
           aria-label="No, otra receta"
           onClick={() => topCardHandleRef.current?.triggerSwipe("left")}
         >
-          <ArrowLeftIcon width="26" height="26" fill="var(--c-error)" />
-        </button>
-        <button
-          type="button"
-          className={`${styles.actionBtn} ${styles.actionInfo}`}
-          aria-label="Ver ingredientes y dificultad"
-          onClick={() => topCardHandleRef.current?.triggerSwipe("up")}
-        >
-          <ChevronUpIcon width="22" height="22" fill="var(--c-text-secondary)" />
+          <ArrowLeftIcon width="20" height="20" fill="#fff" />
+          No
         </button>
         <button
           type="button"
@@ -185,7 +178,8 @@ export default function SwipeDinnerPage() {
           aria-label="Sí, cocinar esto"
           onClick={() => topCardHandleRef.current?.triggerSwipe("right")}
         >
-          <ArrowRightIcon width="26" height="26" fill="var(--c-success)" />
+          Sí, cocinar
+          <ArrowRightIcon width="20" height="20" fill="#fff" />
         </button>
       </div>
     </div>

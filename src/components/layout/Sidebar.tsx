@@ -20,7 +20,6 @@ const mobileNav = [
   { to: '/dashboard', label: 'Inicio',  icon: <HomeIcon/> },
   { to: '/discover', label: 'Descubrí', icon:<SearchIcon/> },
   { to: '/random-dinner', label: 'Sorpresa', icon: <DiceIcon/> , highlight: true },
-  { to: '/groups', label: 'Familia', icon: <GroupIcon/> },
   { to: '/fridge', label: 'Heladera', icon: <FridgeIcon /> },
   { to: '/swipe', label: 'Antojo', icon: <ChefIcon /> },
  ]

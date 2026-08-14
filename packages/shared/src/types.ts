@@ -34,6 +34,7 @@ export interface RecipeResponse {
   servings: number;
   prepTime: number;
   category: string | null;
+  difficulty: number | null;
   ingredients: Ingredient[];
   steps: Step[];
   createdAt: string;
@@ -47,6 +48,7 @@ export interface RecipeListItem {
   servings: number;
   prepTime: number;
   category: string | null;
+  difficulty: number | null;
   ingredientCount: number;
   stepCount: number;
   createdAt: string;
@@ -126,6 +128,7 @@ export interface SavedRecipe {
   servings: number;
   prepTime: number;
   category: string | null;
+  difficulty: number | null;
   ingredientCount: number;
   stepCount: number;
   savedAt: string;

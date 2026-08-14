@@ -68,6 +68,10 @@
   }
 }
 
+.difficulty {
+  margin-bottom: 0.4rem;
+}
+
 .counts {
   display: flex;
   gap: 0.4rem;

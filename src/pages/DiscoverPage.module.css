@@ -193,6 +193,10 @@
   }
 }
 
+.cardDifficulty {
+  margin-top: 0.4rem;
+}
+
 .author {
   display: flex;
   align-items: center;

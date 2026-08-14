@@ -2,7 +2,7 @@ import { forwardRef, useImperativeHandle } from "react";
 import type { RecipeListItem, RecipeResponse } from "@sasona/shared";
 import { useSwipeCard, type SwipeDirection } from "../../hooks/useSwipeCard";
 import { ChevronUpIcon, ClockIcon, CutleryIcon, PeopleIcon } from "../ui/Icons";
-import DifficultyStars from "./DifficultyStars";
+import DifficultyIndicator from "./DifficultyIndicator";
 import styles from "./RecipeSwipeCard.module.css";
 
 export interface RecipeSwipeCardHandle {
@@ -76,7 +76,7 @@ const RecipeSwipeCard = forwardRef<RecipeSwipeCardHandle, RecipeSwipeCardProps>(
               </span>
             </div>
             {!!recipe.difficulty && (
-              <DifficultyStars value={recipe.difficulty} size="16" />
+              <DifficultyIndicator value={recipe.difficulty} size="12" light />
             )}
           </div>
           {interactive && !revealed && (
@@ -104,7 +104,7 @@ const RecipeSwipeCard = forwardRef<RecipeSwipeCardHandle, RecipeSwipeCardProps>(
           </button>
           {!!recipe.difficulty && (
             <div className={styles.revealDifficulty}>
-              <DifficultyStars value={recipe.difficulty} size="18" />
+              <DifficultyIndicator value={recipe.difficulty} size="14" />
             </div>
           )}
           <h4 className={styles.revealTitle}>Ingredientes</h4>

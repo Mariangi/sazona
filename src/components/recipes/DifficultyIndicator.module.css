@@ -1,0 +1,49 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--c-text-secondary);
+  white-space: nowrap;
+}
+
+.light .label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.dot {
+  border-radius: 50%;
+  border: 2px solid var(--c-border);
+  background: transparent;
+  padding: 0;
+  flex-shrink: 0;
+  cursor: default;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.light .dot {
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.filled {
+  background: var(--c-primary);
+  border-color: var(--c-primary);
+}
+
+.interactive {
+  cursor: pointer;
+}
+
+.interactive:hover {
+  border-color: var(--c-primary);
+}

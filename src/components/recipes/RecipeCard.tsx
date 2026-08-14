@@ -2,7 +2,7 @@ import type { RecipeListItem } from "@sasona/shared";
 import { useNavigate } from "react-router-dom";
 import styles from "./RecipeCard.module.css";
 import { ClockIcon, CutleryIcon, PeopleIcon } from "../ui/Icons";
-import DifficultyStars from "./DifficultyStars";
+import DifficultyIndicator from "./DifficultyIndicator";
 
 interface RecipeCardProps {
   recipe: RecipeListItem;
@@ -43,7 +43,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
         </div>
         {!!recipe.difficulty && (
           <div className={styles.difficulty}>
-            <DifficultyStars value={recipe.difficulty} size="14" />
+            <DifficultyIndicator value={recipe.difficulty} size="10" />
           </div>
         )}
         <div className={styles.counts}>

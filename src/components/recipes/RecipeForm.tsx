@@ -8,7 +8,7 @@ import Input from '../ui/Input'
 import ImageUpload from './ImageUpload'
 import IngredientInput from './IngredientInput'
 import StepInput from './StepInput'
-import DifficultyStars from './DifficultyStars'
+import DifficultyIndicator from './DifficultyIndicator'
 import styles from './RecipeForm.module.css'
 
 interface Ingredient {
@@ -120,7 +120,7 @@ export default function RecipeForm({ recipe }: RecipeFormProps) {
 
       <div className={styles.field}>
         <label className={styles.fieldLabel}>Dificultad</label>
-        <DifficultyStars value={difficulty} onChange={setDifficulty} size="28" />
+        <DifficultyIndicator value={difficulty} onChange={setDifficulty} size="28" showLabel={false} />
       </div>
 
       <div className={styles.row}>

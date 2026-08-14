@@ -11,7 +11,7 @@ import {
   PeopleIcon,
   SearchIcon,
 } from "../components/ui/Icons";
-import DifficultyStars from "../components/recipes/DifficultyStars";
+import DifficultyIndicator from "../components/recipes/DifficultyIndicator";
 
 type DiscoverRecipe = RecipeListItem & {
   author: { id: number; username: string; avatarUrl: string | null } | null;
@@ -209,7 +209,7 @@ export default function DiscoverPage() {
                 </div>
                 {!!recipe.difficulty && (
                   <div className={styles.cardDifficulty}>
-                    <DifficultyStars value={recipe.difficulty} size="13" />
+                    <DifficultyIndicator value={recipe.difficulty} size="10" />
                   </div>
                 )}
                 {recipe.author && (

@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import { resolveMediaUrl } from '../../api/client'
 import styles from './Sidebar.module.css'
 import { BookIcon, CalendarIcon, ChefIcon, DiceIcon, FridgeIcon, GroupIcon, HomeIcon, ListToBuyIcon, Logo, SaveIcon, SearchIcon } from '../ui/Icons'
 
@@ -55,7 +56,7 @@ export default function Sidebar() {
           <button className={styles.userBtn} onClick={() => navigate('/profile')}>
             <span className={styles.avatar}>
               {user?.avatarUrl ? (
-                <img src={user.avatarUrl} alt="" className={styles.avatarImg} />
+                <img src={resolveMediaUrl(user.avatarUrl)} alt="" className={styles.avatarImg} />
               ) : (
                 user?.username?.[0]?.toUpperCase() || '?'
               )}

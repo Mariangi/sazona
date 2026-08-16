@@ -1,16 +1,21 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import type { ShoppingListDetail as ShoppingListDetailType } from '@sasona/shared'
 import { api } from '../api/client'
+import { useAuth } from '../hooks/useAuth'
 import styles from './ShoppingListDetail.module.css'
 import { ArrowLeftIcon } from '../components/ui/Icons'
+
+const GROUP_POLL_INTERVAL_MS = 3000
 
 export default function ShoppingListDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [list, setList] = useState<ShoppingListDetailType | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
     if (!id) return
@@ -20,13 +25,29 @@ export default function ShoppingListDetail() {
       .finally(() => setLoading(false))
   }, [id])
 
+  useEffect(() => {
+    if (!id || !list?.groupId) return
+    pollRef.current = setInterval(() => {
+      api.getShoppingList(Number(id)).then(setList).catch(() => {})
+    }, GROUP_POLL_INTERVAL_MS)
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current)
+    }
+  }, [id, list?.groupId])
+
   async function handleToggle(itemId: number, checked: boolean) {
     try {
-      await api.toggleShoppingItem(itemId, checked)
+      const res = await api.toggleShoppingItem(itemId, checked)
       setList(prev => prev ? {
         ...prev,
         items: prev.items.map(i =>
-          i.id === itemId ? { ...i, checked } : i
+          i.id === itemId ? {
+            ...i, checked,
+            checkedBy: res.checkedBy,
+            checkedAt: res.checkedAt,
+            checkedByUsername: res.checkedBy ? user?.username ?? null : null,
+            checkedByAvatarUrl: res.checkedBy ? user?.avatarUrl ?? null : null,
+          } : i
         ),
       } : prev)
     } catch {}
@@ -79,6 +100,11 @@ export default function ShoppingListDetail() {
                 {(item.quantity || item.unit) && (
                   <span className={styles.itemDetail}>
                     {item.quantity}{item.unit ? ` ${item.unit}` : ''}
+                  </span>
+                )}
+                {item.checked && item.checkedByUsername && (
+                  <span className={styles.checkedByLabel}>
+                    Comprado por {item.checkedByUsername}
                   </span>
                 )}
               </div>

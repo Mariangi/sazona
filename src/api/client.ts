@@ -1,14 +1,23 @@
 import type {
   AuthResponse, UserResponse, RecipeResponse, RecipeListItem, RecipeMatch,
   FamilyGroup, GroupMessage, ShoppingList, ShoppingListDetail,
-  SavedRecipe, MealPlan,
+  SavedRecipe, MealPlan, SwipeSessionStatus, SwipeLikeResult,
+  RecognizeIngredientsResponse,
 } from '@sasona/shared'
 
-const API_BASE = '/api'
+const API_ORIGIN = import.meta.env.VITE_API_BASE_URL || ''
+const API_BASE = `${API_ORIGIN}/api`
+
+export function resolveMediaUrl(path: string | null | undefined): string {
+  if (!path) return ''
+  if (/^(https?:)?\/\//.test(path) || path.startsWith('data:') || path.startsWith('blob:')) return path
+  return `${API_ORIGIN}${path}`
+}
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = localStorage.getItem('token')
   const headers: Record<string, string> = {
+    'ngrok-skip-browser-warning': 'true',
     ...(options.body ? { 'Content-Type': 'application/json' } : {}),
     ...(options.headers as Record<string, string>),
   }
@@ -68,6 +77,9 @@ export const api = {
   findRecipesByIngredients: (data: { ingredients: string[]; allowExtra: boolean }) =>
     request<RecipeMatch[]>('/recipes/find-by-ingredients', { method: 'POST', body: JSON.stringify(data) }),
 
+  recognizeIngredients: (imageBase64: string) =>
+    request<RecognizeIngredientsResponse>('/recipes/recognize-ingredients', { method: 'POST', body: JSON.stringify({ imageBase64 }) }),
+
   // Groups
   createGroup: (name: string) =>
     request<FamilyGroup>('/groups', { method: 'POST', body: JSON.stringify({ name }) }),
@@ -108,10 +120,23 @@ export const api = {
     request<ShoppingListDetail>('/shopping-lists/' + id),
 
   toggleShoppingItem: (itemId: number, checked: boolean) =>
-    request<{ id: number; checked: boolean }>('/shopping-list-items/' + itemId, { method: 'PATCH', body: JSON.stringify({ checked }) }),
+    request<{ id: number; checked: boolean; checkedBy: number | null; checkedAt: string | null }>('/shopping-list-items/' + itemId, { method: 'PATCH', body: JSON.stringify({ checked }) }),
 
   deleteShoppingList: (id: number) =>
     request<{ message: string }>('/shopping-lists/' + id, { method: 'DELETE' }),
+
+  // Group swipe sessions
+  createSwipeSession: (groupId: number) =>
+    request<{ id: number; groupId: number; status: string; createdAt: string }>('/groups/' + groupId + '/swipe-sessions', { method: 'POST' }),
+
+  joinSwipeSession: (sessionId: number) =>
+    request<SwipeSessionStatus>('/swipe-sessions/' + sessionId + '/join', { method: 'POST' }),
+
+  getSwipeSession: (sessionId: number) =>
+    request<SwipeSessionStatus>('/swipe-sessions/' + sessionId),
+
+  likeSwipeRecipe: (sessionId: number, recipeId: number) =>
+    request<SwipeLikeResult>('/swipe-sessions/' + sessionId + '/likes', { method: 'POST', body: JSON.stringify({ recipeId }) }),
 
   // Saved recipes
   getSavedRecipes: () =>

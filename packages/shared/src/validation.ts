@@ -106,9 +106,23 @@ export const findIngredientsSchema = z.object({
   allowExtra: z.boolean(),
 });
 
+export const submitSwipeLikeSchema = z.object({
+  recipeId: z.number().int().positive(),
+});
+
+export const recognizeIngredientsRequestSchema = z.object({
+  imageBase64: z.string().min(1, 'Imagen requerida'),
+});
+
+export const recognizeIngredientsResponseSchema = z.object({
+  ingredients: z.array(z.string().min(1)),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;
 export type UpdateRecipeInput = z.infer<typeof updateRecipeSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+export type SubmitSwipeLikeInput = z.infer<typeof submitSwipeLikeSchema>;
+export type RecognizeIngredientsInput = z.infer<typeof recognizeIngredientsRequestSchema>;

@@ -150,6 +150,33 @@
   color: var(--c-text-tertiary);
 }
 
+.swipeSessionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.7rem 1rem;
+  background: var(--c-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-self: flex-start;
+}
+
+.swipeSessionBtn:hover:not(:disabled) {
+  background: var(--c-primary-hover);
+}
+
+.swipeSessionBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .chat {
   flex: 1;
   overflow-y: auto;

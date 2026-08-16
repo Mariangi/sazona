@@ -3,3 +3,7 @@ packages/server/data/*.db-shm
 packages/server/data/*.db-wal
 packages/server/data/*.db
 packages/server/uploads/*
+.env
+.env.mobile
+packages/server/.env
+android.broken-backup/

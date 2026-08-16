@@ -1,5 +1,6 @@
 import type { RecipeListItem } from "@sasona/shared";
 import { useNavigate } from "react-router-dom";
+import { resolveMediaUrl } from "../../api/client";
 import styles from "./RecipeCard.module.css";
 import { ClockIcon, CutleryIcon, PeopleIcon } from "../ui/Icons";
 import DifficultyIndicator from "./DifficultyIndicator";
@@ -19,7 +20,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
       <div className={styles.imageWrapper}>
         {recipe.imageUrl ? (
           <img
-            src={recipe.imageUrl}
+            src={resolveMediaUrl(recipe.imageUrl)}
             alt={recipe.name}
             className={styles.image}
           />

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import styles from './AvatarUpload.module.css'
 import { CameraIcon } from '../ui/Icons'
+import { resolveMediaUrl } from '../../api/client'
 
 interface AvatarUploadProps {
   currentUrl: string | null
@@ -30,7 +31,7 @@ export default function AvatarUpload({ currentUrl, onUpload }: AvatarUploadProps
     reader.readAsDataURL(file)
   }
 
-  const src = preview || currentUrl
+  const src = resolveMediaUrl(preview || currentUrl)
 
   return (
     <div className={styles.container}>

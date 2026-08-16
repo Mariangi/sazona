@@ -415,6 +415,12 @@ export function groupRoutes(app: FastifyInstance) {
       .orderBy(schema.shoppingListItems.orderIndex)
       .all();
 
+    const checkedByIds = [...new Set(items.map(i => i.checkedBy).filter((v): v is number => v !== null))];
+    const checkedByUsers = checkedByIds.length > 0
+      ? db.select().from(schema.users).where(inArray(schema.users.id, checkedByIds)).all()
+      : [];
+    const checkedByMap = new Map(checkedByUsers.map(u => [u.id, u]));
+
     let groupName: string | null = null;
     if (list.groupId) {
       const g = db.select().from(schema.familyGroups).where(eq(schema.familyGroups.id, list.groupId)).get();
@@ -427,6 +433,10 @@ export function groupRoutes(app: FastifyInstance) {
       items: items.map(i => ({
         id: i.id, listId: i.listId, name: i.name,
         quantity: i.quantity, unit: i.unit, checked: i.checked, orderIndex: i.orderIndex,
+        checkedBy: i.checkedBy,
+        checkedByUsername: i.checkedBy ? checkedByMap.get(i.checkedBy)?.username || null : null,
+        checkedByAvatarUrl: i.checkedBy ? checkedByMap.get(i.checkedBy)?.avatarUrl || null : null,
+        checkedAt: i.checkedAt,
       })),
       createdAt: list.createdAt, updatedAt: list.updatedAt,
     };
@@ -448,10 +458,12 @@ export function groupRoutes(app: FastifyInstance) {
       .where(and(eq(schema.familyMembers.groupId, list.groupId), eq(schema.familyMembers.userId, userId))).get() : null;
     if (!isOwner && !isGroupMember) return reply.status(403).send({ message: 'Sin acceso', statusCode: 403 });
 
-    db.update(schema.shoppingListItems).set({ checked })
+    const checkedBy = checked ? userId : null;
+    const checkedAt = checked ? new Date().toISOString() : null;
+    db.update(schema.shoppingListItems).set({ checked, checkedBy, checkedAt })
       .where(eq(schema.shoppingListItems.id, item.id)).run();
 
-    return { id: item.id, checked };
+    return { id: item.id, checked, checkedBy, checkedAt };
   });
 
   app.delete('/api/shopping-lists/:id', { preHandler: authMiddleware }, async (request, reply) => {

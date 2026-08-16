@@ -1,5 +1,6 @@
 import { forwardRef, useImperativeHandle } from "react";
 import type { RecipeListItem, RecipeResponse } from "@sasona/shared";
+import { resolveMediaUrl } from "../../api/client";
 import { useSwipeCard, type SwipeDirection } from "../../hooks/useSwipeCard";
 import { ChevronUpIcon, ClockIcon, CutleryIcon, PeopleIcon } from "../ui/Icons";
 import DifficultyIndicator from "./DifficultyIndicator";
@@ -54,7 +55,7 @@ const RecipeSwipeCard = forwardRef<RecipeSwipeCardHandle, RecipeSwipeCardProps>(
         <div className={styles.imageArea}>
           {recipe.imageUrl ? (
             <img
-              src={recipe.imageUrl}
+              src={resolveMediaUrl(recipe.imageUrl)}
               alt={recipe.name}
               className={styles.image}
               draggable={false}

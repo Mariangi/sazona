@@ -118,6 +118,10 @@ export interface ShoppingListItem {
   unit: string | null;
   checked: boolean;
   orderIndex: number;
+  checkedBy: number | null;
+  checkedByUsername: string | null;
+  checkedByAvatarUrl: string | null;
+  checkedAt: string | null;
 }
 
 export interface SavedRecipe {
@@ -159,4 +163,36 @@ export interface ShoppingListDetail {
   items: ShoppingListItem[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface SwipeSessionParticipant {
+  userId: number;
+  username: string;
+  avatarUrl: string | null;
+  joinedAt: string;
+}
+
+export interface SwipeSessionStatus {
+  id: number;
+  groupId: number;
+  status: string; // 'active' | 'completed'
+  createdAt: string;
+  completedAt: string | null;
+  deck: RecipeListItem[];
+  participants: SwipeSessionParticipant[];
+  myLikedRecipeIds: number[];
+  matchedRecipeId: number | null;
+  matchedRecipeName: string | null;
+  shoppingListId: number | null;
+}
+
+export interface SwipeLikeResult {
+  matched: boolean;
+  matchedRecipeId?: number;
+  matchedRecipeName?: string;
+  shoppingListId?: number;
+}
+
+export interface RecognizeIngredientsResponse {
+  ingredients: string[];
 }

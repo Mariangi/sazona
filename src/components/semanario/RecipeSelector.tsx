@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { RecipeListItem } from '@sasona/shared'
-import { api } from '../../api/client'
+import { api, resolveMediaUrl } from '../../api/client'
 import { CATEGORIES } from '@sasona/shared'
 import styles from './RecipeSelector.module.css'
 import { CloseIcon } from '../ui/Icons'
@@ -104,7 +104,7 @@ export default function RecipeSelector({
                 onClick={() => onSelect(recipe.id, recipe.name, recipe.imageUrl)}
               >
                 {recipe.imageUrl && (
-                  <img src={recipe.imageUrl} alt={recipe.name} className={styles.recipeImage} />
+                  <img src={resolveMediaUrl(recipe.imageUrl)} alt={recipe.name} className={styles.recipeImage} />
                 )}
                 <div className={styles.recipeInfo}>
                   <h4 className={styles.recipeName}>{recipe.name}</h4>

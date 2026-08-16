@@ -7,7 +7,7 @@ import Button from '../components/ui/Button'
 import MultiplierModal from '../components/groups/MultiplierModal'
 import RecipePickerModal from '../components/groups/RecipePickerModal'
 import styles from './GroupPage.module.css'
-import { ArrowLeftIcon, CutleryIcon, EditIcon, ThumbDownIcon, ThumbsUpDownIcon, ThumbUpIcon } from '../components/ui/Icons'
+import { ArrowLeftIcon, CutleryIcon, DiceIcon, EditIcon, ThumbDownIcon, ThumbsUpDownIcon, ThumbUpIcon } from '../components/ui/Icons'
 
 export default function GroupPage() {
   const { id } = useParams()
@@ -24,6 +24,7 @@ export default function GroupPage() {
   const [editNameValue, setEditNameValue] = useState('')
   const [showMultiplierModal, setShowMultiplierModal] = useState(false)
   const [pendingCloseVoteMsgId, setPendingCloseVoteMsgId] = useState<number | null>(null)
+  const [startingSwipe, setStartingSwipe] = useState(false)
   const editInputRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
 
@@ -113,6 +114,17 @@ export default function GroupPage() {
     setPendingCloseVoteMsgId(null)
   }
 
+  async function handleStartSwipeSession() {
+    if (!id || startingSwipe) return
+    setStartingSwipe(true)
+    try {
+      const session = await api.createSwipeSession(Number(id))
+      navigate(`/groups/${id}/swipe/${session.id}`)
+    } catch {
+      setStartingSwipe(false)
+    }
+  }
+
   const isOwn = (uid: number) => uid === user?.id
 
   if (loading) return <div className={styles.center}><div className={styles.spinner} /></div>
@@ -151,6 +163,15 @@ export default function GroupPage() {
           )}
           <span className={styles.groupCode}>Código: {group.inviteCode} · {group.memberCount} miembros</span>
         </div>
+        <button
+          type="button"
+          className={styles.swipeSessionBtn}
+          onClick={handleStartSwipeSession}
+          disabled={startingSwipe}
+        >
+          <DiceIcon height="20" width="20" fill="#fff" />
+          Elegir cena en grupo
+        </button>
       </div>
 
       <div className={styles.chat}>

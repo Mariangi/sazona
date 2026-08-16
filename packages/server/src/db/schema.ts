@@ -96,6 +96,8 @@ export const shoppingListItems = sqliteTable('shopping_list_items', {
   unit: text('unit'),
   checked: integer('checked', { mode: 'boolean' }).notNull().$default(() => false),
   orderIndex: integer('order_index').notNull(),
+  checkedBy: integer('checked_by').references(() => users.id),
+  checkedAt: text('checked_at'),
 });
 
 export const mealPlans = sqliteTable('meal_plans', {
@@ -112,5 +114,32 @@ export const mealPlanEntries = sqliteTable('meal_plan_entries', {
   recipeId: integer('recipe_id').notNull().references(() => recipes.id),
   dayOfWeek: integer('day_of_week').notNull(),
   mealType: text('meal_type').notNull().$default(() => 'lunch'), // 'breakfast' | 'lunch' | 'snack' | 'dinner'
+  createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
+});
+
+export const swipeSessions = sqliteTable('swipe_sessions', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  groupId: integer('group_id').notNull().references(() => familyGroups.id),
+  createdBy: integer('created_by').notNull().references(() => users.id),
+  deckRecipeIds: text('deck_recipe_ids').notNull(), // JSON-stringified number[]
+  status: text('status').notNull().$default(() => 'active'), // 'active' | 'completed'
+  matchedRecipeId: integer('matched_recipe_id').references(() => recipes.id),
+  shoppingListId: integer('shopping_list_id').references(() => shoppingLists.id),
+  createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
+  completedAt: text('completed_at'),
+});
+
+export const swipeSessionParticipants = sqliteTable('swipe_session_participants', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  sessionId: integer('session_id').notNull().references(() => swipeSessions.id),
+  userId: integer('user_id').notNull().references(() => users.id),
+  joinedAt: text('joined_at').notNull().$defaultFn(() => new Date().toISOString()),
+});
+
+export const swipeSessionLikes = sqliteTable('swipe_session_likes', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  sessionId: integer('session_id').notNull().references(() => swipeSessions.id),
+  userId: integer('user_id').notNull().references(() => users.id),
+  recipeId: integer('recipe_id').notNull().references(() => recipes.id),
   createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
 });

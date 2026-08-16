@@ -13,6 +13,7 @@ import FridgePage from './pages/FridgePage'
 import SavedRecipesPage from './pages/SavedRecipesPage'
 import GroupsPage from './pages/GroupsPage'
 import GroupPage from './pages/GroupPage'
+import GroupSwipeSessionPage from './pages/GroupSwipeSessionPage'
 import ShoppingListsPage from './pages/ShoppingListsPage'
 import ShoppingListDetail from './pages/ShoppingListDetail'
 import MealPlannerPage from './pages/MealPlannerPage'
@@ -81,6 +82,7 @@ export default function App() {
       <Route path="/groups" element={<ProtectedRoute />}>
         <Route index element={<GroupsPage />} />
         <Route path=":id" element={<GroupPage />} />
+        <Route path=":groupId/swipe/:sessionId" element={<GroupSwipeSessionPage />} />
       </Route>
 
       <Route path="/shopping-lists" element={<ProtectedRoute />}>

@@ -1,4 +1,5 @@
 import type { MealPlanEntry } from '@sasona/shared'
+import { resolveMediaUrl } from '../../api/client'
 import styles from './MealCell.module.css'
 import { CloseIcon } from '../ui/Icons'
 
@@ -38,7 +39,7 @@ export default function MealCell({
       <span className={styles.mealLabel}>{MEAL_LABELS[mealType]}</span>
       <div className={styles.content}>
         {entry.recipeImage && (
-          <img src={entry.recipeImage} alt={entry.recipeName} className={styles.image} />
+          <img src={resolveMediaUrl(entry.recipeImage)} alt={entry.recipeName} className={styles.image} />
         )}
         <div className={styles.info}>
           <h4 className={styles.recipeName}>{entry.recipeName}</h4>

@@ -312,6 +312,24 @@ export const CameraIcon = ({
   );
 };
 
+export const NutritionIcon = ({
+  width = "24",
+  height = "24",
+  fill = "#1b1b1b",
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height={height}
+      viewBox="0 -960 960 960"
+      width={width}
+      fill={fill}
+    >
+      <path d="M300-560q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29Zm180 440q-134 0-227-93t-93-227q0-91 47-164.5T336-716q-4-11-6-22.5t-2-23.5q0-42 29-71t71-29q29 0 53 14t39 38q15-24 39-38t53-14q42 0 71 29t29 71q0 12-2 23.5t-6 22.5q79 26 126 99.5T880-440q0 134-93 227t-227 93Z" />
+    </svg>
+  );
+};
+
 export const ArrowLeftIcon = ({
   width = "24",
   height = "24",

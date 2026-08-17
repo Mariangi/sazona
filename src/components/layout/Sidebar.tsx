@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { resolveMediaUrl } from '../../api/client'
 import styles from './Sidebar.module.css'
-import { BookIcon, CalendarIcon, ChefIcon, DiceIcon, FridgeIcon, GroupIcon, HomeIcon, ListToBuyIcon, Logo, SaveIcon, SearchIcon } from '../ui/Icons'
+import { BookIcon, CalendarIcon, ChefIcon, DiceIcon, FridgeIcon, GroupIcon, HomeIcon, ListToBuyIcon, Logo, NutritionIcon, SaveIcon, SearchIcon } from '../ui/Icons'
 
 const desktopNav = [
   { to: '/dashboard', label: 'Inicio', icon: <HomeIcon  fill='var(--c-text-secondary)'/> },
@@ -13,6 +13,7 @@ const desktopNav = [
   { to: '/shopping-lists', label: 'Compras', icon: <ListToBuyIcon  fill='var(--c-text-secondary)' /> },
   { to: '/groups', label: 'Grupos', icon: <GroupIcon  fill='var(--c-text-secondary)'/> },
   { to: '/meal-planner', label: 'Menu semanal', icon: <CalendarIcon fill='var(--c-text-secondary)'/> },
+  { to: '/nutrition', label: 'Nutrición', icon: <NutritionIcon fill='var(--c-text-secondary)'/> },
   { to: '/random-dinner', label: 'Sorpresa', icon: <DiceIcon  fill='var(--c-text-secondary)'/> },
   { to: '/swipe', label: 'Antojo', icon: <ChefIcon  fill='var(--c-text-secondary)'/> },
 ]

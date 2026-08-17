@@ -143,3 +143,16 @@ export const swipeSessionLikes = sqliteTable('swipe_session_likes', {
   recipeId: integer('recipe_id').notNull().references(() => recipes.id),
   createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
 });
+
+export const nutritionLogs = sqliteTable('nutrition_logs', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  userId: integer('user_id').notNull().references(() => users.id),
+  imageUrl: text('image_url'),
+  foodName: text('food_name').notNull(),
+  servingDescription: text('serving_description'),
+  calories: real('calories').notNull(),
+  protein: real('protein').notNull(),
+  fat: real('fat').notNull(),
+  carbs: real('carbs').notNull(),
+  createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
+});

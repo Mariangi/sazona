@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
 import { CameraIcon } from '../ui/Icons'
 import { api } from '../../api/client'
 import styles from './FridgeInput.module.css'
@@ -12,7 +13,6 @@ export default function FridgeInput({ ingredients, onChange }: FridgeInputProps)
   const [value, setValue] = useState('')
   const [recognizing, setRecognizing] = useState(false)
   const [recognizeError, setRecognizeError] = useState('')
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
   function add() {
     const trimmed = value.trim().toLowerCase()
@@ -33,34 +33,43 @@ export default function FridgeInput({ ingredients, onChange }: FridgeInputProps)
     }
   }
 
-  function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    const reader = new FileReader()
-    reader.onload = async () => {
-      const base64 = reader.result as string
-      setRecognizing(true)
-      setRecognizeError('')
-      try {
-        const { ingredients: detected } = await api.recognizeIngredients(base64)
-        if (detected.length === 0) {
-          setRecognizeError('No se detectaron ingredientes en la foto, probá con otra')
-        } else {
-          const merged = [...ingredients]
-          for (const ing of detected) {
-            if (!merged.includes(ing)) merged.push(ing)
-          }
-          onChange(merged)
-        }
-      } catch (err) {
-        setRecognizeError(err instanceof Error ? err.message : 'No pudimos reconocer los ingredientes, probá de nuevo')
-      } finally {
-        setRecognizing(false)
-        if (fileInputRef.current) fileInputRef.current.value = ''
-      }
+  async function handlePhoto() {
+    let photo
+    try {
+      photo = await Camera.getPhoto({
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Prompt,
+        quality: 80,
+        promptLabelHeader: 'Foto de la heladera',
+        promptLabelPhoto: 'Elegir de la galería',
+        promptLabelPicture: 'Sacar foto',
+        promptLabelCancel: 'Cancelar',
+      })
+    } catch {
+      return
     }
-    reader.readAsDataURL(file)
+
+    const base64 = photo.dataUrl
+    if (!base64) return
+
+    setRecognizing(true)
+    setRecognizeError('')
+    try {
+      const { ingredients: detected } = await api.recognizeIngredients(base64)
+      if (detected.length === 0) {
+        setRecognizeError('No se detectaron ingredientes en la foto, probá con otra')
+      } else {
+        const merged = [...ingredients]
+        for (const ing of detected) {
+          if (!merged.includes(ing)) merged.push(ing)
+        }
+        onChange(merged)
+      }
+    } catch (err) {
+      setRecognizeError(err instanceof Error ? err.message : 'No pudimos reconocer los ingredientes, probá de nuevo')
+    } finally {
+      setRecognizing(false)
+    }
   }
 
   return (
@@ -85,9 +94,9 @@ export default function FridgeInput({ ingredients, onChange }: FridgeInputProps)
         <button
           type="button"
           className={styles.cameraBtn}
-          onClick={() => fileInputRef.current?.click()}
+          onClick={handlePhoto}
           disabled={recognizing}
-          title="Sacar foto de la heladera"
+          title="Sacar foto o elegir de la galería"
         >
           {recognizing ? '...' : <CameraIcon width="18" height="18" fill="white" />}
         </button>
@@ -95,15 +104,6 @@ export default function FridgeInput({ ingredients, onChange }: FridgeInputProps)
           Añadir
         </button>
       </div>
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        capture="environment"
-        onChange={handlePhoto}
-        className={styles.hiddenInput}
-      />
 
       {recognizeError && <div className={styles.recognizeError}>{recognizeError}</div>}
     </div>

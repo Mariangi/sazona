@@ -118,6 +118,29 @@ export const recognizeIngredientsResponseSchema = z.object({
   ingredients: z.array(z.string().min(1)),
 });
 
+export const analyzeMealRequestSchema = z.object({
+  imageBase64: z.string().min(1, 'Imagen requerida'),
+});
+
+export const analyzeMealResponseSchema = z.object({
+  foodName: z.string().min(1),
+  servingDescription: z.string().optional().default(''),
+  calories: z.number(),
+  protein: z.number(),
+  fat: z.number(),
+  carbs: z.number(),
+});
+
+export const createNutritionLogSchema = z.object({
+  imageBase64: z.string().optional(),
+  foodName: z.string().min(1, 'Nombre requerido'),
+  servingDescription: z.string().optional(),
+  calories: z.coerce.number(),
+  protein: z.coerce.number(),
+  fat: z.coerce.number(),
+  carbs: z.coerce.number(),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;
@@ -126,3 +149,5 @@ export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 export type SubmitSwipeLikeInput = z.infer<typeof submitSwipeLikeSchema>;
 export type RecognizeIngredientsInput = z.infer<typeof recognizeIngredientsRequestSchema>;
+export type AnalyzeMealInput = z.infer<typeof analyzeMealRequestSchema>;
+export type CreateNutritionLogInput = z.infer<typeof createNutritionLogSchema>;

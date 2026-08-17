@@ -4,6 +4,17 @@ const config: CapacitorConfig = {
   appId: 'com.sazona.app',
   appName: 'Sazoná',
   webDir: 'dist',
+  plugins: {
+    SplashScreen: {
+      launchShowDuration: 0,
+      launchAutoHide: false,
+      backgroundColor: '#FF8240',
+      androidScaleType: 'CENTER_CROP',
+      showSpinner: false,
+      splashFullScreen: true,
+      splashImmersive: true,
+    },
+  },
 };
 
 export default config;

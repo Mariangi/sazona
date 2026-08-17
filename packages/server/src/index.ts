@@ -10,6 +10,7 @@ import { groupRoutes } from './routes/groups.js';
 import { mealPlanRoutes } from './routes/mealPlans.js';
 import { swipeSessionRoutes } from './routes/swipeSessions.js';
 import { ingredientRecognitionRoutes } from './routes/ingredientRecognition.js';
+import { nutritionRoutes } from './routes/nutrition.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOADS_DIR = join(__dirname, '..', 'uploads');
@@ -43,6 +44,7 @@ groupRoutes(app);
 mealPlanRoutes(app);
 swipeSessionRoutes(app);
 ingredientRecognitionRoutes(app);
+nutritionRoutes(app);
 
 if (existsSync(DIST_DIR)) {
   await app.register(fastifyStatic, {

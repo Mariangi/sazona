@@ -1,0 +1,44 @@
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-primary);
+  animation: fadeIn 0.25s ease;
+  transition: opacity 0.4s ease;
+}
+
+.exiting {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.logoWrap {
+  animation: logoIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both, pulse 1.8s ease-in-out 0.6s infinite;
+}
+
+.exiting .logoWrap {
+  animation: logoOut 0.4s ease both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes logoIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes logoOut {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.08); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.045); }
+}

@@ -2,7 +2,7 @@ import type {
   AuthResponse, UserResponse, RecipeResponse, RecipeListItem, RecipeMatch,
   FamilyGroup, GroupMessage, ShoppingList, ShoppingListDetail,
   SavedRecipe, MealPlan, SwipeSessionStatus, SwipeLikeResult,
-  RecognizeIngredientsResponse,
+  RecognizeIngredientsResponse, AnalyzeMealResponse, NutritionLogEntry,
 } from '@sasona/shared'
 
 const API_ORIGIN = import.meta.env.VITE_API_BASE_URL || ''
@@ -199,4 +199,25 @@ export const api = {
     steps: { description: string }[];
   }) =>
     request<RecipeResponse>(`/recipes/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+
+  // Nutrition
+  analyzeMeal: (imageBase64: string) =>
+    request<AnalyzeMealResponse>('/nutrition/analyze', { method: 'POST', body: JSON.stringify({ imageBase64 }) }),
+
+  getNutritionLogs: () =>
+    request<NutritionLogEntry[]>('/nutrition/logs'),
+
+  createNutritionLog: (data: {
+    imageBase64?: string;
+    foodName: string;
+    servingDescription?: string;
+    calories: number;
+    protein: number;
+    fat: number;
+    carbs: number;
+  }) =>
+    request<NutritionLogEntry>('/nutrition/logs', { method: 'POST', body: JSON.stringify(data) }),
+
+  deleteNutritionLog: (id: number) =>
+    request<{ message: string }>('/nutrition/logs/' + id, { method: 'DELETE' }),
 }

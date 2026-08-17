@@ -196,3 +196,24 @@ export interface SwipeLikeResult {
 export interface RecognizeIngredientsResponse {
   ingredients: string[];
 }
+
+export interface AnalyzeMealResponse {
+  foodName: string;
+  servingDescription: string;
+  calories: number;
+  protein: number;
+  fat: number;
+  carbs: number;
+}
+
+export interface NutritionLogEntry {
+  id: number;
+  imageUrl: string | null;
+  foodName: string;
+  servingDescription: string | null;
+  calories: number;
+  protein: number;
+  fat: number;
+  carbs: number;
+  createdAt: string;
+}

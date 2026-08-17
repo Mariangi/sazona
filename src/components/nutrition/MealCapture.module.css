@@ -31,10 +31,6 @@
   cursor: default;
 }
 
-.hiddenInput {
-  display: none;
-}
-
 .error {
   color: var(--c-error);
   font-size: 0.85rem;

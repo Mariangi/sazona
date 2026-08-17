@@ -12,6 +12,7 @@ import {
   CutleryIcon,
   GroupIcon,
   ListToBuyIcon,
+  NutritionIcon,
 } from "../components/ui/Icons";
 import { Popup } from "../components/ui/Popup";
 import LogOut from "../components/Auth/LogOut";
@@ -198,6 +199,13 @@ export default function ProfilePage() {
             <div className={styles.card}>
               <span>Lista de compras</span>
               <ListToBuyIcon height="20" width="20" fill="var(--c-text)" />
+            </div>
+          </NavLink>
+
+          <NavLink to="/nutrition" className={styles.cardLink}>
+            <div className={styles.card}>
+              <span>Nutrición</span>
+              <NutritionIcon height="20" width="20" fill="var(--c-text)" />
             </div>
           </NavLink>
 

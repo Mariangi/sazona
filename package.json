@@ -13,6 +13,7 @@
     "start": "npm run build && npm run dev:server",
     "start:tunnel": "npm run build && npm run dev:server & ngrok http 3000",
     "build": "tsc -b && vite build",
+    "build:tunnel": "tsc -b && vite build --mode tunnel --base=/sazona/ --outDir dist-tunnel",
     "preview": "vite preview",
     "db:generate": "npm run db:generate -w packages/server",
     "db:migrate": "npm run db:migrate -w packages/server",

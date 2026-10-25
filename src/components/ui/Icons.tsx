@@ -321,11 +321,17 @@ export const NutritionIcon = ({
     <svg
       xmlns="http://www.w3.org/2000/svg"
       height={height}
-      viewBox="0 -960 960 960"
+      viewBox="0 0 24 24"
       width={width}
-      fill={fill}
+      fill="none"
+      data-stroke-icon
+      stroke={fill}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
-      <path d="M300-560q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29Zm180 440q-134 0-227-93t-93-227q0-91 47-164.5T336-716q-4-11-6-22.5t-2-23.5q0-42 29-71t71-29q29 0 53 14t39 38q15-24 39-38t53-14q42 0 71 29t29 71q0 12-2 23.5t-6 22.5q79 26 126 99.5T880-440q0 134-93 227t-227 93Z" />
+      <path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z" />
+      <path d="M10 2c1 .5 2 2 2 5" />
     </svg>
   );
 };

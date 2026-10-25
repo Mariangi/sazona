@@ -63,6 +63,13 @@
   }
 }
 
+/* Stroke-based icons (e.g. NutritionIcon) recolor the stroke, not the fill */
+.link:hover svg[data-stroke-icon] path,
+.active svg[data-stroke-icon] path {
+  fill: none;
+  stroke: var(--c-primary);
+}
+
 .icon {
   width: 2.5rem;
   display: flex;

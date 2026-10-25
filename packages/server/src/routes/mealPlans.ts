@@ -41,6 +41,7 @@ export function mealPlanRoutes(app: FastifyInstance) {
     return plans.map(plan => {
       const entries = (entryMap.get(plan.id) || []).map(e => ({
         dayOfWeek: e.dayOfWeek,
+        mealType: e.mealType,
         recipeId: e.recipeId,
         recipeName: recipeMap.get(e.recipeId)?.name || '',
         recipeImage: recipeMap.get(e.recipeId)?.imageUrl || null,
@@ -49,6 +50,7 @@ export function mealPlanRoutes(app: FastifyInstance) {
       return {
         id: plan.id,
         weekStart: plan.weekStart,
+        servingsMultiplier: plan.servingsMultiplier,
         createdAt: plan.createdAt,
         entries,
       };
@@ -88,9 +90,11 @@ export function mealPlanRoutes(app: FastifyInstance) {
       return {
         id: existing.id,
         weekStart: existing.weekStart,
+        servingsMultiplier: existing.servingsMultiplier,
         createdAt: existing.createdAt,
         entries: entries.map(e => ({
           dayOfWeek: e.dayOfWeek,
+          mealType: e.mealType,
           recipeId: e.recipeId,
           recipeName: recipeMap.get(e.recipeId)?.name || '',
           recipeImage: recipeMap.get(e.recipeId)?.imageUrl || null,
@@ -99,13 +103,14 @@ export function mealPlanRoutes(app: FastifyInstance) {
     }
 
     const plan = db.insert(schema.mealPlans)
-      .values({ userId, weekStart: parsed.data.weekStart })
+      .values({ userId, weekStart: parsed.data.weekStart, servingsMultiplier: 1 })
       .returning()
       .get();
 
     return {
       id: plan.id,
       weekStart: plan.weekStart,
+      servingsMultiplier: plan.servingsMultiplier,
       createdAt: plan.createdAt,
       entries: [],
     };
@@ -141,9 +146,68 @@ export function mealPlanRoutes(app: FastifyInstance) {
     return {
       id: plan.id,
       weekStart: plan.weekStart,
+      servingsMultiplier: plan.servingsMultiplier,
       createdAt: plan.createdAt,
       entries: entries.map(e => ({
         dayOfWeek: e.dayOfWeek,
+        mealType: e.mealType,
+        recipeId: e.recipeId,
+        recipeName: recipeMap.get(e.recipeId)?.name || '',
+        recipeImage: recipeMap.get(e.recipeId)?.imageUrl || null,
+      })),
+    };
+  });
+
+  app.put('/api/meal-plans/:id/servings', { preHandler: authMiddleware }, async (request, reply) => {
+    const { userId } = (request as any).user;
+    const { id } = request.params as { id: string };
+    const { servingsMultiplier } = request.body as { servingsMultiplier: number };
+
+    if (!servingsMultiplier || servingsMultiplier < 1) {
+      return reply.status(400).send({ message: 'Invalid servings multiplier', statusCode: 400 });
+    }
+
+    const plan = db.select()
+      .from(schema.mealPlans)
+      .where(and(eq(schema.mealPlans.id, Number(id)), eq(schema.mealPlans.userId, userId)))
+      .get();
+
+    if (!plan) {
+      return reply.status(404).send({ message: 'Plan no encontrado', statusCode: 404 });
+    }
+
+    db.update(schema.mealPlans)
+      .set({ servingsMultiplier })
+      .where(eq(schema.mealPlans.id, plan.id))
+      .run();
+
+    const updatedPlan = db.select()
+      .from(schema.mealPlans)
+      .where(eq(schema.mealPlans.id, plan.id))
+      .get();
+
+    const entries = db.select()
+      .from(schema.mealPlanEntries)
+      .where(eq(schema.mealPlanEntries.mealPlanId, plan.id))
+      .all();
+
+    const recipeIds = [...new Set(entries.map(e => e.recipeId))];
+    const recipes = recipeIds.length > 0
+      ? db.select({ id: schema.recipes.id, name: schema.recipes.name, imageUrl: schema.recipes.imageUrl })
+        .from(schema.recipes)
+        .where(inArray(schema.recipes.id, recipeIds))
+        .all()
+      : [];
+    const recipeMap = new Map(recipes.map(r => [r.id, r]));
+
+    return {
+      id: updatedPlan.id,
+      weekStart: updatedPlan.weekStart,
+      servingsMultiplier: updatedPlan.servingsMultiplier,
+      createdAt: updatedPlan.createdAt,
+      entries: entries.map(e => ({
+        dayOfWeek: e.dayOfWeek,
+        mealType: e.mealType,
         recipeId: e.recipeId,
         recipeName: recipeMap.get(e.recipeId)?.name || '',
         recipeImage: recipeMap.get(e.recipeId)?.imageUrl || null,
@@ -179,6 +243,7 @@ export function mealPlanRoutes(app: FastifyInstance) {
           mealPlanId: plan.id,
           recipeId: e.recipeId,
           dayOfWeek: e.dayOfWeek,
+          mealType: e.mealType || 'lunch',
         }))
       ).run();
     }
@@ -200,9 +265,11 @@ export function mealPlanRoutes(app: FastifyInstance) {
     return {
       id: plan.id,
       weekStart: plan.weekStart,
+      servingsMultiplier: plan.servingsMultiplier,
       createdAt: plan.createdAt,
       entries: entries.map(e => ({
         dayOfWeek: e.dayOfWeek,
+        mealType: e.mealType,
         recipeId: e.recipeId,
         recipeName: recipeMap.get(e.recipeId)?.name || '',
         recipeImage: recipeMap.get(e.recipeId)?.imageUrl || null,
@@ -213,6 +280,7 @@ export function mealPlanRoutes(app: FastifyInstance) {
   app.post('/api/meal-plans/:id/generate-list', { preHandler: authMiddleware }, async (request, reply) => {
     const { userId } = (request as any).user;
     const { id } = request.params as { id: string };
+    const { servingsMultiplier = 1 } = request.body as { servingsMultiplier?: number };
 
     const plan = db.select()
       .from(schema.mealPlans)
@@ -254,10 +322,11 @@ export function mealPlanRoutes(app: FastifyInstance) {
       const allSameUnit = instances.every(i => i.unit === first.unit);
 
       if (allSameUnit && first.quantity) {
-        const totalQty = instances.reduce((sum, i) => {
+        let totalQty = instances.reduce((sum, i) => {
           const q = parseFloat(i.quantity.replace(',', '.'));
           return sum + (isNaN(q) ? 0 : q);
         }, 0);
+        totalQty *= servingsMultiplier;
         return {
           name: name.charAt(0).toUpperCase() + name.slice(1),
           quantity: totalQty > 0 ? String(Math.round(totalQty * 100) / 100) : '',

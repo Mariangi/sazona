@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import styles from './ImageUpload.module.css'
+import { resolveMediaUrl } from '../../api/client'
 
 interface ImageUploadProps {
   value: string | null
@@ -52,7 +53,7 @@ export default function ImageUpload({ value, onChange, existingImage }: ImageUpl
           </div>
         ) : showExisting ? (
           <div className={styles.preview}>
-            <img src={existingImage} alt="Vista previa" />
+            <img src={resolveMediaUrl(existingImage)} alt="Vista previa" />
             <button
               type="button"
               className={styles.removeBtn}

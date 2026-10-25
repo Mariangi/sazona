@@ -8,10 +8,18 @@ import { authRoutes } from './routes/auth.js';
 import { recipeRoutes } from './routes/recipes.js';
 import { groupRoutes } from './routes/groups.js';
 import { mealPlanRoutes } from './routes/mealPlans.js';
+import { swipeSessionRoutes } from './routes/swipeSessions.js';
+import { ingredientRecognitionRoutes } from './routes/ingredientRecognition.js';
+import { nutritionRoutes } from './routes/nutrition.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOADS_DIR = join(__dirname, '..', 'uploads');
 const DIST_DIR = join(__dirname, '..', '..', '..', 'dist');
+const ENV_FILE = join(__dirname, '..', '.env');
+
+if (existsSync(ENV_FILE)) {
+  process.loadEnvFile(ENV_FILE);
+}
 
 if (!existsSync(UPLOADS_DIR)) {
   mkdirSync(UPLOADS_DIR, { recursive: true });
@@ -34,6 +42,9 @@ authRoutes(app);
 recipeRoutes(app);
 groupRoutes(app);
 mealPlanRoutes(app);
+swipeSessionRoutes(app);
+ingredientRecognitionRoutes(app);
+nutritionRoutes(app);
 
 if (existsSync(DIST_DIR)) {
   await app.register(fastifyStatic, {
@@ -56,10 +67,12 @@ if (existsSync(DIST_DIR)) {
   console.log('Modo desarrollo: no se sirve frontend estático');
 }
 
+const PORT = Number(process.env.PORT) || 3000;
+
 const start = async () => {
   try {
-    await app.listen({ port: 3000, host: '0.0.0.0' });
-    console.log('Servidor corriendo en http://localhost:3000');
+    await app.listen({ port: PORT, host: '0.0.0.0' });
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
   } catch (err) {
     app.log.error(err);
     process.exit(1);

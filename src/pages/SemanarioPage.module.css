@@ -1,0 +1,131 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--c-text);
+  margin: 0 0 0.5rem;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: var(--c-text-secondary);
+  margin: 0;
+}
+
+.errorBanner {
+  background-color: var(--c-error-light);
+  border: 1px solid var(--c-error);
+  color: var(--c-error-dark);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+}
+
+.skeleton {
+  padding: 2rem;
+  text-align: center;
+  color: var(--c-text-secondary);
+  font-size: 0.95rem;
+}
+
+.error {
+  padding: 2rem;
+  text-align: center;
+  color: var(--c-error);
+}
+
+.controls {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--radius-lg);
+}
+
+.multiplierControl {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.multiplierControl label {
+  font-weight: 600;
+  color: var(--c-text);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.multiplierInput {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.5rem;
+  background: var(--c-bg);
+}
+
+.multiplierInput button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--c-primary);
+  color: white;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.multiplierInput button:hover {
+  background: var(--c-primary-dark);
+}
+
+.multiplierInput input {
+  width: 60px;
+  text-align: center;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--c-text);
+}
+
+.multiplierInput input:focus {
+  outline: none;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.actions button {
+  padding: 0.75rem 2rem;
+}

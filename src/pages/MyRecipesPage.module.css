@@ -127,3 +127,10 @@
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+
+.endMessage {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--c-text-secondary);
+  font-size: 0.9rem;
+}

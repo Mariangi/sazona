@@ -8,6 +8,7 @@ import Input from '../ui/Input'
 import ImageUpload from './ImageUpload'
 import IngredientInput from './IngredientInput'
 import StepInput from './StepInput'
+import DifficultyIndicator from './DifficultyIndicator'
 import styles from './RecipeForm.module.css'
 
 interface Ingredient {
@@ -36,6 +37,7 @@ export default function RecipeForm({ recipe }: RecipeFormProps) {
   const [servings, setServings] = useState(recipe?.servings.toString() ?? '')
   const [prepTime, setPrepTime] = useState(recipe?.prepTime.toString() ?? '')
   const [category, setCategory] = useState(recipe?.category ?? '')
+  const [difficulty, setDifficulty] = useState(recipe?.difficulty ?? 0)
   const [ingredients, setIngredients] = useState<Ingredient[]>(
     recipe?.ingredients.map(i => ({ name: i.name, quantity: i.quantity, unit: i.unit })) ?? [
       { name: '', quantity: '', unit: '' },
@@ -70,6 +72,7 @@ export default function RecipeForm({ recipe }: RecipeFormProps) {
         servings: Number(servings),
         prepTime: Number(prepTime),
         category: category || undefined,
+        difficulty: difficulty || undefined,
         ingredients: ingredients.filter((i) => i.name.trim()),
         steps: steps.filter((s) => s.description.trim()),
       }
@@ -113,6 +116,11 @@ export default function RecipeForm({ recipe }: RecipeFormProps) {
             <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.fieldLabel}>Dificultad</label>
+        <DifficultyIndicator value={difficulty} onChange={setDifficulty} size="28" showLabel={false} />
       </div>
 
       <div className={styles.row}>

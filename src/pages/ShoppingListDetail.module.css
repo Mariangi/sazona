@@ -156,6 +156,12 @@
   color: var(--c-text-tertiary);
 }
 
+.checkedByLabel {
+  font-size: 0.75rem;
+  color: var(--c-success);
+  font-weight: 500;
+}
+
 .checkmark {
   font-size: 1rem;
   color: var(--c-success);

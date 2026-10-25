@@ -27,6 +27,7 @@ export const createRecipeSchema = z.object({
   servings: z.coerce.number().int().min(1, 'Al menos 1 comensal'),
   prepTime: z.coerce.number().int().min(1, 'Tiempo mínimo 1 minuto'),
   category: z.string().optional(),
+  difficulty: z.coerce.number().int().min(1).max(5).optional(),
   ingredients: z.array(ingredientSchema).min(1, 'Al menos un ingrediente'),
   steps: z.array(stepSchema).min(1, 'Al menos un paso'),
 });
@@ -37,6 +38,7 @@ export const updateRecipeSchema = z.object({
   servings: z.coerce.number().int().min(1, 'Al menos 1 comensal'),
   prepTime: z.coerce.number().int().min(1, 'Tiempo mínimo 1 minuto'),
   category: z.string().optional(),
+  difficulty: z.coerce.number().int().min(1).max(5).optional(),
   ingredients: z.array(ingredientSchema).min(1, 'Al menos un ingrediente'),
   steps: z.array(stepSchema).min(1, 'Al menos un paso'),
 });
@@ -94,6 +96,7 @@ export const createMealPlanSchema = z.object({
 export const updateMealPlanEntriesSchema = z.object({
   entries: z.array(z.object({
     dayOfWeek: z.number().int().min(0).max(6),
+    mealType: z.string().min(1),
     recipeId: z.number().int().positive(),
   })),
 });
@@ -103,9 +106,48 @@ export const findIngredientsSchema = z.object({
   allowExtra: z.boolean(),
 });
 
+export const submitSwipeLikeSchema = z.object({
+  recipeId: z.number().int().positive(),
+});
+
+export const recognizeIngredientsRequestSchema = z.object({
+  imageBase64: z.string().min(1, 'Imagen requerida'),
+});
+
+export const recognizeIngredientsResponseSchema = z.object({
+  ingredients: z.array(z.string().min(1)),
+});
+
+export const analyzeMealRequestSchema = z.object({
+  imageBase64: z.string().min(1, 'Imagen requerida'),
+});
+
+export const analyzeMealResponseSchema = z.object({
+  foodName: z.string().min(1),
+  servingDescription: z.string().optional().default(''),
+  calories: z.number(),
+  protein: z.number(),
+  fat: z.number(),
+  carbs: z.number(),
+});
+
+export const createNutritionLogSchema = z.object({
+  imageBase64: z.string().optional(),
+  foodName: z.string().min(1, 'Nombre requerido'),
+  servingDescription: z.string().optional(),
+  calories: z.coerce.number(),
+  protein: z.coerce.number(),
+  fat: z.coerce.number(),
+  carbs: z.coerce.number(),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;
 export type UpdateRecipeInput = z.infer<typeof updateRecipeSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+export type SubmitSwipeLikeInput = z.infer<typeof submitSwipeLikeSchema>;
+export type RecognizeIngredientsInput = z.infer<typeof recognizeIngredientsRequestSchema>;
+export type AnalyzeMealInput = z.infer<typeof analyzeMealRequestSchema>;
+export type CreateNutritionLogInput = z.infer<typeof createNutritionLogSchema>;

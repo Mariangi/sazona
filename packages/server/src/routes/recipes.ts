@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 import { db, schema } from '../db/index.js';
 import { authMiddleware } from '../auth/middleware.js';
 import { createRecipeSchema, updateRecipeSchema, findIngredientsSchema } from '@sasona/shared';
-import { eq, ne, desc, inArray, and, sql } from 'drizzle-orm';
+import { eq, desc, inArray, and, sql } from 'drizzle-orm';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOADS_DIR = join(__dirname, '..', '..', 'uploads');
@@ -43,6 +43,7 @@ export function recipeRoutes(app: FastifyInstance) {
       servings: recipe.servings,
       prepTime: recipe.prepTime,
       category: recipe.category,
+      difficulty: recipe.difficulty,
       ingredientCount: allIngredients.filter(i => i.recipeId === recipe.id).length,
       stepCount: allSteps.filter(s => s.recipeId === recipe.id).length,
       createdAt: recipe.createdAt,
@@ -51,14 +52,17 @@ export function recipeRoutes(app: FastifyInstance) {
 
   app.get('/api/recipes/discover', { preHandler: authMiddleware }, async (request) => {
     const { userId } = (request as any).user;
-    const query = request.query as { page?: string; limit?: string; category?: string };
+    const query = request.query as { page?: string; limit?: string; category?: string; search?: string };
     const page = Math.max(1, Number(query.page) || 1);
     const limit = Math.min(50, Math.max(1, Number(query.limit) || 12));
     const offset = (page - 1) * limit;
 
-    const conditions = [ne(schema.recipes.userId, userId)];
+    const conditions: any[] = [];
     if (query.category) {
       conditions.push(eq(schema.recipes.category, query.category));
+    }
+    if (query.search) {
+      conditions.push(sql`lower(${schema.recipes.name}) like lower('%' || ${query.search} || '%')`);
     }
 
     const whereClause = and(...conditions);
@@ -108,6 +112,7 @@ export function recipeRoutes(app: FastifyInstance) {
         stepCount: allSteps.filter(s => s.recipeId === recipe.id).length,
         createdAt: recipe.createdAt,
         category: recipe.category,
+        difficulty: recipe.difficulty,
         author: authorMap.get(recipe.userId) || null,
       })),
       total: Number(total.count),
@@ -142,6 +147,7 @@ export function recipeRoutes(app: FastifyInstance) {
       servings: recipe.servings,
       prepTime: recipe.prepTime,
       category: recipe.category,
+      difficulty: recipe.difficulty,
       ingredientCount: allIngredients.filter(i => i.recipeId === recipe.id).length,
       stepCount: allSteps.filter(s => s.recipeId === recipe.id).length,
       createdAt: recipe.createdAt,
@@ -181,6 +187,7 @@ export function recipeRoutes(app: FastifyInstance) {
       servings: recipe.servings,
       prepTime: recipe.prepTime,
       category: recipe.category,
+      difficulty: recipe.difficulty,
       ingredients,
       steps,
       createdAt: recipe.createdAt,
@@ -220,6 +227,7 @@ export function recipeRoutes(app: FastifyInstance) {
       servings: recipe.servings,
       prepTime: recipe.prepTime,
       category: recipe.category,
+      difficulty: recipe.difficulty,
       ingredients,
       steps,
       createdAt: recipe.createdAt,
@@ -228,8 +236,6 @@ export function recipeRoutes(app: FastifyInstance) {
   });
 
   app.post('/api/recipes/find-by-ingredients', { preHandler: authMiddleware }, async (request, reply) => {
-    const { userId } = (request as any).user;
-
     const parsed = findIngredientsSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ message: 'Datos inválidos', statusCode: 400 });
@@ -240,15 +246,13 @@ export function recipeRoutes(app: FastifyInstance) {
       i.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     );
 
-    const userRecipes = db.select().from(schema.recipes)
-      .where(eq(schema.recipes.userId, userId))
-      .all();
+    const allRecipes = db.select().from(schema.recipes).all();
 
-    if (userRecipes.length === 0) {
-      return reply.status(404).send({ message: 'No tienes recetas aún', statusCode: 404 });
+    if (allRecipes.length === 0) {
+      return [];
     }
 
-    const recipeIds = userRecipes.map(r => r.id);
+    const recipeIds = allRecipes.map(r => r.id);
 
     const allIngredients = db.select()
       .from(schema.recipeIngredients)
@@ -261,7 +265,7 @@ export function recipeRoutes(app: FastifyInstance) {
       recipeMap.get(ing.recipeId)!.push(ing);
     }
 
-    const results = userRecipes.map(recipe => {
+    const results = allRecipes.map(recipe => {
       const recipeIngs = recipeMap.get(recipe.id) || [];
       const matchInfo = recipeIngs.map(ri => {
         const normalizedName = ri.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -272,6 +276,7 @@ export function recipeRoutes(app: FastifyInstance) {
       const matched = matchInfo.filter(m => m.matched);
       const missing = matchInfo.filter(m => !m.matched).map(m => m.name);
 
+      if (matched.length === 0) return null;
       if (!allowExtra && missing.length > 0) return null;
 
       return {
@@ -300,7 +305,7 @@ export function recipeRoutes(app: FastifyInstance) {
       });
     }
 
-    const { name, imageBase64, servings, prepTime, category, ingredients, steps } = parsed.data;
+    const { name, imageBase64, servings, prepTime, category, difficulty, ingredients, steps } = parsed.data;
     const { userId } = (request as any).user;
 
     let imageUrl: string | null = null;
@@ -329,6 +334,7 @@ export function recipeRoutes(app: FastifyInstance) {
       servings,
       prepTime,
       category: category || null,
+      difficulty: difficulty ?? null,
     }).returning().get();
 
     if (ingredients.length > 0) {
@@ -373,6 +379,7 @@ export function recipeRoutes(app: FastifyInstance) {
       servings: recipe.servings,
       prepTime: recipe.prepTime,
       category: recipe.category,
+      difficulty: recipe.difficulty,
       ingredients: savedIngredients,
       steps: savedSteps,
       createdAt: recipe.createdAt,
@@ -400,7 +407,7 @@ export function recipeRoutes(app: FastifyInstance) {
       });
     }
 
-    const { name, imageBase64, servings, prepTime, category, ingredients, steps } = parsed.data;
+    const { name, imageBase64, servings, prepTime, category, difficulty, ingredients, steps } = parsed.data;
 
     let imageUrl = existing.imageUrl;
 
@@ -426,7 +433,7 @@ export function recipeRoutes(app: FastifyInstance) {
     }
 
     db.update(schema.recipes)
-      .set({ name, imageUrl, servings, prepTime, category: category || null })
+      .set({ name, imageUrl, servings, prepTime, category: category || null, difficulty: difficulty ?? null })
       .where(eq(schema.recipes.id, Number(id)))
       .run();
 
@@ -482,6 +489,7 @@ export function recipeRoutes(app: FastifyInstance) {
       servings: updated.servings,
       prepTime: updated.prepTime,
       category: updated.category,
+      difficulty: updated.difficulty,
       ingredients: savedIngredients,
       steps: savedSteps,
       createdAt: updated.createdAt,
@@ -502,6 +510,7 @@ export function recipeRoutes(app: FastifyInstance) {
       servings: schema.recipes.servings,
       prepTime: schema.recipes.prepTime,
       category: schema.recipes.category,
+      difficulty: schema.recipes.difficulty,
       savedAt: schema.savedRecipes.createdAt,
     }).from(schema.savedRecipes)
       .innerJoin(schema.recipes, eq(schema.savedRecipes.recipeId, schema.recipes.id))
@@ -540,6 +549,7 @@ export function recipeRoutes(app: FastifyInstance) {
       servings: s.servings,
       prepTime: s.prepTime,
       category: s.category,
+      difficulty: s.difficulty,
       ingredientCount: ingCountMap.get(s.recipeId) || 0,
       stepCount: stepCountMap.get(s.recipeId) || 0,
       savedAt: s.savedAt,

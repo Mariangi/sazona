@@ -107,6 +107,61 @@
   max-width: 140px;
 }
 
+.groupCard {
+  flex: 0 0 140px;
+  scroll-snap-align: start;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  padding: 1rem 0.75rem;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.groupCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--c-primary);
+}
+
+.groupPlaceholder {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--c-primary-light), var(--c-bg));
+}
+
+.groupInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  width: 100%;
+}
+
+.groupName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--c-text);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.groupMeta {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--c-text-secondary);
+}
+
 .pageTitle {
   font-size: 1.5rem;
   font-weight: 700;
@@ -156,11 +211,47 @@
   border-color: var(--c-primary);
 }
 
-.version {
+.cardLink {
+  text-decoration: none;
+  display: block;
+}
+
+.emptySection {
+  margin-bottom: 0.5rem;
+}
+
+.emptyState {
+  background: var(--c-bg);
+  border: 1.5px dashed var(--c-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
   text-align: center;
-  font-size: 0.78rem;
-  color: var(--c-text-tertiary);
-  margin: 2rem 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--c-text-secondary);
+}
+
+.emptyLink {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--c-primary);
+  text-decoration: none;
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--c-primary-light);
+  transition: all 0.2s;
+}
+
+.emptyLink:hover {
+  background: var(--c-primary);
+  color: white;
 }
 
 @media (max-width: 480px) {
@@ -175,5 +266,14 @@
 
   .favoriteTitle {
     max-width: 120px;
+  }
+
+  .groupCard {
+    flex: 0 0 120px;
+  }
+
+  .groupPlaceholder {
+    width: 48px;
+    height: 48px;
   }
 }

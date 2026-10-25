@@ -1,0 +1,6 @@
+.version {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--c-text-tertiary);
+  margin: 2rem 0 0.5rem;
+}

@@ -1,5 +1,6 @@
 import { useNavigate, NavLink } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { resolveMediaUrl } from "../../api/client";
 import styles from "./Header.module.css";
 import { Logo } from "../ui/Icons";
 
@@ -16,7 +17,7 @@ export const Header = () => {
       </div>
       <button className={styles.avatarBtn} onClick={() => navigate("/profile")}>
         {user?.avatarUrl ? (
-          <img src={user.avatarUrl} alt="" />
+          <img src={resolveMediaUrl(user.avatarUrl)} alt="" />
         ) : (
           user?.username?.[0]?.toUpperCase() || "?"
         )}

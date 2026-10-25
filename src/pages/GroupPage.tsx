@@ -4,8 +4,10 @@ import type { GroupMessage } from '@sasona/shared'
 import { api } from '../api/client'
 import { useAuth } from '../hooks/useAuth'
 import Button from '../components/ui/Button'
+import MultiplierModal from '../components/groups/MultiplierModal'
+import RecipePickerModal from '../components/groups/RecipePickerModal'
 import styles from './GroupPage.module.css'
-import { ArrowLeftIcon, CutleryIcon, EditIcon, ThumbDownIcon, ThumbsUpDownIcon, ThumbUpIcon } from '../components/ui/Icons'
+import { ArrowLeftIcon, CutleryIcon, DiceIcon, EditIcon, ThumbDownIcon, ThumbsUpDownIcon, ThumbUpIcon } from '../components/ui/Icons'
 
 export default function GroupPage() {
   const { id } = useParams()
@@ -20,6 +22,9 @@ export default function GroupPage() {
   const [sending, setSending] = useState(false)
   const [editingName, setEditingName] = useState(false)
   const [editNameValue, setEditNameValue] = useState('')
+  const [showMultiplierModal, setShowMultiplierModal] = useState(false)
+  const [pendingCloseVoteMsgId, setPendingCloseVoteMsgId] = useState<number | null>(null)
+  const [startingSwipe, setStartingSwipe] = useState(false)
   const editInputRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
 
@@ -78,15 +83,46 @@ export default function GroupPage() {
   }
 
   async function handleCloseVote(msgId: number) {
+    setPendingCloseVoteMsgId(msgId)
+    setShowMultiplierModal(true)
+  }
+
+  async function handleConfirmCloseVote(multiplier: number) {
+    if (!pendingCloseVoteMsgId) return
     try {
-      const res = await api.closeVote(msgId)
+      const res = await api.closeVote(pendingCloseVoteMsgId, multiplier)
       setMessages(prev => prev.map(m =>
-        m.id === msgId ? { ...m, status: res.accepted ? 'accepted' : 'active' } : m
+        m.id === pendingCloseVoteMsgId ? { ...m, status: res.accepted ? 'accepted' : 'active' } : m
       ))
-      if (res.accepted) {
-        alert(' Propuesta aceptada! Se generó una lista de compras.')
+      if (res.accepted && res.shoppingListId) {
+        const msg = messages.find(m => m.id === pendingCloseVoteMsgId)
+        const recipeName = msg?.recipeName || 'la receta'
+        const listMsg = await api.sendMessage(Number(id), {
+          message: `📋 "${recipeName}" fue aceptada! Se generó una lista de compras.`,
+        })
+        setMessages(prev => [listMsg, ...prev])
+        navigate('/shopping-lists/' + res.shoppingListId)
       }
-    } catch {}
+    } catch {} finally {
+      setShowMultiplierModal(false)
+      setPendingCloseVoteMsgId(null)
+    }
+  }
+
+  function handleCancelCloseVote() {
+    setShowMultiplierModal(false)
+    setPendingCloseVoteMsgId(null)
+  }
+
+  async function handleStartSwipeSession() {
+    if (!id || startingSwipe) return
+    setStartingSwipe(true)
+    try {
+      const session = await api.createSwipeSession(Number(id))
+      navigate(`/groups/${id}/swipe/${session.id}`)
+    } catch {
+      setStartingSwipe(false)
+    }
   }
 
   const isOwn = (uid: number) => uid === user?.id
@@ -96,6 +132,12 @@ export default function GroupPage() {
 
   return (
     <div className={styles.container}>
+      <MultiplierModal
+        isOpen={showMultiplierModal}
+        onConfirm={handleConfirmCloseVote}
+        onCancel={handleCancelCloseVote}
+      />
+
       <div className={styles.header}>
         <button className={styles.backBtn} onClick={() => navigate('/groups')}><ArrowLeftIcon height='12' width='12' fill='var(--c-primary)'/> Grupos</button>
         <div className={styles.nameRow}>
@@ -121,6 +163,15 @@ export default function GroupPage() {
           )}
           <span className={styles.groupCode}>Código: {group.inviteCode} · {group.memberCount} miembros</span>
         </div>
+        <button
+          type="button"
+          className={styles.swipeSessionBtn}
+          onClick={handleStartSwipeSession}
+          disabled={startingSwipe}
+        >
+          <DiceIcon height="20" width="20" fill="#fff" />
+          Elegir cena en grupo
+        </button>
       </div>
 
       <div className={styles.chat}>
@@ -180,19 +231,10 @@ export default function GroupPage() {
 
       <div className={styles.inputArea}>
         {showRecipePicker && (
-          <div className={styles.recipePicker}>
-            <span className={styles.pickerTitle}>Elegí una receta:</span>
-            <div className={styles.pickerScroll}>
-              {recipes.map(r => (
-                <button key={r.id} className={styles.pickerItem} onClick={() => handleSend(r.id)}>
-                  {r.name}
-                </button>
-              ))}
-            </div>
-            <button className={styles.pickerCancel} onClick={() => setShowRecipePicker(false)}>
-              Cancelar
-            </button>
-          </div>
+          <RecipePickerModal
+            onSelect={(recipeId) => handleSend(recipeId)}
+            onClose={() => setShowRecipePicker(false)}
+          />
         )}
 
         <div className={styles.inputRow}>

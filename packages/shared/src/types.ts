@@ -34,6 +34,7 @@ export interface RecipeResponse {
   servings: number;
   prepTime: number;
   category: string | null;
+  difficulty: number | null;
   ingredients: Ingredient[];
   steps: Step[];
   createdAt: string;
@@ -47,6 +48,7 @@ export interface RecipeListItem {
   servings: number;
   prepTime: number;
   category: string | null;
+  difficulty: number | null;
   ingredientCount: number;
   stepCount: number;
   createdAt: string;
@@ -116,6 +118,10 @@ export interface ShoppingListItem {
   unit: string | null;
   checked: boolean;
   orderIndex: number;
+  checkedBy: number | null;
+  checkedByUsername: string | null;
+  checkedByAvatarUrl: string | null;
+  checkedAt: string | null;
 }
 
 export interface SavedRecipe {
@@ -126,6 +132,7 @@ export interface SavedRecipe {
   servings: number;
   prepTime: number;
   category: string | null;
+  difficulty: number | null;
   ingredientCount: number;
   stepCount: number;
   savedAt: string;
@@ -134,12 +141,14 @@ export interface SavedRecipe {
 export interface MealPlan {
   id: number;
   weekStart: string;
+  servingsMultiplier: number;
   createdAt: string;
   entries: MealPlanEntry[];
 }
 
 export interface MealPlanEntry {
   dayOfWeek: number;
+  mealType: string; // 'breakfast' | 'lunch' | 'snack' | 'dinner'
   recipeId: number;
   recipeName: string;
   recipeImage: string | null;
@@ -154,4 +163,57 @@ export interface ShoppingListDetail {
   items: ShoppingListItem[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface SwipeSessionParticipant {
+  userId: number;
+  username: string;
+  avatarUrl: string | null;
+  joinedAt: string;
+}
+
+export interface SwipeSessionStatus {
+  id: number;
+  groupId: number;
+  status: string; // 'active' | 'completed'
+  createdAt: string;
+  completedAt: string | null;
+  deck: RecipeListItem[];
+  participants: SwipeSessionParticipant[];
+  myLikedRecipeIds: number[];
+  matchedRecipeId: number | null;
+  matchedRecipeName: string | null;
+  shoppingListId: number | null;
+}
+
+export interface SwipeLikeResult {
+  matched: boolean;
+  matchedRecipeId?: number;
+  matchedRecipeName?: string;
+  shoppingListId?: number;
+}
+
+export interface RecognizeIngredientsResponse {
+  ingredients: string[];
+}
+
+export interface AnalyzeMealResponse {
+  foodName: string;
+  servingDescription: string;
+  calories: number;
+  protein: number;
+  fat: number;
+  carbs: number;
+}
+
+export interface NutritionLogEntry {
+  id: number;
+  imageUrl: string | null;
+  foodName: string;
+  servingDescription: string | null;
+  calories: number;
+  protein: number;
+  fat: number;
+  carbs: number;
+  createdAt: string;
 }

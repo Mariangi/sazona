@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { RecipeResponse } from "@sasona/shared";
-import { api } from "../api/client";
+import { api, resolveMediaUrl } from "../api/client";
 import { useAuth } from "../hooks/useAuth";
 import Button from "../components/ui/Button";
 import styles from "./RecipeDetailPage.module.css";
@@ -108,7 +108,7 @@ export default function RecipeDetailPage() {
       {recipe.imageUrl && (
         <div className={styles.hero}>
           <img
-            src={recipe.imageUrl}
+            src={resolveMediaUrl(recipe.imageUrl)}
             alt={recipe.name}
             className={styles.heroImage}
           />

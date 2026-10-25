@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import AppSplash from './components/layout/AppSplash'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import DashboardPage from './pages/DashboardPage'
@@ -8,13 +10,16 @@ import RecipeDetailPage from './pages/RecipeDetailPage'
 import ProfilePage from './pages/ProfilePage'
 import DiscoverPage from './pages/DiscoverPage'
 import RandomDinnerPage from './pages/RandomDinnerPage'
+import SwipeDinnerPage from './pages/SwipeDinnerPage'
 import FridgePage from './pages/FridgePage'
 import SavedRecipesPage from './pages/SavedRecipesPage'
 import GroupsPage from './pages/GroupsPage'
 import GroupPage from './pages/GroupPage'
+import GroupSwipeSessionPage from './pages/GroupSwipeSessionPage'
 import ShoppingListsPage from './pages/ShoppingListsPage'
 import ShoppingListDetail from './pages/ShoppingListDetail'
 import MealPlannerPage from './pages/MealPlannerPage'
+import NutritionPage from './pages/NutritionPage'
 import AuthLayout from './components/layout/AuthLayout'
 import { useAuth } from './hooks/useAuth'
 
@@ -33,6 +38,13 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const { loading } = useAuth()
+  const [showSplash, setShowSplash] = useState(true)
+
+  if (showSplash) {
+    return <AppSplash loading={loading} onFinished={() => setShowSplash(false)} />
+  }
+
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/login" replace />} />
@@ -57,6 +69,10 @@ export default function App() {
         <Route index element={<RandomDinnerPage />} />
       </Route>
 
+      <Route path="/swipe" element={<ProtectedRoute />}>
+        <Route index element={<SwipeDinnerPage />} />
+      </Route>
+
       <Route path="/fridge" element={<ProtectedRoute />}>
         <Route index element={<FridgePage />} />
       </Route>
@@ -76,6 +92,7 @@ export default function App() {
       <Route path="/groups" element={<ProtectedRoute />}>
         <Route index element={<GroupsPage />} />
         <Route path=":id" element={<GroupPage />} />
+        <Route path=":groupId/swipe/:sessionId" element={<GroupSwipeSessionPage />} />
       </Route>
 
       <Route path="/shopping-lists" element={<ProtectedRoute />}>
@@ -86,6 +103,11 @@ export default function App() {
       <Route path="/meal-planner" element={<ProtectedRoute />}>
         <Route index element={<MealPlannerPage />} />
       </Route>
+
+      <Route path="/nutrition" element={<ProtectedRoute />}>
+        <Route index element={<NutritionPage />} />
+      </Route>
+
     </Routes>
   )
 }

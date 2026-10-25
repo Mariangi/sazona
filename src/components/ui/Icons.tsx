@@ -312,6 +312,30 @@ export const CameraIcon = ({
   );
 };
 
+export const NutritionIcon = ({
+  width = "24",
+  height = "24",
+  fill = "#1b1b1b",
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height={height}
+      viewBox="0 0 24 24"
+      width={width}
+      fill="none"
+      data-stroke-icon
+      stroke={fill}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z" />
+      <path d="M10 2c1 .5 2 2 2 5" />
+    </svg>
+  );
+};
+
 export const ArrowLeftIcon = ({
   width = "24",
   height = "24",
@@ -612,11 +636,7 @@ export const ThumbsUpDownIcon = ({
   );
 };
 
-export const EditIcon = ({
-  width = "24",
-  height = "24",
-  fill = "#1b1b1b",
-}) => {
+export const EditIcon = ({ width = "24", height = "24", fill = "#1b1b1b" }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -630,7 +650,11 @@ export const EditIcon = ({
   );
 };
 
-export const CalendarIcon = ({ width = "24", height = "24", fill = "#1b1b1b" }) => {
+export const CalendarIcon = ({
+  width = "24",
+  height = "24",
+  fill = "#1b1b1b",
+}) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -658,6 +682,60 @@ export const TrashIcon = ({
       fill={fill}
     >
       <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+    </svg>
+  );
+};
+
+export const CloseIcon = ({
+  width = "16",
+  height = "16",
+  fill = "#dc2626",
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height={height}
+      viewBox="0 -960 960 960"
+      width={width}
+      fill={fill}
+    >
+      <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+    </svg>
+  );
+};
+
+export const StarIcon = ({
+  width = "24",
+  height = "24",
+  fill = "#1b1b1b",
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height={height}
+      viewBox="0 0 24 24"
+      width={width}
+      fill={fill}
+    >
+      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+    </svg>
+  );
+};
+
+export const ChevronUpIcon = ({
+  width = "24",
+  height = "24",
+  fill = "#1b1b1b",
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height={height}
+      viewBox="0 -960 960 960"
+      width={width}
+      fill={fill}
+    >
+      <path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z" />
     </svg>
   );
 };

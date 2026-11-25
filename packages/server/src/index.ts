@@ -12,6 +12,7 @@ import { mealPlanRoutes } from './routes/mealPlans.js';
 import { swipeSessionRoutes } from './routes/swipeSessions.js';
 import { ingredientRecognitionRoutes } from './routes/ingredientRecognition.js';
 import { nutritionRoutes } from './routes/nutrition.js';
+import { attachImageInfo } from './services/imageInfo.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOADS_DIR = join(__dirname, '..', 'uploads');
@@ -72,6 +73,16 @@ await app.register(fastifyStatic, {
   decorateReply: false,
   maxAge: '365d',
   immutable: true,
+});
+
+// Agrega dimensiones y miniatura a las imágenes que devuelva cualquier ruta.
+app.addHook('preSerialization', async (request, _reply, payload) => {
+  try {
+    await attachImageInfo(payload);
+  } catch (err) {
+    request.log.warn(err, 'No se pudo agregar la información de imágenes');
+  }
+  return payload;
 });
 
 authRoutes(app);

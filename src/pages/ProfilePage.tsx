@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api, resolveMediaUrl } from "../api/client";
+import { api, thumbSrc } from "../api/client";
 import { useAuth } from "../hooks/useAuth";
 import type { SavedRecipe, RecipeListItem, FamilyGroup } from "@sasona/shared";
 import AvatarUpload from "../components/profile/AvatarUpload";
@@ -81,7 +81,7 @@ export default function ProfilePage() {
                     <div className={styles.favoriteImageWrapper}>
                       {recipe.imageUrl ? (
                         <img
-                          src={resolveMediaUrl(recipe.imageUrl)}
+                          src={thumbSrc(recipe)} loading="lazy" decoding="async"
                           alt={recipe.name}
                           className={styles.favoriteImage}
                         />
@@ -126,7 +126,7 @@ export default function ProfilePage() {
                     <div className={styles.favoriteImageWrapper}>
                       {recipe.imageUrl ? (
                         <img
-                          src={resolveMediaUrl(recipe.imageUrl)}
+                          src={thumbSrc(recipe)} loading="lazy" decoding="async"
                           alt={recipe.name}
                           className={styles.favoriteImage}
                         />

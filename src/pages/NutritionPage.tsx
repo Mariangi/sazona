@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { AnalyzeMealResponse, NutritionLogEntry } from '@sasona/shared'
-import { api, resolveMediaUrl } from '../api/client'
+import { api, thumbSrc } from '../api/client'
 import Button from '../components/ui/Button'
 import MealCapture from '../components/nutrition/MealCapture'
 import { TrashIcon } from '../components/ui/Icons'
@@ -234,7 +234,7 @@ export default function NutritionPage() {
           {logs.map((log) => (
             <div key={log.id} className={styles.logItem}>
               {log.imageUrl && (
-                <img src={resolveMediaUrl(log.imageUrl)} alt="" className={styles.logImage} />
+                <img src={thumbSrc(log)} loading="lazy" decoding="async" alt="" className={styles.logImage} />
               )}
               <div className={styles.logInfo}>
                 <span className={styles.logName}>{log.foodName}</span>

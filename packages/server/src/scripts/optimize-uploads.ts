@@ -1,6 +1,7 @@
 /**
- * Optimiza las imágenes que ya están en uploads/ (resize + WebP) y actualiza las referencias
- * en la base de datos. Los originales NO se borran: se mueven a una carpeta de backup.
+ * Optimiza las imágenes que ya están en uploads/ (resize + WebP), actualiza las referencias
+ * en la base de datos y genera las miniaturas que falten (recetas y comidas).
+ * Los originales NO se borran: se mueven a una carpeta de backup.
  *
  *   npm run optimize:uploads -w packages/server -- --dry-run     # solo muestra qué haría
  *   npm run optimize:uploads -w packages/server                   # aplica los cambios
@@ -20,7 +21,7 @@ import sharp from 'sharp';
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, unlinkSync, writeFileSync } from 'fs';
 import { basename, dirname, extname, join, resolve } from 'path';
 import { fileURLToPath } from 'url';
-import { IMAGE_PRESETS, optimizeImage, type ImagePreset } from '../services/images.js';
+import { createThumbnail, IMAGE_PRESETS, optimizeImage, thumbName, type ImagePreset } from '../services/images.js';
 
 const serverDir = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -98,7 +99,11 @@ async function main() {
   const files = readdirSync(uploadsDir).filter(
     (f) => IMAGE_EXT.has(extname(f).toLowerCase()) && statSync(join(uploadsDir, f)).isFile(),
   );
-  const orphans = files.filter((f) => !presetByName.has(f) && !otherRefs.has(f));
+  // Las miniaturas de imágenes referenciadas no son huérfanas aunque ninguna fila las nombre.
+  const referencedThumbs = new Set(
+    [...presetByName.keys()].flatMap((n) => [thumbName(n), thumbName(`${basename(n, extname(n))}.webp`)]),
+  );
+  const orphans = files.filter((f) => !presetByName.has(f) && !otherRefs.has(f) && !referencedThumbs.has(f));
 
   console.log(`${dryRun ? '[DRY-RUN] ' : ''}Base: ${dbPath}`);
   console.log(`Imágenes: ${files.length} en ${uploadsDir} | referenciadas: ${presetByName.size} | huérfanas: ${orphans.length}\n`);
@@ -108,6 +113,20 @@ async function main() {
     column,
     stmt: dryRun ? null : db.prepare(`update "${table}" set "${column}" = ? where "${column}" = ?`),
   }));
+
+  let thumbs = 0;
+
+  /** Genera la miniatura si falta y pesa menos que la imagen (los avatares no llevan). */
+  async function ensureThumb(filename: string, bytes: Buffer, preset: ImagePreset) {
+    if (preset === 'avatar') return;
+    const target = join(uploadsDir, thumbName(filename));
+    if (existsSync(target)) return;
+    const thumb = await createThumbnail(bytes);
+    if (thumb.length >= bytes.length * 0.95) return;
+    console.log(`  ${dryRun ? '~' : '+'} miniatura ${thumbName(filename)}  ${kb(thumb.length)}`);
+    thumbs++;
+    if (!dryRun) writeFileSync(target, thumb);
+  }
 
   let before = 0;
   let after = 0;
@@ -151,6 +170,7 @@ async function main() {
     if (alreadyGood || noGain) {
       console.log(`  = ${name} (${kb(original.length)}) ya está optimizada`);
       skipped++;
+      await ensureThumb(name, original, preset);
       continue;
     }
 
@@ -162,7 +182,10 @@ async function main() {
     before += original.length;
     after += optimized.length;
     converted++;
-    if (dryRun) continue;
+    if (dryRun) {
+      await ensureThumb(newName, optimized, preset);
+      continue;
+    }
 
     // 1) archivo nuevo, 2) referencias en la base, 3) original al backup
     writeFileSync(join(uploadsDir, newName), optimized);
@@ -170,6 +193,7 @@ async function main() {
       for (const { stmt } of updates) stmt!.run(`/uploads/${newName}`, `/uploads/${name}`);
     })();
     moveToBackup(file);
+    await ensureThumb(newName, optimized, preset);
   }
 
   if (moveOrphans && orphans.length > 0) {
@@ -185,7 +209,7 @@ async function main() {
   }
 
   console.log(
-    `\n${dryRun ? '[DRY-RUN] ' : ''}Convertidas: ${converted} | ya optimizadas: ${skipped} | con error/faltantes: ${failed} | huérfanas: ${orphans.length}${moveOrphans ? '' : ' (no se tocan; usar --move-orphans)'}`,
+    `\n${dryRun ? '[DRY-RUN] ' : ''}Convertidas: ${converted} | ya optimizadas: ${skipped} | miniaturas nuevas: ${thumbs} | con error/faltantes: ${failed} | huérfanas: ${orphans.length}${moveOrphans ? '' : ' (no se tocan; usar --move-orphans)'}`,
   );
   if (converted > 0) {
     console.log(`Peso de las convertidas: ${mb(before)} -> ${mb(after)}  (ahorro ${mb(before - after)}, -${(100 - (after / before) * 100).toFixed(0)}%)`);

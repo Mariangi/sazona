@@ -185,6 +185,9 @@ export function mealPlanRoutes(app: FastifyInstance) {
       .from(schema.mealPlans)
       .where(eq(schema.mealPlans.id, plan.id))
       .get();
+    if (!updatedPlan) {
+      return reply.status(404).send({ message: 'Plan no encontrado', statusCode: 404 });
+    }
 
     const entries = db.select()
       .from(schema.mealPlanEntries)

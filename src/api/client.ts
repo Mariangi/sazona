@@ -14,6 +14,11 @@ export function resolveMediaUrl(path: string | null | undefined): string {
   return `${API_ORIGIN}${path}`
 }
 
+/** URL para tarjetas y listas: la miniatura si existe, si no la imagen completa. */
+export function thumbSrc(item: { imageUrl: string | null; imageThumbUrl?: string }): string {
+  return resolveMediaUrl(item.imageThumbUrl ?? item.imageUrl)
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = localStorage.getItem('token')
   const headers: Record<string, string> = {

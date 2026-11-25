@@ -2,7 +2,9 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import type { RecipeListItem } from "@sasona/shared";
 import { CATEGORIES } from "@sasona/shared";
-import { api, resolveMediaUrl } from "../api/client";
+import { api, resolveMediaUrl, thumbSrc } from "../api/client";
+import MasonryImage from "../components/recipes/MasonryImage";
+import { useMasonryColumns } from "../hooks/useMasonryColumns";
 import styles from "./DiscoverPage.module.css";
 import {
   ClockIcon,
@@ -18,6 +20,12 @@ type DiscoverRecipe = RecipeListItem & {
 };
 
 const LIMIT = 12;
+
+// Alto de una tarjeta relativo a su ancho: la imagen más el bloque de texto.
+const estimateCardHeight = (r: DiscoverRecipe) => {
+  const image = !r.imageUrl ? 0.9 : r.imageWidth && r.imageHeight ? r.imageHeight / r.imageWidth : 1.25;
+  return image + 0.9;
+};
 
 function SkeletonCard() {
   return (
@@ -48,6 +56,7 @@ export default function DiscoverPage() {
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   const hasMore = recipes.length < total;
+  const columns = useMasonryColumns(recipes, estimateCardHeight);
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -148,8 +157,11 @@ export default function DiscoverPage() {
 
       {loading ? (
         <div className={styles.masonry}>
-          {Array.from({ length: 6 }, (_, i) => (
-            <SkeletonCard key={i} />
+          {columns.map((_, col) => (
+            <div key={col} className={styles.column}>
+              <SkeletonCard />
+              <SkeletonCard />
+            </div>
           ))}
         </div>
       ) : recipes.length === 0 ? (
@@ -165,81 +177,83 @@ export default function DiscoverPage() {
         </div>
       ) : (
         <div className={styles.masonry}>
-          {recipes.map((recipe) => (
-            <div
-              key={recipe.id}
-              className={styles.card}
-              onClick={() => navigate(`/recipes/${recipe.id}`)}
-            >
-              {recipe.imageUrl ? (
-                <img
-                  src={resolveMediaUrl(recipe.imageUrl)}
-                  alt={recipe.name}
-                  className={styles.cardImage}
-                />
-              ) : (
-                <div className={styles.cardPlaceholder}>
-                  <CutleryIcon height="16" width="16" />
-                </div>
-              )}
-              <div className={styles.cardBody}>
-                <h3 className={styles.cardName}>{recipe.name}</h3>
-                {recipe.category && (
-                  <span className={styles.categoryBadge}>
-                    {recipe.category}
-                  </span>
-                )}
-                <div className={styles.cardMeta}>
-                  <span>
-                    <PeopleIcon
-                      height="16"
-                      width="16"
-                      fill="var(--c-text-secondary)"
-                    />{" "}
-                    {recipe.servings}
-                  </span>
-                  <span>
-                    <ClockIcon
-                      height="16"
-                      width="16"
-                      fill="var(--c-text-secondary)"
-                    />{" "}
-                    {recipe.prepTime}min
-                  </span>
-                </div>
-                {!!recipe.difficulty && (
-                  <div className={styles.cardDifficulty}>
-                    <DifficultyIndicator value={recipe.difficulty} size="10" />
+          {columns.map((column, col) => (
+            <div key={col} className={styles.column}>
+              {column.map((recipe) => (
+                <div
+                  key={recipe.id}
+                  className={styles.card}
+                  onClick={() => navigate(`/recipes/${recipe.id}`)}
+                >
+                  {recipe.imageUrl ? (
+                    <MasonryImage
+                      src={thumbSrc(recipe)}
+                      alt={recipe.name}
+                      width={recipe.imageWidth}
+                      height={recipe.imageHeight}
+                      className={styles.cardImage}
+                    />
+                  ) : (
+                    <div className={styles.cardPlaceholder}>
+                      <CutleryIcon height="16" width="16" />
+                    </div>
+                  )}
+                  <div className={styles.cardBody}>
+                    <h3 className={styles.cardName}>{recipe.name}</h3>
+                    {recipe.category && (
+                      <span className={styles.categoryBadge}>
+                        {recipe.category}
+                      </span>
+                    )}
+                    <div className={styles.cardMeta}>
+                      <span>
+                        <PeopleIcon
+                          height="16"
+                          width="16"
+                          fill="var(--c-text-secondary)"
+                        />{" "}
+                        {recipe.servings}
+                      </span>
+                      <span>
+                        <ClockIcon
+                          height="16"
+                          width="16"
+                          fill="var(--c-text-secondary)"
+                        />{" "}
+                        {recipe.prepTime}min
+                      </span>
+                    </div>
+                    {!!recipe.difficulty && (
+                      <div className={styles.cardDifficulty}>
+                        <DifficultyIndicator value={recipe.difficulty} size="10" />
+                      </div>
+                    )}
+                    {recipe.author && (
+                      <div className={styles.author}>
+                        <span className={styles.authorAvatar}>
+                          {recipe.author.avatarUrl ? (
+                            <img
+                              src={resolveMediaUrl(recipe.author.avatarUrl)}
+                              alt=""
+                              loading="lazy"
+                              decoding="async"
+                              className={styles.authorAvatarImg}
+                            />
+                          ) : (
+                            recipe.author.username[0].toUpperCase()
+                          )}
+                        </span>
+                        <span className={styles.authorName}>
+                          {recipe.author.username}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                )}
-                {recipe.author && (
-                  <div className={styles.author}>
-                    <span className={styles.authorAvatar}>
-                      {recipe.author.avatarUrl ? (
-                        <img
-                          src={resolveMediaUrl(recipe.author.avatarUrl)}
-                          alt=""
-                          className={styles.authorAvatarImg}
-                        />
-                      ) : (
-                        recipe.author.username[0].toUpperCase()
-                      )}
-                    </span>
-                    <span className={styles.authorName}>
-                      {recipe.author.username}
-                    </span>
-                  </div>
-                )}
-              </div>
+                </div>
+              ))}
+              {loadingMore && <SkeletonCard />}
             </div>
           ))}
-          {loadingMore && (
-            <>
-              <SkeletonCard />
-              <SkeletonCard />
-              <SkeletonCard />
-            </>
-          )}
         </div>
       )}
 

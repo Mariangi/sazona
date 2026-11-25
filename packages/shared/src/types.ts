@@ -26,6 +26,13 @@ export interface Step {
   description: string;
 }
 
+/** Datos que el servidor agrega a las respuestas con imágenes de uploads/. */
+export interface ImageInfo {
+  imageThumbUrl?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+}
+
 export interface RecipeResponse {
   id: number;
   userId: number;
@@ -41,7 +48,7 @@ export interface RecipeResponse {
   updatedAt: string;
 }
 
-export interface RecipeListItem {
+export interface RecipeListItem extends ImageInfo {
   id: number;
   name: string;
   imageUrl: string | null;
@@ -54,7 +61,7 @@ export interface RecipeListItem {
   createdAt: string;
 }
 
-export interface RecipeMatch {
+export interface RecipeMatch extends ImageInfo {
   id: number;
   name: string;
   imageUrl: string | null;
@@ -124,7 +131,7 @@ export interface ShoppingListItem {
   checkedAt: string | null;
 }
 
-export interface SavedRecipe {
+export interface SavedRecipe extends ImageInfo {
   id: number;
   recipeId: number;
   name: string;
@@ -206,7 +213,7 @@ export interface AnalyzeMealResponse {
   carbs: number;
 }
 
-export interface NutritionLogEntry {
+export interface NutritionLogEntry extends ImageInfo {
   id: number;
   imageUrl: string | null;
   foodName: string;

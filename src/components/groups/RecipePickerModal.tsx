@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { api, resolveMediaUrl } from '../../api/client'
+import { api, thumbSrc } from '../../api/client'
 import styles from './RecipePickerModal.module.css'
 import { CloseIcon } from '../ui/Icons'
 
@@ -48,7 +48,7 @@ export default function RecipePickerModal({ onSelect, onClose }: RecipePickerMod
           {filtered.map(r => (
             <button key={r.id} className={styles.item} onClick={() => onSelect(r.id)}>
               {r.imageUrl && (
-                <img src={resolveMediaUrl(r.imageUrl)} alt="" className={styles.itemImage} />
+                <img src={thumbSrc(r)} loading="lazy" decoding="async" alt="" className={styles.itemImage} />
               )}
               <span className={styles.itemName}>{r.name}</span>
             </button>

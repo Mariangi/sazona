@@ -1,7 +1,7 @@
 import sharp from 'sharp';
 import { randomUUID } from 'crypto';
 import { mkdir, writeFile } from 'fs/promises';
-import { dirname, join } from 'path';
+import { basename, dirname, extname, join } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -15,6 +15,12 @@ export const IMAGE_PRESETS = {
 } as const;
 
 export type ImagePreset = keyof typeof IMAGE_PRESETS;
+
+// Miniatura para las tarjetas de las grillas (los avatares ya son chicos y no la necesitan).
+export const THUMB = { width: 640, maxHeight: 1280, quality: 75 } as const;
+
+/** Nombre del archivo de miniatura asociado a una imagen: `abc.webp` -> `abc-thumb.webp`. */
+export const thumbName = (filename: string) => `${basename(filename, extname(filename))}-thumb.webp`;
 
 // Protege contra imágenes "bomba" (miles de megapíxeles que agotan la memoria).
 const MAX_INPUT_PIXELS = 100_000_000;
@@ -32,8 +38,17 @@ export async function optimizeImage(input: Buffer, preset: ImagePreset): Promise
     .toBuffer();
 }
 
+export async function createThumbnail(input: Buffer): Promise<Buffer> {
+  return sharp(input, { limitInputPixels: MAX_INPUT_PIXELS })
+    .rotate()
+    .resize({ width: THUMB.width, height: THUMB.maxHeight, fit: 'inside', withoutEnlargement: true })
+    .webp({ quality: THUMB.quality, effort: 4 })
+    .toBuffer();
+}
+
 /**
  * Recibe una imagen como data URI base64, la optimiza y la guarda en uploads/ como .webp.
+ * Salvo los avatares, también guarda su miniatura.
  * Devuelve la URL pública (`/uploads/<archivo>`), o `null` si el formato no es una imagen válida.
  */
 export async function saveImageFromDataUri(
@@ -54,5 +69,8 @@ export async function saveImageFromDataUri(
   const filename = `${filenamePrefix}${randomUUID()}.webp`;
   await mkdir(UPLOADS_DIR, { recursive: true });
   await writeFile(join(UPLOADS_DIR, filename), optimized);
+  if (preset !== 'avatar') {
+    await writeFile(join(UPLOADS_DIR, thumbName(filename)), await createThumbnail(optimized));
+  }
   return `/uploads/${filename}`;
 }

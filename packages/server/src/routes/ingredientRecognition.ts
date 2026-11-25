@@ -1,10 +1,11 @@
 import { FastifyInstance } from 'fastify';
 import { authMiddleware } from '../auth/middleware.js';
+import { geminiLimit } from '../auth/rateLimits.js';
 import { recognizeIngredientsRequestSchema } from '@sasona/shared';
 import { recognizeIngredientsFromImage, GeminiNotConfiguredError, GeminiRecognitionError } from '../services/gemini.js';
 
 export function ingredientRecognitionRoutes(app: FastifyInstance) {
-  app.post('/api/recipes/recognize-ingredients', { preHandler: authMiddleware }, async (request, reply) => {
+  app.post('/api/recipes/recognize-ingredients', { preHandler: authMiddleware, config: geminiLimit }, async (request, reply) => {
     const parsed = recognizeIngredientsRequestSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ message: 'Datos inválidos', statusCode: 400 });

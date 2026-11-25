@@ -6,6 +6,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { db, schema } from '../db/index.js';
 import { authMiddleware } from '../auth/middleware.js';
+import { geminiLimit } from '../auth/rateLimits.js';
 import { analyzeMealRequestSchema, createNutritionLogSchema } from '@sasona/shared';
 import { analyzeMealFromImage, GeminiNotConfiguredError, GeminiRecognitionError } from '../services/nutritionAnalysis.js';
 import { eq, desc, and } from 'drizzle-orm';
@@ -14,7 +15,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOADS_DIR = join(__dirname, '..', '..', 'uploads');
 
 export function nutritionRoutes(app: FastifyInstance) {
-  app.post('/api/nutrition/analyze', { preHandler: authMiddleware }, async (request, reply) => {
+  app.post('/api/nutrition/analyze', { preHandler: authMiddleware, config: geminiLimit }, async (request, reply) => {
     const parsed = analyzeMealRequestSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ message: 'Datos inválidos', statusCode: 400 });

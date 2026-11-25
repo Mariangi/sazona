@@ -10,12 +10,13 @@ import { eq, ne } from 'drizzle-orm';
 import { registerSchema, loginSchema, updateProfileSchema, changePasswordSchema, avatarSchema } from '@sasona/shared';
 import { signToken } from '../auth/jwt.js';
 import { authMiddleware } from '../auth/middleware.js';
+import { registerLimit, loginLimit } from '../auth/rateLimits.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOADS_DIR = join(__dirname, '..', '..', 'uploads');
 
 export function authRoutes(app: FastifyInstance) {
-  app.post('/api/auth/register', async (request, reply) => {
+  app.post('/api/auth/register', { config: registerLimit }, async (request, reply) => {
     const parsed = registerSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({
@@ -53,7 +54,7 @@ export function authRoutes(app: FastifyInstance) {
     };
   });
 
-  app.post('/api/auth/login', async (request, reply) => {
+  app.post('/api/auth/login', { config: loginLimit }, async (request, reply) => {
     const parsed = loginSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({

@@ -61,8 +61,8 @@ export const api = {
   getAllRecipes: () =>
     request<RecipeListItem[]>('/recipes/all'),
 
-  getDiscoverRecipes: (page = 1, limit = 12, category?: string, search?: string) =>
-    request<{ recipes: (RecipeListItem & { author: { id: number; username: string; avatarUrl: string | null } | null })[]; total: number; page: number; limit: number }>(`/recipes/discover?page=${page}&limit=${limit}${category ? `&category=${encodeURIComponent(category)}` : ''}${search ? `&search=${encodeURIComponent(search)}` : ''}`),
+  getDiscoverRecipes: (page = 1, limit = 12, category?: string, search?: string, difficulty?: number) =>
+    request<{ recipes: (RecipeListItem & { author: { id: number; username: string; avatarUrl: string | null } | null })[]; total: number; page: number; limit: number }>(`/recipes/discover?page=${page}&limit=${limit}${category ? `&category=${encodeURIComponent(category)}` : ''}${search ? `&search=${encodeURIComponent(search)}` : ''}${difficulty ? `&difficulty=${difficulty}` : ''}`),
 
   updateProfile: (data: { email: string; username: string }) =>
     request<UserResponse>('/auth/profile', { method: 'PUT', body: JSON.stringify(data) }),

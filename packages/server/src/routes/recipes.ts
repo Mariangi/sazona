@@ -46,7 +46,7 @@ export function recipeRoutes(app: FastifyInstance) {
 
   app.get('/api/recipes/discover', { preHandler: authMiddleware }, async (request) => {
     const { userId } = (request as any).user;
-    const query = request.query as { page?: string; limit?: string; category?: string; search?: string };
+    const query = request.query as { page?: string; limit?: string; category?: string; search?: string; difficulty?: string };
     const page = Math.max(1, Number(query.page) || 1);
     const limit = Math.min(50, Math.max(1, Number(query.limit) || 12));
     const offset = (page - 1) * limit;
@@ -57,6 +57,11 @@ export function recipeRoutes(app: FastifyInstance) {
     }
     if (query.search) {
       conditions.push(sql`lower(${schema.recipes.name}) like lower('%' || ${query.search} || '%')`);
+    }
+
+    const difficulty = Number(query.difficulty);
+    if (Number.isInteger(difficulty) && difficulty >= 1 && difficulty <= 5) {
+      conditions.push(eq(schema.recipes.difficulty, difficulty));
     }
 
     const whereClause = and(...conditions);

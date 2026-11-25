@@ -21,6 +21,15 @@ type DiscoverRecipe = RecipeListItem & {
 
 const LIMIT = 12;
 
+// Escala de dificultad de las recetas (1 a 5).
+const DIFFICULTIES = [
+  { value: 1, label: "Muy fácil" },
+  { value: 2, label: "Fácil" },
+  { value: 3, label: "Media" },
+  { value: 4, label: "Difícil" },
+  { value: 5, label: "Muy difícil" },
+];
+
 // Alto de una tarjeta relativo a su ancho: la imagen más el bloque de texto.
 const estimateCardHeight = (r: DiscoverRecipe) => {
   const image = !r.imageUrl ? 0.9 : r.imageWidth && r.imageHeight ? r.imageHeight / r.imageWidth : 1.25;
@@ -52,26 +61,41 @@ export default function DiscoverPage() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDifficulty, setSelectedDifficulty] = useState(0);
 
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   const hasMore = recipes.length < total;
   const columns = useMasonryColumns(recipes, estimateCardHeight);
 
-  const handleSearchChange = (value: string) => {
-    setSearchQuery(value);
+  // Cualquier cambio de filtro vuelve a la primera página.
+  const resetResults = () => {
     setRecipes([]);
     setPage(1);
     setTotal(0);
+    setLoading(true);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    resetResults();
+  };
+
+  const handleCategoryChange = (category: string) => {
+    if (category === selectedCategory) return;
+    setSelectedCategory(category);
+    resetResults();
+  };
+
+  // Tocar la dificultad ya elegida la quita.
+  const handleDifficultyChange = (value: number) => {
+    setSelectedDifficulty((current) => (current === value ? 0 : value));
+    resetResults();
   };
 
   useEffect(() => {
-    setRecipes([]);
-    setPage(1);
-    setTotal(0);
-  }, [selectedCategory]);
-
-  useEffect(() => {
+    // Descarta respuestas de filtros anteriores que lleguen tarde.
+    let cancelled = false;
     if (page === 1) setLoading(true);
     else setLoadingMore(true);
 
@@ -81,8 +105,10 @@ export default function DiscoverPage() {
         LIMIT,
         selectedCategory || undefined,
         searchQuery || undefined,
+        selectedDifficulty || undefined,
       )
       .then((data) => {
+        if (cancelled) return;
         if (page === 1) {
           setRecipes(data.recipes);
         } else {
@@ -92,10 +118,15 @@ export default function DiscoverPage() {
       })
       .catch(() => {})
       .finally(() => {
+        if (cancelled) return;
         setLoading(false);
         setLoadingMore(false);
       });
-  }, [page, selectedCategory, searchQuery]);
+    return () => {
+      cancelled = true;
+      setLoadingMore(false);
+    };
+  }, [page, selectedCategory, searchQuery, selectedDifficulty]);
 
   useEffect(() => {
     if (!sentinelRef.current || !hasMore || loading || loadingMore) return;
@@ -115,8 +146,15 @@ export default function DiscoverPage() {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.pageTitle}>Descubrí</h2>
-      <p className={styles.subtitle}>Recetas de otros chefs</p>
+      <div className={styles.titleRow}>
+        <h2 className={styles.pageTitle}>Descubrí</h2>
+        <button
+          className={styles.addBtn}
+          onClick={() => navigate("/recipes/new")}
+        >
+          + Nueva receta
+        </button>
+      </div>
 
       <div className={styles.searchBox}>
         <SearchIcon height="16" width="16" fill="var(--c-text-secondary)" />
@@ -140,7 +178,7 @@ export default function DiscoverPage() {
       <div className={styles.categoryFilter}>
         <button
           className={`${styles.catBtn} ${selectedCategory === "" ? styles.catActive : ""}`}
-          onClick={() => setSelectedCategory("")}
+          onClick={() => handleCategoryChange("")}
         >
           Todas
         </button>
@@ -148,11 +186,36 @@ export default function DiscoverPage() {
           <button
             key={cat}
             className={`${styles.catBtn} ${selectedCategory === cat ? styles.catActive : ""}`}
-            onClick={() => setSelectedCategory(cat)}
+            onClick={() => handleCategoryChange(cat)}
           >
             {cat}
           </button>
         ))}
+      </div>
+
+      <div
+        className={styles.difficultyFilter}
+        role="group"
+        aria-label="Filtrar por dificultad"
+      >
+        <span className={styles.filterLabel}>Dificultad</span>
+        {DIFFICULTIES.map(({ value, label }) => (
+          <button
+            key={value}
+            className={`${styles.diffBtn} ${selectedDifficulty === value ? styles.catActive : ""}`}
+            onClick={() => handleDifficultyChange(value)}
+            aria-pressed={selectedDifficulty === value}
+            aria-label={`${value} de 5: ${label}`}
+            title={label}
+          >
+            {value}
+          </button>
+        ))}
+        {selectedDifficulty > 0 && (
+          <span className={styles.diffName}>
+            {DIFFICULTIES[selectedDifficulty - 1].label}
+          </span>
+        )}
       </div>
 
       {loading ? (
@@ -171,8 +234,10 @@ export default function DiscoverPage() {
           </div>
           <p>
             No hay recetas{selectedCategory ? ` en "${selectedCategory}"` : ""}
-            {searchQuery ? ` que coincidan con "${searchQuery}"` : ""} de otros
-            chefs
+            {selectedDifficulty
+              ? ` de dificultad ${DIFFICULTIES[selectedDifficulty - 1].label.toLowerCase()}`
+              : ""}
+            {searchQuery ? ` que coincidan con "${searchQuery}"` : ""}
           </p>
         </div>
       ) : (

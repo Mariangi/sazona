@@ -18,15 +18,68 @@
   }
 }
 
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .pageTitle {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--c-text);
-  margin: 0 0 0.25rem;
+  margin: 0;
 }
 
-.subtitle {
-  font-size: 0.9rem;
+.addBtn {
+  min-height: 44px;
+  padding: 0.6rem 1.25rem;
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--c-primary);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 130, 64, 0.3);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.addBtn:hover {
+  background: var(--c-primary-hover);
+  transform: translateY(-1px);
+}
+
+.difficultyFilter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filterLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--c-text-secondary);
+}
+
+.diffBtn {
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--radius-full);
+  background: var(--c-surface);
+  color: var(--c-text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.diffName {
+  font-size: 0.8rem;
   color: var(--c-text-secondary);
 }
 
@@ -97,7 +150,16 @@
   color: var(--c-primary);
 }
 
-.catActive {
+/* El hover solo con mouse: en táctil queda "pegado" y dejaba el texto del chip activo invisible. */
+@media (hover: hover) {
+  .diffBtn:hover {
+    border-color: var(--c-primary);
+    color: var(--c-primary);
+  }
+}
+
+.catActive,
+.catActive:hover {
   background: var(--c-primary);
   color: white;
   border-color: var(--c-primary);

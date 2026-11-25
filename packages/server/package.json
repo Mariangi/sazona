@@ -8,7 +8,8 @@
     "start": "node --loader tsx src/index.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
-    "db:seed": "tsx src/db/seed.ts"
+    "db:seed": "tsx src/db/seed.ts",
+    "optimize:uploads": "tsx src/scripts/optimize-uploads.ts"
   },
   "dependencies": {
     "@fastify/cors": "^10.0.2",
@@ -21,6 +22,7 @@
     "drizzle-orm": "^0.38.3",
     "fastify": "^5.2.1",
     "jsonwebtoken": "^9.0.2",
+    "sharp": "^0.35.5",
     "zod": "^3.24.3"
   },
   "devDependencies": {

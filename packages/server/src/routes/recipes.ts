@@ -1,16 +1,10 @@
 import { FastifyInstance } from 'fastify';
-import { randomUUID } from 'crypto';
-import { writeFile, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
 import { db, schema } from '../db/index.js';
+import { saveImageFromDataUri } from '../services/images.js';
 import { authMiddleware } from '../auth/middleware.js';
 import { createRecipeSchema, updateRecipeSchema, findIngredientsSchema } from '@sasona/shared';
 import { eq, desc, inArray, and, sql } from 'drizzle-orm';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const UPLOADS_DIR = join(__dirname, '..', '..', 'uploads');
 
 export function recipeRoutes(app: FastifyInstance) {
 
@@ -308,24 +302,7 @@ export function recipeRoutes(app: FastifyInstance) {
     const { name, imageBase64, servings, prepTime, category, difficulty, ingredients, steps } = parsed.data;
     const { userId } = (request as any).user;
 
-    let imageUrl: string | null = null;
-
-    if (imageBase64) {
-      const matches = imageBase64.match(/^data:(image\/\w+);base64,(.+)$/);
-      if (matches) {
-        const ext = matches[1].split('/')[1];
-        const buffer = Buffer.from(matches[2], 'base64');
-        const filename = `${randomUUID()}.${ext}`;
-        const filepath = join(UPLOADS_DIR, filename);
-
-        if (!existsSync(UPLOADS_DIR)) {
-          await mkdir(UPLOADS_DIR, { recursive: true });
-        }
-
-        await writeFile(filepath, buffer);
-        imageUrl = `/uploads/${filename}`;
-      }
-    }
+    const imageUrl = imageBase64 ? await saveImageFromDataUri(imageBase64, 'recipe') : null;
 
     const recipe = db.insert(schema.recipes).values({
       userId,
@@ -415,20 +392,8 @@ export function recipeRoutes(app: FastifyInstance) {
       if (imageBase64 === '') {
         imageUrl = null;
       } else {
-        const matches = imageBase64.match(/^data:(image\/\w+);base64,(.+)$/);
-        if (matches) {
-          const ext = matches[1].split('/')[1];
-          const buffer = Buffer.from(matches[2], 'base64');
-          const filename = `${randomUUID()}.${ext}`;
-          const filepath = join(UPLOADS_DIR, filename);
-
-          if (!existsSync(UPLOADS_DIR)) {
-            await mkdir(UPLOADS_DIR, { recursive: true });
-          }
-
-          await writeFile(filepath, buffer);
-          imageUrl = `/uploads/${filename}`;
-        }
+        // Si el archivo no es una imagen válida se conserva la imagen actual.
+        imageUrl = (await saveImageFromDataUri(imageBase64, 'recipe')) ?? imageUrl;
       }
     }
 

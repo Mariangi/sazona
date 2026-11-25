@@ -1,19 +1,13 @@
 import { FastifyInstance } from 'fastify';
 import bcrypt from 'bcryptjs';
-import { randomUUID } from 'crypto';
-import { writeFile, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
 import { db, schema } from '../db/index.js';
+import { saveImageFromDataUri } from '../services/images.js';
 import { eq, ne } from 'drizzle-orm';
 import { registerSchema, loginSchema, updateProfileSchema, changePasswordSchema, avatarSchema } from '@sasona/shared';
 import { signToken } from '../auth/jwt.js';
 import { authMiddleware } from '../auth/middleware.js';
 import { registerLimit, loginLimit } from '../auth/rateLimits.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const UPLOADS_DIR = join(__dirname, '..', '..', 'uploads');
 
 export function authRoutes(app: FastifyInstance) {
   app.post('/api/auth/register', { config: registerLimit }, async (request, reply) => {
@@ -181,22 +175,10 @@ export function authRoutes(app: FastifyInstance) {
     const { userId } = (request as any).user;
     const { avatarBase64 } = parsed.data;
 
-    const matches = avatarBase64.match(/^data:(image\/\w+);base64,(.+)$/);
-    if (!matches) {
+    const avatarUrl = await saveImageFromDataUri(avatarBase64, 'avatar', `avatar-${userId}-`);
+    if (!avatarUrl) {
       return reply.status(400).send({ message: 'Formato de imagen inválido', statusCode: 400 });
     }
-
-    const ext = matches[1].split('/')[1];
-    const buffer = Buffer.from(matches[2], 'base64');
-    const filename = `avatar-${userId}-${randomUUID()}.${ext}`;
-    const filepath = join(UPLOADS_DIR, filename);
-
-    if (!existsSync(UPLOADS_DIR)) {
-      await mkdir(UPLOADS_DIR, { recursive: true });
-    }
-
-    await writeFile(filepath, buffer);
-    const avatarUrl = `/uploads/${filename}`;
 
     db.update(schema.users)
       .set({ avatarUrl })

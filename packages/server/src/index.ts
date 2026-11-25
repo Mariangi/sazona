@@ -65,10 +65,13 @@ await app.register(rateLimit, {
   }),
 });
 
+// Los archivos de uploads llevan un UUID en el nombre y nunca cambian: cache largo e inmutable.
 await app.register(fastifyStatic, {
   root: UPLOADS_DIR,
   prefix: '/uploads/',
   decorateReply: false,
+  maxAge: '365d',
+  immutable: true,
 });
 
 authRoutes(app);

@@ -7,3 +7,5 @@ packages/server/uploads/*
 .env.mobile
 packages/server/.env
 android.broken-backup/
+# originales de las imágenes optimizadas (backup local del optimizador)
+packages/server/data/uploads-originals/

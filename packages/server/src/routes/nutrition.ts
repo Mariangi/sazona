@@ -1,18 +1,12 @@
 import { FastifyInstance } from 'fastify';
-import { randomUUID } from 'crypto';
-import { writeFile, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
 import { db, schema } from '../db/index.js';
+import { saveImageFromDataUri } from '../services/images.js';
 import { authMiddleware } from '../auth/middleware.js';
 import { geminiLimit } from '../auth/rateLimits.js';
 import { analyzeMealRequestSchema, createNutritionLogSchema } from '@sasona/shared';
 import { analyzeMealFromImage, GeminiNotConfiguredError, GeminiRecognitionError } from '../services/nutritionAnalysis.js';
 import { eq, desc, and } from 'drizzle-orm';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const UPLOADS_DIR = join(__dirname, '..', '..', 'uploads');
 
 export function nutritionRoutes(app: FastifyInstance) {
   app.post('/api/nutrition/analyze', { preHandler: authMiddleware, config: geminiLimit }, async (request, reply) => {
@@ -77,24 +71,7 @@ export function nutritionRoutes(app: FastifyInstance) {
     const { imageBase64, foodName, servingDescription, calories, protein, fat, carbs } = parsed.data;
     const { userId } = (request as any).user;
 
-    let imageUrl: string | null = null;
-
-    if (imageBase64) {
-      const matches = imageBase64.match(/^data:(image\/\w+);base64,(.+)$/);
-      if (matches) {
-        const ext = matches[1].split('/')[1];
-        const buffer = Buffer.from(matches[2], 'base64');
-        const filename = `${randomUUID()}.${ext}`;
-        const filepath = join(UPLOADS_DIR, filename);
-
-        if (!existsSync(UPLOADS_DIR)) {
-          await mkdir(UPLOADS_DIR, { recursive: true });
-        }
-
-        await writeFile(filepath, buffer);
-        imageUrl = `/uploads/${filename}`;
-      }
-    }
+    const imageUrl = imageBase64 ? await saveImageFromDataUri(imageBase64, 'meal') : null;
 
     const log = db.insert(schema.nutritionLogs).values({
       userId,

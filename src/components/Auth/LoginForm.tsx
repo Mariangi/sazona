@@ -22,7 +22,7 @@ export default function LoginForm() {
       const res = await api.login(form)
       localStorage.setItem('token', res.token)
       setUser(res.user)
-      navigate('/dashboard')
+      navigate('/discover')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al iniciar sesión')
     } finally {

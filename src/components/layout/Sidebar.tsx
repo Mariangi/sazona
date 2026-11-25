@@ -19,11 +19,11 @@ const desktopNav = [
 ]
 
 const mobileNav = [
-  { to: '/dashboard', label: 'Inicio',  icon: <HomeIcon/> },
   { to: '/discover', label: 'Descubrí', icon:<SearchIcon/> },
+  { to: '/swipe', label: 'Antojo', icon: <ChefIcon /> },
   { to: '/random-dinner', label: 'Sorpresa', icon: <DiceIcon/> , highlight: true },
   { to: '/fridge', label: 'Heladera', icon: <FridgeIcon /> },
-  { to: '/swipe', label: 'Antojo', icon: <ChefIcon /> },
+  { to: '/groups', label: 'Grupos', icon: <GroupIcon /> },
  ]
 
 export default function Sidebar() {

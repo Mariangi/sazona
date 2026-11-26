@@ -1,10 +1,8 @@
-import { useState } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { resolveMediaUrl } from '../../api/client'
 import { Logo } from '../ui/Icons'
 import { NavCalendar, NavChefHat, NavHome, NavPlus, NavSearch } from '../ui/NavIcons'
-import CreateSheet from './CreateSheet'
 import { navGroups, sectionFor } from './navigation'
 import styles from './Sidebar.module.css'
 
@@ -12,7 +10,6 @@ export default function Sidebar() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const [createOpen, setCreateOpen] = useState(false)
 
   const section = sectionFor(pathname)
 
@@ -43,10 +40,10 @@ export default function Sidebar() {
           <Logo width="100%" />
         </button>
 
-        <button type="button" className={styles.createBtn} onClick={() => setCreateOpen(true)}>
+        <NavLink to="/recipes/new" className={styles.createBtn}>
           <NavPlus size={22} />
-          Crear
-        </button>
+          Nueva receta
+        </NavLink>
 
         <nav className={styles.nav} aria-label="Navegación principal">
           {navGroups.map((group) => (
@@ -84,19 +81,11 @@ export default function Sidebar() {
 
       <nav className={styles.mobileNav} aria-label="Navegación principal">
         {mobileTabs.slice(0, 2).map(renderTab)}
-        <button
-          type="button"
-          className={styles.mobileCreate}
-          onClick={() => setCreateOpen(true)}
-          aria-label="Crear"
-          aria-haspopup="dialog"
-        >
+        <NavLink to="/recipes/new" className={styles.mobileCreate} aria-label="Nueva receta">
           <NavPlus size={28} />
-        </button>
+        </NavLink>
         {mobileTabs.slice(2).map(renderTab)}
       </nav>
-
-      <CreateSheet open={createOpen} onClose={() => setCreateOpen(false)} />
     </>
   )
 }

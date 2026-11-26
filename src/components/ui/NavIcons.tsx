@@ -73,3 +73,9 @@ export const NavChevron = (p: Props) => (
 export const NavClose = (p: Props) => (
   <Svg {...p}><path d="M6 6l12 12M18 6 6 18" /></Svg>
 )
+export const NavMore = (p: Props) => (
+  <Svg {...p}><circle cx="5" cy="12" r="1.4" fill="currentColor" /><circle cx="12" cy="12" r="1.4" fill="currentColor" /><circle cx="19" cy="12" r="1.4" fill="currentColor" /></Svg>
+)
+export const NavCutlery = (p: Props) => (
+  <Svg {...p}><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 1-3 3.5-3 6.5V13h3v8" /></Svg>
+)

@@ -190,7 +190,7 @@ export default function ProfilePage() {
 
           <NavLink to="/meal-planner" className={styles.cardLink}>
             <div className={styles.card}>
-              <span>Menu semanal</span>
+              <span>Menú</span>
               <CalendarIcon height="20" width="20" fill="var(--c-text)" />
             </div>
           </NavLink>

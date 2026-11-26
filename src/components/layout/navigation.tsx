@@ -21,7 +21,7 @@ export const navGroups: { title: string; items: NavItem[] }[] = [
   {
     title: 'Organizar',
     items: [
-      { to: '/meal-planner', label: 'Menú semanal', icon: <NavCalendar /> },
+      { to: '/meal-planner', label: 'Menú', icon: <NavCalendar /> },
       { to: '/shopping-lists', label: 'Compras', icon: <NavCart /> },
       { to: '/nutrition', label: 'Nutrición', icon: <NavLeaf /> },
     ],
@@ -41,7 +41,7 @@ export const sections = {
   plan: {
     title: 'Plan',
     tabs: [
-      { to: '/meal-planner', label: 'Semana' },
+      { to: '/meal-planner', label: 'Menú' },
       { to: '/shopping-lists', label: 'Compras' },
       { to: '/nutrition', label: 'Nutrición' },
     ],

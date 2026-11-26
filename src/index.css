@@ -49,6 +49,13 @@ body {
   background: var(--c-bg);
   color: var(--c-text);
   line-height: 1.5;
+  /* Las palabras muy largas se cortan en vez de ensanchar la pantalla (scroll lateral):
+     primero por sílabas con guion (según lang="es") y, si no se puede, en cualquier punto. */
+  overflow-wrap: anywhere;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  /* Solo se separan las palabras largas (10+ letras, dejando al menos 4 de cada lado). */
+  hyphenate-limit-chars: 10 4 4;
 }
 
 a {
@@ -62,6 +69,9 @@ button {
 
 input, textarea, select {
   font-family: inherit;
+  /* Sin esto, un campo dentro de una fila flex no se achica y empuja los botones afuera. */
+  min-width: 0;
+  max-width: 100%;
 }
 
 .loading-screen {

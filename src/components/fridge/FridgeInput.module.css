@@ -51,6 +51,7 @@
 
 .input {
   flex: 1;
+  min-width: 0;
   padding: 0.75rem 1rem;
   border: 1.5px solid var(--c-border);
   border-radius: var(--radius-full);
@@ -82,38 +83,4 @@
 .addBtn:hover {
   background: var(--c-primary-hover);
   transform: translateY(-1px);
-}
-
-.cameraBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.65rem;
-  height: 2.65rem;
-  flex-shrink: 0;
-  background: var(--c-primary);
-  color: white;
-  border: none;
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.cameraBtn:hover:not(:disabled) {
-  background: var(--c-primary-hover);
-  transform: translateY(-1px);
-}
-
-.cameraBtn:disabled {
-  opacity: 0.6;
-  cursor: default;
-}
-
-.hiddenInput {
-  display: none;
-}
-
-.recognizeError {
-  color: var(--c-error);
-  font-size: 0.85rem;
 }

@@ -33,7 +33,7 @@ function ProtectedRoute() {
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
   if (loading) return <div className="loading-screen">Cargando...</div>
-  if (user) return <Navigate to="/discover" replace />
+  if (user) return <Navigate to="/dashboard" replace />
   return <>{children}</>
 }
 
@@ -47,7 +47,7 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
 

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import type { RecipeListItem } from "@sasona/shared";
 import { CATEGORIES } from "@sasona/shared";
 import { api, resolveMediaUrl, thumbSrc } from "../api/client";
@@ -60,7 +60,9 @@ export default function DiscoverPage() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchParams] = useSearchParams();
+  // El buscador del Inicio llega acá con ?q=...
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get("q") ?? "");
   const [selectedDifficulty, setSelectedDifficulty] = useState(0);
 
   const sentinelRef = useRef<HTMLDivElement>(null);

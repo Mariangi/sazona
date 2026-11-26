@@ -1,60 +1,74 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { resolveMediaUrl } from '../../api/client'
+import { Logo } from '../ui/Icons'
+import { NavCalendar, NavChefHat, NavHome, NavPlus, NavSearch } from '../ui/NavIcons'
+import CreateSheet from './CreateSheet'
+import { navGroups, sectionFor } from './navigation'
 import styles from './Sidebar.module.css'
-import { BookIcon, CalendarIcon, ChefIcon, DiceIcon, FridgeIcon, GroupIcon, HomeIcon, ListToBuyIcon, Logo, NutritionIcon, SaveIcon, SearchIcon } from '../ui/Icons'
-
-const desktopNav = [
-  { to: '/dashboard', label: 'Inicio', icon: <HomeIcon  fill='var(--c-text-secondary)'/> },
-    { to: '/discover', label: 'Descubrí', icon:<SearchIcon fill='var(--c-text-secondary)' /> },
-  { to: '/recipes', label: 'Recetas', icon: <BookIcon fill='var(--c-text-secondary)'/> },
-  { to: '/fridge', label: 'Heladera', icon: <FridgeIcon fill='var(--c-text-secondary)'/> },
-  { to: '/saved', label: 'Guardados', icon: <SaveIcon fill='var(--c-text-secondary)'/>   },
-  { to: '/shopping-lists', label: 'Compras', icon: <ListToBuyIcon  fill='var(--c-text-secondary)' /> },
-  { to: '/groups', label: 'Grupos', icon: <GroupIcon  fill='var(--c-text-secondary)'/> },
-  { to: '/meal-planner', label: 'Menu semanal', icon: <CalendarIcon fill='var(--c-text-secondary)'/> },
-  { to: '/nutrition', label: 'Nutrición', icon: <NutritionIcon fill='var(--c-text-secondary)'/> },
-  { to: '/random-dinner', label: 'Sorpresa', icon: <DiceIcon  fill='var(--c-text-secondary)'/> },
-  { to: '/swipe', label: 'Antojo', icon: <ChefIcon  fill='var(--c-text-secondary)'/> },
-]
-
-const mobileNav = [
-  { to: '/discover', label: 'Descubrí', icon:<SearchIcon/> },
-  { to: '/swipe', label: 'Antojo', icon: <ChefIcon /> },
-  { to: '/random-dinner', label: 'Sorpresa', icon: <DiceIcon/> , highlight: true },
-  { to: '/fridge', label: 'Heladera', icon: <FridgeIcon /> },
-  { to: '/groups', label: 'Grupos', icon: <GroupIcon /> },
- ]
 
 export default function Sidebar() {
-  const { user, setUser } = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const [createOpen, setCreateOpen] = useState(false)
+
+  const section = sectionFor(pathname)
+
+  // Barra de abajo en mobile: 4 pestañas + el botón de crear en el medio.
+  const mobileTabs = [
+    { to: '/dashboard', label: 'Inicio', icon: <NavHome />, active: pathname === '/dashboard' },
+    { to: '/discover', label: 'Descubrí', icon: <NavSearch />, active: pathname.startsWith('/discover') },
+    { to: '/meal-planner', label: 'Plan', icon: <NavCalendar />, active: section === 'plan' },
+    { to: '/recipes', label: 'Mi cocina', icon: <NavChefHat />, active: section === 'mine' || pathname.startsWith('/profile') },
+  ]
+
+  const renderTab = (t: (typeof mobileTabs)[number]) => (
+    <NavLink
+      key={t.to}
+      to={t.to}
+      aria-current={t.active ? 'page' : undefined}
+      className={`${styles.mobileLink} ${t.active ? styles.mobileActive : ''}`}
+    >
+      {t.icon}
+      <span className={styles.mobileLabel}>{t.label}</span>
+    </NavLink>
+  )
 
   return (
     <>
       <aside className={styles.sidebar}>
-        <div className={styles.logo} onClick={() => navigate('/dashboard')}>
-          <Logo width='100%' />
-        </div>
+        <button type="button" className={styles.logo} onClick={() => navigate('/dashboard')} aria-label="Ir al inicio">
+          <Logo width="100%" />
+        </button>
 
-        <nav className={styles.nav}>
-          {desktopNav.map(({ to, label, icon }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={to === '/dashboard'}
-              className={({ isActive }) =>
-                `${styles.link} ${isActive ? styles.active : ''}`
-              }
-            >
-              <span className={styles.icon}>{icon}</span>
-              <span className={styles.label}>{label}</span>
-            </NavLink>
+        <button type="button" className={styles.createBtn} onClick={() => setCreateOpen(true)}>
+          <NavPlus size={22} />
+          Crear
+        </button>
+
+        <nav className={styles.nav} aria-label="Navegación principal">
+          {navGroups.map((group) => (
+            <div key={group.title} className={styles.group}>
+              <h2 className={styles.groupTitle}>{group.title}</h2>
+              {group.items.map(({ to, label, icon }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  end={to === '/dashboard' || to === '/recipes'}
+                  className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}
+                >
+                  <span className={styles.icon}>{icon}</span>
+                  <span className={styles.label}>{label}</span>
+                </NavLink>
+              ))}
+            </div>
           ))}
         </nav>
 
         <div className={styles.footer}>
-          <button className={styles.userBtn} onClick={() => navigate('/profile')}>
+          <NavLink to="/profile" className={({ isActive }) => `${styles.userBtn} ${isActive ? styles.active : ''}`}>
             <span className={styles.avatar}>
               {user?.avatarUrl ? (
                 <img src={resolveMediaUrl(user.avatarUrl)} alt="" className={styles.avatarImg} />
@@ -63,25 +77,26 @@ export default function Sidebar() {
               )}
             </span>
             <span className={styles.username}>{user?.username}</span>
-          </button>
+            <span className={styles.profileHint}>Perfil</span>
+          </NavLink>
         </div>
       </aside>
 
-      <nav className={styles.mobileNav}>
-        {mobileNav.map(({ to, label, icon, highlight }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/dashboard'}
-            className={({ isActive }) =>
-              `${styles.mobileLink} ${isActive ? styles.mobileActive : ''} ${highlight ? styles.mobileHighlight : ''}`
-            }
-          >
-            <span className={styles.mobileIcon}>{icon}</span>
-            <span className={styles.mobileLabel}>{label}</span>
-          </NavLink>
-        ))}
+      <nav className={styles.mobileNav} aria-label="Navegación principal">
+        {mobileTabs.slice(0, 2).map(renderTab)}
+        <button
+          type="button"
+          className={styles.mobileCreate}
+          onClick={() => setCreateOpen(true)}
+          aria-label="Crear"
+          aria-haspopup="dialog"
+        >
+          <NavPlus size={28} />
+        </button>
+        {mobileTabs.slice(2).map(renderTab)}
       </nav>
+
+      <CreateSheet open={createOpen} onClose={() => setCreateOpen(false)} />
     </>
   )
 }

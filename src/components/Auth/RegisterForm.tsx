@@ -32,7 +32,7 @@ export default function RegisterForm() {
       })
       localStorage.setItem('token', res.token)
       setUser(res.user)
-      navigate('/discover')
+      navigate('/dashboard')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al registrarse')
     } finally {

@@ -3,6 +3,8 @@
   --c-primary-hover: #e86a2a;
   --c-primary-light: #fff0e8;
   --c-primary-dark: #d45a1a;
+  /* Naranja oscuro para texto e íconos: el #FF8240 no llega al contraste mínimo sobre fondo claro. */
+  --c-primary-ink: #b4460c;
   --c-bg: #faf6f2;
   --c-surface: #ffffff;
   --c-text: #1a1a2e;
@@ -25,8 +27,8 @@
   --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.1);
   --shadow-glow: 0 0 20px rgba(255,130,64,0.3);
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-sans: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Fredoka', 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 
 *,
@@ -112,4 +114,10 @@ input, textarea, select {
 
 @media (max-width: 768px) {
   html { font-size: 15px; }
+}
+
+/* Títulos con la tipografía redondeada de la marca */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
 }

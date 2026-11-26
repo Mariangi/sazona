@@ -14,6 +14,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Hasta que React monta el splash, la pantalla queda naranja (evita un destello blanco) -->
+    <style>#root:empty{position:fixed;inset:0;background:#FF8240}</style>
     <link rel="icon" type="image/png" href="/favicon.ico" />
   </head>
   <body>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Naranja de la marca: fondo del arranque y de la ventana mientras carga la app -->
+    <color name="splash_background">#FF8240</color>
+</resources>

@@ -4,6 +4,8 @@ const config: CapacitorConfig = {
   appId: 'com.sazona.app',
   appName: 'Sazoná',
   webDir: 'dist',
+  // Fondo del WebView antes de que se pinte la web (por defecto es blanco)
+  backgroundColor: '#FF8240',
   plugins: {
     SplashScreen: {
       launchShowDuration: 0,

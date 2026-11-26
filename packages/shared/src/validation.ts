@@ -122,6 +122,10 @@ export const analyzeMealRequestSchema = z.object({
   imageBase64: z.string().min(1, 'Imagen requerida'),
 });
 
+export const analyzeMealTextRequestSchema = z.object({
+  text: z.string().trim().min(3, 'Contanos qué comiste').max(500, 'El texto es demasiado largo (máximo 500 caracteres)'),
+});
+
 export const analyzeMealResponseSchema = z.object({
   foodName: z.string().min(1),
   servingDescription: z.string().optional().default(''),

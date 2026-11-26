@@ -3,7 +3,8 @@ import { db, schema } from '../db/index.js';
 import { saveImageFromDataUri } from '../services/images.js';
 import { authMiddleware } from '../auth/middleware.js';
 import { geminiLimit } from '../auth/rateLimits.js';
-import { analyzeMealRequestSchema, createNutritionLogSchema } from '@sasona/shared';
+import { analyzeMealRequestSchema, analyzeMealTextRequestSchema, createNutritionLogSchema } from '@sasona/shared';
+import { analyzeMealFromText, DeepSeekNotConfiguredError, NoFoodError } from '../services/nutritionText.js';
 import { analyzeMealFromImage, GeminiNotConfiguredError, GeminiRecognitionError } from '../services/nutritionAnalysis.js';
 import { eq, desc, and } from 'drizzle-orm';
 
@@ -35,6 +36,27 @@ export function nutritionRoutes(app: FastifyInstance) {
       }
       request.log.error(err, 'Error inesperado analizando comida');
       return reply.status(502).send({ message: 'No se pudo analizar la foto, intentá de nuevo', statusCode: 502 });
+    }
+  });
+
+  app.post('/api/nutrition/analyze-text', { preHandler: authMiddleware, config: geminiLimit }, async (request, reply) => {
+    const parsed = analyzeMealTextRequestSchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.status(400).send({ message: parsed.error.errors[0].message, statusCode: 400 });
+    }
+
+    try {
+      return await analyzeMealFromText(parsed.data.text);
+    } catch (err) {
+      if (err instanceof DeepSeekNotConfiguredError) {
+        request.log.error(err, 'DeepSeek no configurado');
+        return reply.status(503).send({ message: 'El análisis por texto todavía no está configurado en el servidor', statusCode: 503 });
+      }
+      if (err instanceof NoFoodError) {
+        return reply.status(422).send({ message: 'No reconocimos una comida en el texto, probá describirla de otra forma', statusCode: 422 });
+      }
+      request.log.warn(err, 'Fallo al analizar el texto');
+      return reply.status(502).send({ message: 'No se pudo analizar el texto, intentá de nuevo', statusCode: 502 });
     }
   });
 

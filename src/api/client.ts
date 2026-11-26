@@ -209,6 +209,9 @@ export const api = {
   analyzeMeal: (imageBase64: string) =>
     request<AnalyzeMealResponse>('/nutrition/analyze', { method: 'POST', body: JSON.stringify({ imageBase64 }) }),
 
+  analyzeMealText: (text: string) =>
+    request<AnalyzeMealResponse>('/nutrition/analyze-text', { method: 'POST', body: JSON.stringify({ text }) }),
+
   getNutritionLogs: () =>
     request<NutritionLogEntry[]>('/nutrition/logs'),
 

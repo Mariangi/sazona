@@ -3,6 +3,7 @@ import type { AnalyzeMealResponse, NutritionLogEntry } from '@sasona/shared'
 import { api, thumbSrc } from '../api/client'
 import Button from '../components/ui/Button'
 import MealCapture from '../components/nutrition/MealCapture'
+import MealTextInput from '../components/nutrition/MealTextInput'
 import { TrashIcon } from '../components/ui/Icons'
 import styles from './NutritionPage.module.css'
 
@@ -36,9 +37,9 @@ export default function NutritionPage() {
     }
   }
 
-  function handleAnalyzed(result: AnalyzeMealResponse, imageBase64: string) {
+  function handleAnalyzed(result: AnalyzeMealResponse, imageBase64?: string) {
     setDraft(result)
-    setPendingImage(imageBase64)
+    setPendingImage(imageBase64 ?? null)
     setError('')
   }
 
@@ -107,12 +108,13 @@ export default function NutritionPage() {
       <div className={styles.header}>
         <h2 className={styles.pageTitle}>Nutrición</h2>
         <p className={styles.subtitle}>
-          Sacale una foto a tu comida y estimamos sus calorías y macros
+          Sacale una foto a tu comida o escribí qué comiste y estimamos sus calorías y macros
         </p>
       </div>
 
       <div className={styles.card}>
         <MealCapture onAnalyzed={handleAnalyzed} />
+        <MealTextInput onAnalyzed={handleAnalyzed} />
 
         {error && <div className={styles.error}>{error}</div>}
 
